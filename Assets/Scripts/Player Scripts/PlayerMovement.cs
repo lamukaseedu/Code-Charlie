@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] float walkSpeed = 5f;
     [SerializeField] float sprintSpeed = 8f;
-    private const float gravity = 5f;
+    private const float gravity = 10f;
 
     private CharacterController controller;
 
@@ -31,19 +31,21 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
-        Vector3 moveDirection =
+        
+        Vector3 movement =
             transform.right * moveInput.x +
             transform.forward * moveInput.y;
-        moveDirection = Vector3.ClampMagnitude(moveDirection, 1f);
-
-        // If sprint button is pressed, move faster
+        
+        movement = Vector3.ClampMagnitude(movement, 1f);
+        
+        // If sprint button is pressed, increase speed
         float speed = sprintAction.IsPressed() ? sprintSpeed : walkSpeed;
-        
-        Vector3 movement = moveDirection * speed;
-        
+
+        movement *= speed;
+
         // Move downwards always so player stays on the floor
         movement.y = -gravity;
-
+        
         controller.Move(movement * Time.deltaTime);
     }
 }
