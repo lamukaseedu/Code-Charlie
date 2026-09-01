@@ -7,12 +7,12 @@ using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class FirstPersonShooting : MonoBehaviour
+public class PlayerGun : MonoBehaviour
 {
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
     [SerializeField] private float fireRate = 0.5f;
-    public Camera playerCamera;
+    private Camera playerCamera;
 
     private float nextFireTime = 0f;
 
@@ -20,6 +20,7 @@ public class FirstPersonShooting : MonoBehaviour
 
     private void Awake()
     {
+        playerCamera = GetComponentInChildren<Camera>();
         PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["Shoot"];
     }
