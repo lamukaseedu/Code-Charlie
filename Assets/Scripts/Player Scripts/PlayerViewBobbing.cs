@@ -1,3 +1,8 @@
+/*
+ * Author: Lam Nguyen
+ * Created: 9/1/2026
+ */
+
 using System;
 using Unity.Cinemachine;
 using UnityEngine;
