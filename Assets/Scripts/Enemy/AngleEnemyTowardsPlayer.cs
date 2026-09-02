@@ -22,9 +22,11 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
 
     private Transform playerTarget;
 
-    [Header("Visual Reference")]
+    [Header("Visual Reference DEBUGGING")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private DirectionalSprites directionalSprites;
+
+    [Header("Animation")]
     [SerializeField] private Animator enemyAnimation;
 
     [Header("Direction Debugging")]
