@@ -11,10 +11,11 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] float walkSpeed = 5f;
     [SerializeField] float sprintSpeed = 8f;
+    
     private const float gravity = 10f;
+    private bool isMoving = false;
 
     private CharacterController controller;
-
     private InputAction moveAction;
     private InputAction sprintAction;
 
@@ -38,6 +39,16 @@ public class PlayerMovement : MonoBehaviour
         
         movement = Vector3.ClampMagnitude(movement, 1f);
         
+        // Set a boolean that shows if the player is inputting a movement key
+        if (moveInput.magnitude > 0f)
+        {
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
+        }
+        
         // If sprint button is pressed, increase speed
         float speed = sprintAction.IsPressed() ? sprintSpeed : walkSpeed;
 
@@ -47,5 +58,11 @@ public class PlayerMovement : MonoBehaviour
         movement.y = -gravity;
         
         controller.Move(movement * Time.deltaTime);
+    }
+    
+    // Return whether a movement key is being inputted.
+    public bool CheckMovement()
+    {
+        return isMoving;
     }
 }
