@@ -3,6 +3,7 @@
  * Created: 8/30/2026
  */
 
+using System.Collections;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,6 +13,12 @@ public class PlayerGun : MonoBehaviour
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
     [SerializeField] private float fireRate = 0.5f;
+
+    [SerializeField] private GameObject NailPrefab;
+
+    [SerializeField] private Transform Muzzle;
+
+    [SerializeField] private LineRenderer bulletTrailPrefab;
     private Camera playerCamera;
 
     private float nextFireTime = 0f;
@@ -33,7 +40,8 @@ public class PlayerGun : MonoBehaviour
         }
     }
 
-    //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage
+    //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
+    //Also creates a nail object embedded where ray hits object
     private void Shoot()
     {
         if (Time.time < nextFireTime)
@@ -55,8 +63,17 @@ public class PlayerGun : MonoBehaviour
         1f
         );
 
+        Vector3 hitPoint;
+
         if (Physics.Raycast(ray, out RaycastHit hit, range))
         {
+            hitPoint = hit.point;
+
+            GameObject Nail = Instantiate(NailPrefab, hit.point, Quaternion.LookRotation(playerCamera.transform.up));
+            Nail.transform.SetParent(hit.collider.transform);
+
+            StartCoroutine(DestroyNail(Nail));
+
             Debug.Log("Hit: " + hit.collider.name);
 
             IDamageable damageable = hit.collider.GetComponent<IDamageable>();
@@ -66,5 +83,27 @@ public class PlayerGun : MonoBehaviour
                 damageable.TakeDamage(damage);
             }
         }
+        else
+        {
+            hitPoint = ray.origin + ray.direction * range;
+        }
+
+        CreateBulletTrail(hitPoint);
+    }
+
+    private void CreateBulletTrail(Vector3 hitPoint)
+    {
+        LineRenderer trail = Instantiate(bulletTrailPrefab);
+
+        trail.SetPosition(0, Muzzle.position);
+        trail.SetPosition(1, hitPoint);
+
+        Destroy(trail.gameObject, 0.05f);
+    }
+
+    IEnumerator DestroyNail(GameObject Nail)
+    {
+        yield return new WaitForSeconds(5f);
+        Destroy(Nail);
     }
 }
