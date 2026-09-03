@@ -3,6 +3,7 @@
  * Created: 8/30/2026
  */
 
+using Unity.Cinemachine;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,7 +13,7 @@ public class PlayerGun : MonoBehaviour
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
     [SerializeField] private float fireRate = 0.5f;
-    private Camera playerCamera;
+    private Transform playerCamera;
 
     private float nextFireTime = 0f;
 
@@ -20,7 +21,7 @@ public class PlayerGun : MonoBehaviour
 
     private void Awake()
     {
-        playerCamera = GetComponentInChildren<Camera>();
+        playerCamera = GetComponentInChildren<Transform>();
         PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["Shoot"];
     }
