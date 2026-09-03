@@ -16,6 +16,7 @@ public class PlayerWeaponSwitcher : MonoBehaviour
     private InputAction weapon1Action;
     private InputAction weapon2Action;
 
+    // Caches input actions and equips the first weapon before other scripts update
     private void Awake()
     {
         PlayerInput playerInput = GetComponent<PlayerInput>();
@@ -23,11 +24,7 @@ public class PlayerWeaponSwitcher : MonoBehaviour
         previousWeaponAction = playerInput.actions["PreviousWeapon"];
         weapon1Action = playerInput.actions["Weapon1"];
         weapon2Action = playerInput.actions["Weapon2"];
-    }
 
-    // Starts with the first assigned weapon
-    private void Start()
-    {
         SelectWeapon(0);
     }
 
@@ -55,63 +52,46 @@ public class PlayerWeaponSwitcher : MonoBehaviour
         }
     }
 
+    // Steps to the next weapon slot, wrapping at the ends
     private void CycleWeapon(int direction)
     {
-        int count = GetWeaponCount();
-        if (count == 0)
+        if (weapons == null || weapons.Length == 0)
         {
             return;
         }
 
-        int nextIndex = (currentIndex + direction) % count;
-        if (nextIndex < 0)
-        {
-            nextIndex += count;
-        }
-
+        int nextIndex = (currentIndex + direction + weapons.Length) % weapons.Length;
         SelectWeapon(nextIndex);
     }
 
     // Activates the weapon at the specified index
     private void SelectWeapon(int index)
     {
-        if (index < 0 || index >= GetWeaponCount())
+        if (weapons == null || index < 0 || index >= weapons.Length)
         {
             return;
         }
 
         currentIndex = index;
-
-        for (int i = 0; i < weapons.Length; i++)
-        {
-            if (weapons[i] == null)
-            {
-                continue;
-            }
-
-            weapons[i].enabled = i == currentIndex;
-        }
+        SetAllWeaponScriptsEnabled(false);
+        weapons[currentIndex].enabled = true;
 
         Debug.Log("Active weapon: " + weapons[currentIndex].GetType().Name);
     }
 
-    // Counts assigned weapon components, skips empty
-    private int GetWeaponCount()
+    // Enables or disables every melee and gun script on the player, including duplicates
+    private void SetAllWeaponScriptsEnabled(bool enabled)
     {
-        if (weapons == null)
+        PlayerMelee melee = GetComponent<PlayerMelee>();
+        if (melee != null)
         {
-            return 0;
+            melee.enabled = enabled;
         }
 
-        int count = 0;
-        for (int i = 0; i < weapons.Length; i++)
+        PlayerGun[] guns = GetComponentsInChildren<PlayerGun>(true);
+        for (int i = 0; i < guns.Length; i++)
         {
-            if (weapons[i] != null)
-            {
-                count++;
-            }
+            guns[i].enabled = enabled;
         }
-
-        return count;
     }
 }
