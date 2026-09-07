@@ -2,8 +2,7 @@
  * Author: Shelton Joseph
  * Created: 8/30/2026
  */
-
-using System.Collections;
+using Unity.Cinemachine;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,7 +18,7 @@ public class PlayerGun : MonoBehaviour
     [SerializeField] private Transform Muzzle;
 
     [SerializeField] private LineRenderer bulletTrailPrefab;
-    private Camera playerCamera;
+    [SerializeField] private Camera playerCamera;
 
     private float nextFireTime = 0f;
 
@@ -27,7 +26,6 @@ public class PlayerGun : MonoBehaviour
 
     private void Awake()
     {
-        playerCamera = GetComponentInChildren<Camera>();
         PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["Shoot"];
     }
@@ -72,7 +70,7 @@ public class PlayerGun : MonoBehaviour
             GameObject Nail = Instantiate(NailPrefab, hit.point, Quaternion.LookRotation(playerCamera.transform.up));
             Nail.transform.SetParent(hit.collider.transform);
 
-            StartCoroutine(DestroyNail(Nail));
+            Destroy(Nail, 5.0f);
 
             Debug.Log("Hit: " + hit.collider.name);
 
@@ -99,11 +97,5 @@ public class PlayerGun : MonoBehaviour
         trail.SetPosition(1, hitPoint);
 
         Destroy(trail.gameObject, 0.05f);
-    }
-
-    IEnumerator DestroyNail(GameObject Nail)
-    {
-        yield return new WaitForSeconds(5f);
-        Destroy(Nail);
     }
 }
