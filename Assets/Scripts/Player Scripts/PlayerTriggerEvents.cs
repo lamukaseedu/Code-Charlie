@@ -5,6 +5,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerTriggerEvents : MonoBehaviour
 {
+    /*
+     * Author: Andres Rondon-Villarmosa
+     * Created: 9/7/2026
+     */
+
     [Header("Trigger Settings")]
     [SerializeField] private string playerTag = "Player";
 

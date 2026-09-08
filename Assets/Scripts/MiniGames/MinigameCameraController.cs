@@ -5,6 +5,10 @@ using Unity.Cinemachine;
 
 public class MinigameCameraController : MonoBehaviour
 {
+    /*
+     * Author: Andres Rondon-Villarmosa
+     * Created: 9/7/2026
+     */
     [Header("Cinemachine Cameras")]
     [SerializeField] private CinemachineCamera playerCamera;
     [SerializeField] private CinemachineCamera minigameCamera;
