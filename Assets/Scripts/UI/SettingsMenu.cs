@@ -111,4 +111,12 @@ public class SettingsMenu : MonoBehaviour
         colorAdjustments.postExposure.overrideState = true;
         colorAdjustments.postExposure.value = GameSettings.BrightnessToPostExposure(value);
     }
+
+    public void ResetDefault()
+    {
+        mouseSensitivitySlider.value = GameSettings.DefaultSensitivity;
+        volumeSlider.value = GameSettings.DefaultVolume;
+        brightnessSlider.value = GameSettings.DefaultBrightness;
+    }
+
 }
