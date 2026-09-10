@@ -13,6 +13,8 @@ public class PlayerMelee : MonoBehaviour
     [SerializeField] float radius = 0.6f;
     [SerializeField] LayerMask hitMask = ~0;
 
+    [SerializeField] private GameObject meleeWeapon;
+
     private InputAction attackAction;
 
     // Caches the Attack action from the player's Input System asset
@@ -20,6 +22,11 @@ public class PlayerMelee : MonoBehaviour
     {
         PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         attackAction = playerInput.actions["Attack"];
+    }
+
+    private void OnEnable()
+    {
+        meleeWeapon.SetActive(true);
     }
 
     // Damages IDamageable targets in a sphere in front of the camera on click
@@ -66,5 +73,10 @@ public class PlayerMelee : MonoBehaviour
         Vector3 center = origin.position + origin.forward * range;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(center, radius);
+    }
+
+    private void OnDisable()
+    {
+        meleeWeapon.SetActive(false);
     }
 }

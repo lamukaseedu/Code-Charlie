@@ -15,6 +15,8 @@ public class PlayerGun : MonoBehaviour
 
     [SerializeField] private GameObject NailPrefab;
 
+    [SerializeField] private GameObject Gun;
+
     [SerializeField] private Transform Muzzle;
 
     [SerializeField] private LineRenderer bulletTrailPrefab;
@@ -28,6 +30,12 @@ public class PlayerGun : MonoBehaviour
     {
         PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         shootAction = playerInput.actions["Shoot"];
+    }
+
+    private void OnEnable()
+    {
+        Gun.SetActive(true);
+        Debug.Log("Gun activated");
     }
 
     private void Update()
@@ -97,5 +105,11 @@ public class PlayerGun : MonoBehaviour
         trail.SetPosition(1, hitPoint);
 
         Destroy(trail.gameObject, 0.05f);
+    }
+
+    private void OnDisable()
+    {
+        Gun.SetActive(false);
+        Debug.Log("Gun unactivated");
     }
 }
