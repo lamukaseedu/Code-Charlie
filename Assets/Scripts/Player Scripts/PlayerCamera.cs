@@ -28,11 +28,16 @@ public class PlayerCamera : MonoBehaviour
     // Set default sensitivity and lock cursor
     private void Start()
     {
-        horizontalSens = PlayerPrefs.GetFloat("HorizontalSensitivity", 0.1f);
-        verticalSens = PlayerPrefs.GetFloat("VerticalSensitivity", 0.1f);
+        SetSensitivity(GameSettings.GetSensitivity());
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    public void SetSensitivity(float value)
+    {
+        horizontalSens = value;
+        verticalSens = value;
     }
 
     // On update, check for changes in mouse movement and either rotate the player horizontally or rotate the camera holder vertically
