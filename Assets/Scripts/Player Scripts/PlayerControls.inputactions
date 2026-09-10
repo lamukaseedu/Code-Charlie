@@ -115,6 +115,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Keypress",
+                    "type": "Button",
+                    "id": "65da267e-8dc9-4869-8933-e8fc1c2120d8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -293,6 +303,17 @@
                     "action": "MinigameInteract",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aeb71b8e-5343-4593-b329-a011fefa8ffe",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Keypress",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -301,7 +322,7 @@
             "id": "988bb82a-0e4d-4b23-a3a4-4b88c5161e30",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Quit Minigame",
                     "type": "Button",
                     "id": "1bad2533-8b44-4142-a616-48fe29ad9f4a",
                     "expectedControlType": "",
@@ -319,7 +340,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Quit Minigame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
