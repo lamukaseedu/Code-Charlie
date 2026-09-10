@@ -121,6 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0dd5e3d53632104da366b54f4adef8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  dampingTime: 0.2
 --- !u!1 &3974480410459393963
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,6 +570,7 @@ GameObject:
   - component: {fileID: 8915089038012151634}
   - component: {fileID: 6199376861136161912}
   - component: {fileID: 1521352313036306317}
+  - component: {fileID: 3331722620190537335}
   m_Layer: 0
   m_Name: PlayerCameraHolder
   m_TagString: Untagged
@@ -647,6 +649,26 @@ MonoBehaviour:
   bulletTrailPrefab: {fileID: 0}
   playerCamera: {fileID: 0}
 --- !u!114 &1521352313036306317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7778692973113614882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965d8bcfc020751488afe78137b82d5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerGun
+  damage: 25
+  range: 100
+  fireRate: 0.5
+  NailPrefab: {fileID: 0}
+  Gun: {fileID: 0}
+  Muzzle: {fileID: 0}
+  bulletTrailPrefab: {fileID: 0}
+  playerCamera: {fileID: 0}
+--- !u!114 &3331722620190537335
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
