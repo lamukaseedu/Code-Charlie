@@ -303,6 +303,35 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Watch",
+            "id": "cc7ea1de-f6ae-4059-a1e3-dedd9e2ec9e3",
+            "actions": [
+                {
+                    "name": "Toggle",
+                    "type": "Button",
+                    "id": "0e626ba3-ad21-4e6a-aff8-cf4ff6127762",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3a0e2927-6fe6-4823-9a42-fd985adcbf48",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
