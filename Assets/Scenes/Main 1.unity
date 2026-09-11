@@ -1336,7 +1336,7 @@ RectTransform:
   m_Father: {fileID: 503118132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1592,7 +1592,7 @@ RectTransform:
   m_Father: {fileID: 1201727549}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2732,7 +2732,7 @@ RectTransform:
   m_Father: {fileID: 1675989560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3799,7 +3799,7 @@ RectTransform:
   m_Father: {fileID: 553954804}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5384,7 +5384,7 @@ RectTransform:
   m_Father: {fileID: 1665831603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6101,13 +6101,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1396326242558876015, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1548467596646116380, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 43369579}
+    - target: {fileID: 2580259244389465246, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284297045408617971, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3767187599765535242, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4543756621194945030, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386931099049532228, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.0005
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386931099049532228, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.0005
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386931099049532228, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.0005
       objectReference: {fileID: 0}
     - target: {fileID: 8915089038012151634, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: playerCamera
@@ -6986,7 +7014,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1653349117
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8089,7 +8117,7 @@ GameObject:
   - component: {fileID: 2011808172}
   - component: {fileID: 2011808176}
   m_Layer: 7
-  m_Name: MinimapCamera
+  m_Name: Minimap Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8622,7 +8650,7 @@ RectTransform:
   m_Father: {fileID: 1728701825}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
