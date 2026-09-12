@@ -49,8 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
-    Enabled: 0
-    m_Value: 0
+    Enabled: 1
+    m_Value: 10
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -376,6 +376,7 @@ GameObject:
   - component: {fileID: 3077178942325623481}
   - component: {fileID: 766661932925906183}
   - component: {fileID: 8422264388429490500}
+  - component: {fileID: 852767844828432375}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -503,6 +504,24 @@ MonoBehaviour:
   weapons:
   - {fileID: 766661932925906183}
   - {fileID: 8915089038012151634}
+--- !u!114 &852767844828432375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d910391ac8fe7145abab93e0c664c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+  playerCamera: {fileID: 0}
+  interactionDistance: 3
+  interactionLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  buttonInteractable: {fileID: 5680287017942265168, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
 --- !u!1 &5992438273437588460
 GameObject:
   m_ObjectHideFlags: 0

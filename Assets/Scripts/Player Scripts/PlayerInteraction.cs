@@ -29,7 +29,8 @@ public class PlayerInteraction : MonoBehaviour
     //Stops listening for user to press the key to activate interactable
     private void OnDisable()
     {
-
+        buttonInteractable.action.performed -= OnInteract;
+        buttonInteractable.action.Disable();
         ClearCurrentInteractable();
     }
 
@@ -94,5 +95,19 @@ public class PlayerInteraction : MonoBehaviour
             playerCamera.transform.position,
             playerCamera.transform.forward * interactionDistance
         );
+    }
+
+    //Unlocks cursor when needed
+    public void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    //Locks cursor when needed
+    public void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 }

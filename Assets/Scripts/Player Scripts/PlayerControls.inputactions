@@ -115,16 +115,6 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
-                },
-                {
-                    "name": "Keypress",
-                    "type": "Button",
-                    "id": "65da267e-8dc9-4869-8933-e8fc1c2120d8",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
                 }
             ],
             "bindings": [
@@ -303,17 +293,6 @@
                     "action": "MinigameInteract",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "aeb71b8e-5343-4593-b329-a011fefa8ffe",
-                    "path": "<Keyboard>/k",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Keypress",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -330,6 +309,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Left-Click",
+                    "type": "Button",
+                    "id": "2e819d9e-72da-43ff-9b14-714a72fdf4f7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -341,6 +330,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Quit Minigame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "188d6498-e3a6-485e-8ba8-8ca66536ba6b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left-Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

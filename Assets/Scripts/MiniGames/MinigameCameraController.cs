@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
+using UnityEngine.Events;
 
 public class MinigameCameraController : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class MinigameCameraController : MonoBehaviour
     [Header("Transition")]
     [Tooltip("Set this to the Cinemachine Brain blend duration.")]
     [SerializeField] private float transitionDuration = 0.5f;
+
+    [Header("Events")]
+    [SerializeField] private UnityEvent onMinigameExited;
 
     private bool minigameActive;
     private bool transitioning;
@@ -91,6 +95,7 @@ public class MinigameCameraController : MonoBehaviour
     private IEnumerator ExitRoutine()
     {
         transitioning = true;
+        onMinigameExited?.Invoke();
 
         playerInput.currentActionMap.Disable();
 
