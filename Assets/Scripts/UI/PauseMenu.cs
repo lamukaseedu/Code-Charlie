@@ -14,13 +14,17 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
 
     private InputAction pauseAction;
-    private InputActionMap playerMap;
+    private InputActionMap uiMap;
+    private InputActionMap actionMapBeforePause;
+
+    private CursorLockMode cursorLockBeforePause;
+    private bool cursorVisibilityBeforePause;
     private bool isPaused;
 
     private void Awake()
     {
-        playerMap = playerInput.actions.FindActionMap("Player");
-        playerInput.actions.FindActionMap("UI").Enable();
+        uiMap = playerInput.actions.FindActionMap("UI");
+        uiMap.Enable();
         pauseAction = playerInput.actions["Pause"];
     }
 
@@ -32,6 +36,9 @@ public class PauseMenu : MonoBehaviour
     private void OnDisable()
     {
         Time.timeScale = 1f;
+
+        if (isPaused && actionMapBeforePause != null)
+            actionMapBeforePause.Enable();
     }
 
     private void Update()
@@ -99,10 +106,22 @@ public class PauseMenu : MonoBehaviour
 
         if (paused)
         {
+            //Remember the actionMap that the player was using before paused
+            actionMapBeforePause = playerInput.currentActionMap;
+
+            //Also remember the cursor state that the player was using before paused
+            cursorLockBeforePause = Cursor.lockState;
+            cursorVisibilityBeforePause = Cursor.visible;
+
+
             CloseSettings();
-            playerMap.Disable();
+
+            if (actionMapBeforePause != null)
+                actionMapBeforePause.Disable();
+
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
             return;
         }
 
@@ -111,8 +130,15 @@ public class PauseMenu : MonoBehaviour
             settingsPanel.SetActive(false);
         }
 
-        playerMap.Enable();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Restore whichever map was active before pausing.
+        if (actionMapBeforePause != null)
+        {
+            actionMapBeforePause.Enable();
+            actionMapBeforePause = null;
+        }
+
+        //Restore the correct cursor state for that map.
+        Cursor.lockState = cursorLockBeforePause;
+        Cursor.visible = cursorVisibilityBeforePause;
     }
 }

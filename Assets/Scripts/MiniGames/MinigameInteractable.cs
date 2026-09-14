@@ -44,6 +44,10 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
     [SerializeField] private UnityEvent onInteractableEntered;
     [SerializeField] private UnityEvent onInteractableExited;
 
+    [Header("Player Visuals")]
+    [Tooltip("Only assign the renderers for the player's visible body/model.")]
+    [SerializeField] private Renderer[] playerRenderers;
+
     public bool IsActive { get; private set; }
     public bool IsTransitioning { get; private set; }
 
@@ -133,10 +137,12 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         if (playerCameraController != null)
             playerCameraController.enabled = false;
 
+        SetPlayerVisible(false);
+
         interactableCamera.Priority = activeCameraPriority;
         playerCamera.Priority = inactiveCameraPriority;
 
-        yield return new WaitForSecondsRealtime(transitionDuration);
+        yield return new WaitForSeconds(transitionDuration);
 
         playerInput.SwitchCurrentActionMap(interactableActionMap);
 
@@ -164,7 +170,9 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         playerCamera.Priority = activeCameraPriority;
         interactableCamera.Priority = inactiveCameraPriority;
 
-        yield return new WaitForSecondsRealtime(transitionDuration);
+        yield return new WaitForSeconds(transitionDuration);
+
+        SetPlayerVisible(true);
 
         playerInput.SwitchCurrentActionMap(defaultActionMap);
 
@@ -198,6 +206,16 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
             highlighted ? highlightColor : normalColor
         );
         highlightRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    //Shows or hides the player's model without disabling the actual player.
+    private void SetPlayerVisible(bool visible)
+    {
+        foreach (Renderer playerRenderer in playerRenderers)
+        {
+            if (playerRenderer != null)
+                playerRenderer.enabled = visible;
+        }
     }
 
     private void CacheMaterialColor()
