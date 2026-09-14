@@ -42,6 +42,7 @@ public class KeypadController : MonoBehaviour
         RefreshDisplay();
     }
 
+    //Function for adding a digit to the input. 
     public void EnterDigit(string digit)
     {
         if (IsBusy || IsUnlocked || string.IsNullOrEmpty(digit))
@@ -61,7 +62,8 @@ public class KeypadController : MonoBehaviour
         PlaySound(digitSound);
         RefreshDisplay();
     }
-
+    
+    //Function for removing a digit from the input. 
     public void Backspace()
     {
         if (IsBusy || IsUnlocked || currentInput.Length == 0)
@@ -72,6 +74,7 @@ public class KeypadController : MonoBehaviour
         RefreshDisplay();
     }
 
+    //Function for fully clearing the digits on the input. 
     public void Clear()
     {
         if (IsBusy || IsUnlocked)
@@ -82,6 +85,7 @@ public class KeypadController : MonoBehaviour
         RefreshDisplay();
     }
 
+    //Function for checking whether the input entered matches the correct code.
     public void Submit()
     {
         if (IsBusy || IsUnlocked)
@@ -94,7 +98,8 @@ public class KeypadController : MonoBehaviour
 
         resultRoutine = StartCoroutine(ShowResult(isCorrect));
     }
-
+    
+    //If the input matches the code display the correct text/sound if it doesn't match display the incorrect text/sound.
     private IEnumerator ShowResult(bool granted)
     {
         IsBusy = true;
@@ -125,6 +130,8 @@ public class KeypadController : MonoBehaviour
         resultRoutine = null;
     }
 
+
+    //Function for refreshing display when needed. 
     private void RefreshDisplay()
     {
         if (displayText != null)

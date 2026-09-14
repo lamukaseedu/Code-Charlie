@@ -12,6 +12,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private LayerMask interactionLayer;
+    [SerializeField] private LayerMask blockRaycastLayers;
 
     [Header("Input")]
     [SerializeField] private InputActionReference buttonInteractable;
@@ -40,9 +41,13 @@ public class PlayerInteraction : MonoBehaviour
         FindInteractable();
     }
 
+    //Finds Interactable but filters out what raycast layers to ignore and what raycast layers contain the interactables. 
     private void FindInteractable()
     {
         IInteractable detectedInteractable = null;
+
+        int raycastLayers =
+        interactionLayer.value | blockRaycastLayers.value;
 
         if (playerCamera != null &&
             Physics.Raycast(
@@ -50,10 +55,19 @@ public class PlayerInteraction : MonoBehaviour
                 playerCamera.transform.forward,
                 out RaycastHit hit,
                 interactionDistance,
-                interactionLayer))
+                raycastLayers,
+                QueryTriggerInteraction.Collide))
         {
-            detectedInteractable =
-                hit.collider.GetComponentInParent<IInteractable>();
+            int hitLayer = hit.collider.gameObject.layer;
+
+            bool hitIsInteractable =
+                (interactionLayer.value & (1 << hitLayer)) != 0;
+
+            if (hitIsInteractable)
+            {
+                detectedInteractable =
+                    hit.collider.GetComponentInParent<IInteractable>();
+            }
         }
 
         // The player is still looking at the same object.

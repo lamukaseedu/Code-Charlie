@@ -27,6 +27,7 @@ public class KeypadPointer : MonoBehaviour
             interactionCamera = Camera.main;
     }
 
+    //Update by tracking the mouse position and whether the raycast is highlighting over a keypad button, if it is then highlight the keypad. 
     private void Update()
     {
         if (!interactionEnabled || interactionCamera == null || Mouse.current == null)
@@ -55,6 +56,7 @@ public class KeypadPointer : MonoBehaviour
         }
     }
 
+    //Set the keypad interactions to enabled.
     public void SetInteractionEnabled(bool enabled)
     {
         interactionEnabled = enabled;
@@ -63,6 +65,7 @@ public class KeypadPointer : MonoBehaviour
             ChangeHoveredButton(null);
     }
 
+    //Switch which button is being hovered over to correctly indicate to the player what they are selecting. 
     private void ChangeHoveredButton(KeypadButton nextButton)
     {
         if (hoveredButton == nextButton)

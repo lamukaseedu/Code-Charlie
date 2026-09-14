@@ -40,6 +40,7 @@ public class KeypadButton : MonoBehaviour
     private Vector3 restingLocalPosition;
     private bool isAnimating;
 
+    //Gets the starting position of the buttons. 
     private void Awake()
     {
         restingLocalPosition = transform.localPosition;
@@ -53,6 +54,7 @@ public class KeypadButton : MonoBehaviour
         CacheMaterialColor();
     }
 
+    //Changes the button color when the player starts or stops hovering over it
     public void SetHovered(bool hovered)
     {
         if (buttonRenderer == null || colorPropertyId == 0)
@@ -64,6 +66,7 @@ public class KeypadButton : MonoBehaviour
         buttonRenderer.SetPropertyBlock(propertyBlock);
     }
 
+    //Sends the button's command to the keypad and starts the press animation.
     public void Press()
     {
         if (isAnimating || keypad == null || keypad.IsBusy || keypad.IsUnlocked)
@@ -88,6 +91,7 @@ public class KeypadButton : MonoBehaviour
         StartCoroutine(AnimatePress());
     }
 
+    //Moves the button inward, waits, and then moves it back to its starting position
     private IEnumerator AnimatePress()
     {
         isAnimating = true;
@@ -102,6 +106,7 @@ public class KeypadButton : MonoBehaviour
         isAnimating = false;
     }
 
+    //Smoothly moves the button from its current position to the given position
     private IEnumerator MoveTo(Vector3 target)
     {
         Vector3 start = transform.localPosition;
@@ -118,6 +123,7 @@ public class KeypadButton : MonoBehaviour
         transform.localPosition = target;
     }
 
+    //Finds the color property used by the material and saves the button's normal color
     private void CacheMaterialColor()
     {
         if (buttonRenderer == null || buttonRenderer.sharedMaterial == null)
@@ -138,6 +144,7 @@ public class KeypadButton : MonoBehaviour
         normalColor = material.GetColor(colorPropertyId);
     }
 
+    //Resets the button's color, position, and animation when it gets disabled
     private void OnDisable()
     {
         SetHovered(false);
@@ -145,6 +152,7 @@ public class KeypadButton : MonoBehaviour
         isAnimating = false;
     }
 
+    //Makes sure a digit button always has one valid number in the Inspector
     private void OnValidate()
     {
         if (action == ButtonAction.Digit &&

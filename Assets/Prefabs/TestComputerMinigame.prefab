@@ -84,8 +84,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5637219336767468870}
-  - component: {fileID: 7395348187318939370}
-  - component: {fileID: 7656030881967386946}
+  - component: {fileID: 1496134677912463107}
   m_Layer: 0
   m_Name: TestComputerMinigame
   m_TagString: Untagged
@@ -111,7 +110,7 @@ Transform:
   - {fileID: 3844023755766248809}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7395348187318939370
+--- !u!114 &1496134677912463107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,30 +119,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 6891687133026864766}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbbbe2c1d9af58c40a344cdb5518ae3c, type: 3}
+  m_Script: {fileID: 11500000, guid: dafed808b19760f489626d9ca1c8a65f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MinigameCameraController
+  m_EditorClassIdentifier: Assembly-CSharp::MinigameInteractable
   playerCamera: {fileID: 0}
-  minigameCamera: {fileID: 3430378401610421196}
+  interactableCamera: {fileID: 3430378401610421196}
   playerCameraController: {fileID: 0}
   playerInput: {fileID: 0}
-  exitMinigameAction: {fileID: 3096587151458098151, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+  exitInteractableAction: {fileID: 3096587151458098151, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
   defaultActionMap: Player
-  minigameActionMap: Minigame
+  interactableActionMap: Minigame
   transitionDuration: 0.5
---- !u!114 &7656030881967386946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6891687133026864766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bc5573cd2eeb3b4aab90e065b9ed09c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ComputerTerminal
-  cameraController: {fileID: 7395348187318939370}
+  activeCameraPriority: 20
+  inactiveCameraPriority: 10
+  unlockCursorWhileActive: 0
+  highlightRenderer: {fileID: 9181267654996275265}
+  highlightColor: {r: 1, g: 0.9699724, b: 0.5896226, a: 1}
   onHover:
     m_PersistentCalls:
       m_Calls:
@@ -174,7 +165,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onInteracted:
+  onInteractableEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  onInteractableExited:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
@@ -187,19 +181,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7395348187318939370}
-        m_TargetAssemblyTypeName: MinigameCameraController, Assembly-CSharp
-        m_MethodName: EnterMinigame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &8883421644182449480
 GameObject:
