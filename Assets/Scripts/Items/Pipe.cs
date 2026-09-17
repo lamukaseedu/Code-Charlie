@@ -4,42 +4,17 @@
  */
 
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class PlayerMelee : MonoBehaviour
+public class Pipe : MonoBehaviour, IUsable
 {
     [SerializeField] float damage = 1f;
     [SerializeField] float range = 2f;
     [SerializeField] float radius = 0.6f;
     [SerializeField] LayerMask hitMask = ~0;
-
-    [SerializeField] private GameObject meleeWeapon;
-
-    private InputAction attackAction;
-
-    // Caches the Attack action from the player's Input System asset
-    private void Awake()
-    {
-        PlayerInput playerInput = GetComponentInParent<PlayerInput>();
-        attackAction = playerInput.actions["Attack"];
-    }
-
-    private void OnEnable()
-    {
-        meleeWeapon.SetActive(true);
-    }
-
+    
     // Damages IDamageable targets in a sphere in front of the camera on click
-    private void Update()
-    {
-        if (attackAction.WasPressedThisFrame())
-        {
-            TryAttack();
-        }
-    }
-
     // Overlaps a sphere in look direction and applies damage, skipping the player
-    private void TryAttack()
+    public void Use()
     {
         Transform origin = Camera.main.transform;
         Vector3 center = origin.position + origin.forward * range;
@@ -73,10 +48,5 @@ public class PlayerMelee : MonoBehaviour
         Vector3 center = origin.position + origin.forward * range;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(center, radius);
-    }
-
-    private void OnDisable()
-    {
-        meleeWeapon.SetActive(false);
     }
 }
