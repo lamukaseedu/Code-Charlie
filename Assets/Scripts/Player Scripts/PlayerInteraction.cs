@@ -49,7 +49,9 @@ public class PlayerInteraction : MonoBehaviour
         int raycastLayers =
         interactionLayer.value | blockRaycastLayers.value;
 
-        if (playerCamera != null &&
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            if (playerCamera != null &&
             Physics.Raycast(
                 playerCamera.transform.position,
                 playerCamera.transform.forward,
@@ -57,18 +59,46 @@ public class PlayerInteraction : MonoBehaviour
                 interactionDistance,
                 raycastLayers,
                 QueryTriggerInteraction.Collide))
-        {
-            int hitLayer = hit.collider.gameObject.layer;
-
-            bool hitIsInteractable =
-                (interactionLayer.value & (1 << hitLayer)) != 0;
-
-            if (hitIsInteractable)
             {
-                detectedInteractable =
-                    hit.collider.GetComponentInParent<IInteractable>();
+                int hitLayer = hit.collider.gameObject.layer;
+
+                bool hitIsInteractable =
+                    (interactionLayer.value & (1 << hitLayer)) != 0;
+
+                if (hitIsInteractable)
+                {
+                    detectedInteractable =
+                        hit.collider.GetComponentInParent<IInteractable>();
+                }
             }
         }
+        else if (Cursor.lockState == CursorLockMode.None)
+        {
+
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            Ray ray = playerCamera.ScreenPointToRay(mousePosition);
+
+            if (playerCamera != null &&
+            Physics.Raycast(
+                ray,
+                out RaycastHit hit,
+                interactionDistance,
+                raycastLayers,
+                QueryTriggerInteraction.Collide))
+            {
+                int hitLayer = hit.collider.gameObject.layer;
+
+                bool hitIsInteractable =
+                    (interactionLayer.value & (1 << hitLayer)) != 0;
+
+                if (hitIsInteractable)
+                {
+                    detectedInteractable =
+                        hit.collider.GetComponentInParent<IInteractable>();
+                }
+            }
+        }
+        
 
         // The player is still looking at the same object.
         if (detectedInteractable == currentInteractable)
