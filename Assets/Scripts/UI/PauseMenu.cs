@@ -16,7 +16,11 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GraphicRaycaster raycaster;
         
     private InputAction pauseAction;
-    private InputActionMap playerMap;
+    private InputActionMap uiMap;
+    private InputActionMap actionMapBeforePause;
+
+    private CursorLockMode cursorLockBeforePause;
+    private bool cursorVisibilityBeforePause;
     private bool isPaused;
     private WatchControl watchControl;
 
@@ -36,6 +40,9 @@ public class PauseMenu : MonoBehaviour
     private void OnDisable()
     {
         Time.timeScale = 1f;
+
+        if (isPaused && actionMapBeforePause != null)
+            actionMapBeforePause.Enable();
     }
 
     private void Update()
@@ -105,10 +112,22 @@ public class PauseMenu : MonoBehaviour
 
         if (paused)
         {
+            //Remember the actionMap that the player was using before paused
+            actionMapBeforePause = playerInput.currentActionMap;
+
+            //Also remember the cursor state that the player was using before paused
+            cursorLockBeforePause = Cursor.lockState;
+            cursorVisibilityBeforePause = Cursor.visible;
+
+
             CloseSettings();
-            playerMap.Disable();
+
+            if (actionMapBeforePause != null)
+                actionMapBeforePause.Disable();
+
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
             return;
         }
 
