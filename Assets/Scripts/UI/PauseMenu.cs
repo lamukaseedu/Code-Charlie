@@ -5,6 +5,7 @@
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -12,13 +13,16 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject pauseMenuRoot;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject settingsPanel;
-
+    [SerializeField] private GraphicRaycaster raycaster;
+        
     private InputAction pauseAction;
     private InputActionMap playerMap;
     private bool isPaused;
+    private WatchControl watchControl;
 
     private void Awake()
     {
+        watchControl = playerInput.GetComponentInChildren<WatchControl>(true);
         playerMap = playerInput.actions.FindActionMap("Player");
         playerInput.actions.FindActionMap("UI").Enable();
         pauseAction = playerInput.actions["Pause"];
@@ -44,6 +48,7 @@ public class PauseMenu : MonoBehaviour
         if (!isPaused)
         {
             SetPaused(true);
+            raycaster.enabled = true;
             return;
         }
 
@@ -59,6 +64,7 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         SetPaused(false);
+        raycaster.enabled = false;
     }
 
     public void OpenSettings()
@@ -112,6 +118,11 @@ public class PauseMenu : MonoBehaviour
         }
 
         playerMap.Enable();
+        if (watchControl != null && watchControl.isActiveAndEnabled)
+        {
+            watchControl.RestorePlayerControls();
+            return;
+        }
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
