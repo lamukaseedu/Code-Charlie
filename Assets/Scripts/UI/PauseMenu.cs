@@ -27,7 +27,6 @@ public class PauseMenu : MonoBehaviour
     private void Awake()
     {
         watchControl = playerInput.GetComponentInChildren<WatchControl>(true);
-        playerMap = playerInput.actions.FindActionMap("Player");
         playerInput.actions.FindActionMap("UI").Enable();
         pauseAction = playerInput.actions["Pause"];
     }
@@ -135,8 +134,7 @@ public class PauseMenu : MonoBehaviour
         {
             settingsPanel.SetActive(false);
         }
-
-        playerMap.Enable();
+        
         if (watchControl != null && watchControl.isActiveAndEnabled)
         {
             watchControl.RestorePlayerControls();

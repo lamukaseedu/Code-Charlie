@@ -410,7 +410,7 @@ Transform:
   m_GameObject: {fileID: 1845692414772917617}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3, y: -0.4, z: 0.65}
+  m_LocalPosition: {x: 0.45, y: -0.45, z: 0.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1280,8 +1280,6 @@ MonoBehaviour:
   mapPanel: {fileID: 7182839529642625195}
   inventoryButton: {fileID: 4459964852727475541}
   mapButton: {fileID: 8368772012318982242}
-  inventoryTabHighlight: {fileID: 0}
-  mapTabHighlight: {fileID: 0}
   startingTab: 0
 --- !u!1 &3974480410459393963
 GameObject:
@@ -1624,7 +1622,6 @@ GameObject:
   - component: {fileID: 25235935112057516}
   - component: {fileID: 7143390117399302350}
   - component: {fileID: 3077178942325623481}
-  - component: {fileID: 8422264388429490500}
   - component: {fileID: 2326529068542717487}
   m_Layer: 0
   m_Name: Player
@@ -1721,21 +1718,6 @@ CharacterController:
   m_SkinWidth: 0.005
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8422264388429490500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4543756621194945030}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcdcd0530dad3c742813a1cb3333e455, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponSwitcher
-  weapons:
-  - {fileID: 0}
-  - {fileID: 8915089038012151634}
 --- !u!114 &2326529068542717487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1750,7 +1732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   slots:
   - {fileID: 11400000, guid: 823f49bf638ffcc4c928db9422d0eebe, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 722346347b5731f4393df24a8599a00f, type: 2}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -2482,7 +2464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3450116339487493484
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2663,7 +2645,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6768979416999183104}
   - component: {fileID: 8856822823882141347}
-  - component: {fileID: 8915089038012151634}
   m_Layer: 0
   m_Name: PlayerCameraHolder
   m_TagString: Untagged
@@ -2701,24 +2682,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61ad39d3231b8f54681861bdbb9823ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
---- !u!114 &8915089038012151634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7778692973113614882}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 965d8bcfc020751488afe78137b82d5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerGun
-  damage: 25
-  range: 100
-  fireRate: 0.5
-  NailPrefab: {fileID: 2034603179677174668, guid: 2dd50cc2c2416f84587f06e64dbbcfc5, type: 3}
-  Muzzle: {fileID: 0}
-  bulletTrailPrefab: {fileID: 4744646803173004771, guid: bd69c8c48c9996946ac1772a121228cf, type: 3}
 --- !u!1 &7916453750244758937
 GameObject:
   m_ObjectHideFlags: 0
