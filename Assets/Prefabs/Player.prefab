@@ -122,6 +122,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   dampingTime: 0.2
+  shakeAmplitude: 1.5
+  shakeFrequency: 8
+  shakeDuration: 0.25
 --- !u!1 &3974480410459393963
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,6 +381,7 @@ GameObject:
   - component: {fileID: 766661932925906183}
   - component: {fileID: 8422264388429490500}
   - component: {fileID: 8568174554154726398}
+  - component: {fileID: 799525877273213033}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -526,6 +530,41 @@ MonoBehaviour:
   Muzzle: {fileID: 2034407536410548947}
   bulletTrailPrefab: {fileID: 4744646803173004771, guid: bd69c8c48c9996946ac1772a121228cf, type: 3}
   playerCamera: {fileID: 0}
+--- !u!114 &799525877273213033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe4a65939b4f25458571b2d2885e52d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 100
+  destroyOnDeath: 0
+  onDamaged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7508158847261980418}
+        m_TargetAssemblyTypeName: PlayerViewBobbing, Assembly-CSharp
+        m_MethodName: Shake
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  onHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5992438273437588460
 GameObject:
   m_ObjectHideFlags: 0
