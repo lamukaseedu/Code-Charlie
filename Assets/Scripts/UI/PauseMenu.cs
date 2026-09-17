@@ -3,6 +3,7 @@
  * Created: 9/9/2026
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -13,22 +14,32 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject pauseMenuRoot;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject settingsPanel;
-    [SerializeField] private GraphicRaycaster raycaster;
-        
+    [Tooltip("Graphic Raycaster on the pause Canvas, not the watch Canvas. Auto-found from Pause Menu Root when empty.")]
+    [SerializeField] private GraphicRaycaster pauseRaycaster;
+
     private InputAction pauseAction;
     private InputActionMap uiMap;
     private InputActionMap actionMapBeforePause;
+    private readonly List<InputAction> enabledActionsBeforePause = new List<InputAction>();
 
     private CursorLockMode cursorLockBeforePause;
     private bool cursorVisibilityBeforePause;
     private bool isPaused;
-    private WatchControl watchControl;
 
     private void Awake()
     {
-        watchControl = playerInput.GetComponentInChildren<WatchControl>(true);
-        playerInput.actions.FindActionMap("UI").Enable();
+        uiMap = playerInput.actions.FindActionMap("UI");
+        uiMap.Enable();
         pauseAction = playerInput.actions["Pause"];
+        if (pauseRaycaster == null)
+        {
+            Canvas pauseCanvas = pauseMenuRoot != null
+                ? pauseMenuRoot.GetComponentInParent<Canvas>(true)
+                : GetComponentInParent<Canvas>(true);
+            if (pauseCanvas != null)
+                pauseRaycaster = pauseCanvas.GetComponent<GraphicRaycaster>();
+        }
+        if (pauseRaycaster != null) pauseRaycaster.enabled = false;
     }
 
     private void Start()
@@ -38,10 +49,8 @@ public class PauseMenu : MonoBehaviour
 
     private void OnDisable()
     {
-        Time.timeScale = 1f;
-
-        if (isPaused && actionMapBeforePause != null)
-            actionMapBeforePause.Enable();
+        if (isPaused) SetPaused(false);
+        if (pauseRaycaster != null) pauseRaycaster.enabled = false;
     }
 
     private void Update()
@@ -54,7 +63,6 @@ public class PauseMenu : MonoBehaviour
         if (!isPaused)
         {
             SetPaused(true);
-            raycaster.enabled = true;
             return;
         }
 
@@ -70,7 +78,6 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         SetPaused(false);
-        raycaster.enabled = false;
     }
 
     public void OpenSettings()
@@ -101,8 +108,11 @@ public class PauseMenu : MonoBehaviour
 
     private void SetPaused(bool paused)
     {
+        if (paused && isPaused) return;
+        bool wasPaused = isPaused;
         isPaused = paused;
         Time.timeScale = paused ? 0f : 1f;
+        if (pauseRaycaster != null) pauseRaycaster.enabled = paused;
 
         if (pauseMenuRoot != null)
         {
@@ -113,6 +123,14 @@ public class PauseMenu : MonoBehaviour
         {
             //Remember the actionMap that the player was using before paused
             actionMapBeforePause = playerInput.currentActionMap;
+            enabledActionsBeforePause.Clear();
+            if (actionMapBeforePause != null)
+            {
+                foreach (InputAction action in actionMapBeforePause.actions)
+                {
+                    if (action.enabled) enabledActionsBeforePause.Add(action);
+                }
+            }
 
             //Also remember the cursor state that the player was using before paused
             cursorLockBeforePause = Cursor.lockState;
@@ -134,13 +152,22 @@ public class PauseMenu : MonoBehaviour
         {
             settingsPanel.SetActive(false);
         }
-        
-        if (watchControl != null && watchControl.isActiveAndEnabled)
+
+        // Startup has no saved input/cursor state to restore.
+        if (!wasPaused) return;
+
+        // Restore only the actions that were enabled in the player or minigame map.
+        // The watch may have deliberately disabled movement and look before pausing.
+        if (actionMapBeforePause != null)
         {
-            watchControl.RestorePlayerControls();
-            return;
+            foreach (InputAction action in enabledActionsBeforePause)
+                action.Enable();
+            actionMapBeforePause = null;
         }
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        enabledActionsBeforePause.Clear();
+
+        //Restore the correct cursor state for that map.
+        Cursor.lockState = cursorLockBeforePause;
+        Cursor.visible = cursorVisibilityBeforePause;
     }
 }

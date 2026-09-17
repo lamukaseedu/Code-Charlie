@@ -86,6 +86,12 @@ public class InventoryUI : MonoBehaviour
         if (!CanInteract || draggedSlot < 0 || dragIcon == null) return;
         Canvas canvas = dragIcon.canvas;
         Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+
+        if (canvas.renderMode != RenderMode.ScreenSpaceOverlay && camera == null)
+        {
+            camera = Camera.main;
+            if (camera == null) return;
+        }
         if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
                 dragIcon.rectTransform.parent as RectTransform, position, camera, out Vector3 world))
             dragIcon.rectTransform.position = world;
