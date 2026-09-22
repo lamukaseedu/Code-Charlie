@@ -5,9 +5,8 @@
 
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class PlayerMelee : MonoBehaviour
+public class Pipe : MonoBehaviour, IUsable
 {
     [SerializeField] float damage = 1f;
     [SerializeField] float range = 2f;
@@ -55,7 +54,7 @@ public class PlayerMelee : MonoBehaviour
         TryAttack();
     }
     // Overlaps a sphere in look direction and applies damage, skipping the player
-    private void TryAttack()
+    public void Use()
     {
         Transform origin = Camera.main.transform;
         Vector3 center = origin.position + origin.forward * range;
@@ -94,10 +93,5 @@ public class PlayerMelee : MonoBehaviour
         Vector3 center = origin.position + origin.forward * range;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(center, radius);
-    }
-
-    private void OnDisable()
-    {
-        meleeWeapon.SetActive(false);
     }
 }

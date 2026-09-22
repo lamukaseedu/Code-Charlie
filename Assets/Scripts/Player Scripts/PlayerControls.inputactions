@@ -47,7 +47,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "Attack",
+                    "name": "Use",
                     "type": "Button",
                     "id": "90c4b911-eb96-40b8-988f-0e6b946e8b00",
                     "expectedControlType": "",
@@ -57,49 +57,29 @@
                     "priority": 0
                 },
                 {
-                    "name": "Shoot",
-                    "type": "Button",
-                    "id": "f2b270c2-b091-4672-913f-7254c838a6d5",
-                    "expectedControlType": "",
+                    "name": "Equip",
+                    "type": "Value",
+                    "id": "360efa48-fe76-4900-90d9-44e6cb6f4ac1",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false,
+                    "initialStateCheck": true,
                     "priority": 0
                 },
                 {
-                    "name": "NextWeapon",
-                    "type": "Button",
-                    "id": "a7c31e8d-4f2b-4c9a-8e15-6d91b0c4e2f3",
-                    "expectedControlType": "",
+                    "name": "Scroll",
+                    "type": "Value",
+                    "id": "72ac6c41-f81f-4a66-a036-f741e55a7720",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false,
+                    "initialStateCheck": true,
                     "priority": 0
                 },
                 {
-                    "name": "PreviousWeapon",
+                    "name": "MinigameInteract",
                     "type": "Button",
-                    "id": "b8d42f9e-5a3c-4d0b-9f26-7e02c1d5f304",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "Weapon1",
-                    "type": "Button",
-                    "id": "c9e530af-6b4d-4e1c-a037-8f13d2e60415",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "Weapon2",
-                    "type": "Button",
-                    "id": "daf641b0-7c5e-4f2d-b148-9a24e3f71526",
+                    "id": "0e68229e-f842-4e1d-98d2-e44d86f52302",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -203,73 +183,123 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "Use",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "3c5de341-ae09-4a17-a8aa-8a37ac5032c4",
-                    "path": "<Mouse>/leftButton",
+                    "id": "b1f0d4c2-42cc-48b2-af11-1c3d554bd3a6",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "Scale",
+                    "groups": "",
+                    "action": "Equip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "209e897c-ef96-4c13-b073-be2e829f3bdf",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "Scale(factor=2)",
+                    "groups": "",
+                    "action": "Equip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "77f9aaf8-33d4-4845-9830-1cc7e6775e49",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "Scale(factor=3)",
+                    "groups": "",
+                    "action": "Equip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c159a37-2379-4da3-b316-4bee866ea920",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "Scale(factor=4)",
+                    "groups": "",
+                    "action": "Equip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f1e3d17-b18d-49e5-b537-8b2cba13b57f",
+                    "path": "<Mouse>/scroll/y",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Shoot",
+                    "action": "Scroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "e10752c1-8d6f-403e-c259-0b35f4082637",
+                    "id": "d89c0e1d-914f-4614-a805-ee76b65d6aef",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MinigameInteract",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Minigame",
+            "id": "988bb82a-0e4d-4b23-a3a4-4b88c5161e30",
+            "actions": [
+                {
+                    "name": "Quit Minigame",
+                    "type": "Button",
+                    "id": "1bad2533-8b44-4142-a616-48fe29ad9f4a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Left-Click",
+                    "type": "Button",
+                    "id": "2e819d9e-72da-43ff-9b14-714a72fdf4f7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bf8d51f7-791e-4225-ba60-ae98cbaf6aff",
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "NextWeapon",
+                    "action": "Quit Minigame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "f21863d2-9e70-414f-d36a-1c46a5193748",
-                    "path": "<Mouse>/scroll/up",
+                    "id": "188d6498-e3a6-485e-8ba8-8ca66536ba6b",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "NextWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "032974e3-0f81-4250-e47b-2d57b62a4859",
-                    "path": "<Mouse>/scroll/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PreviousWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "143085f4-1092-4361-f58c-3e68c73b5960",
-                    "path": "<Keyboard>/1",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Weapon1",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "25419605-21a3-4472-069d-4f79d84c6071",
-                    "path": "<Keyboard>/2",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Weapon2",
+                    "action": "Left-Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -299,6 +329,35 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Watch",
+            "id": "cc7ea1de-f6ae-4059-a1e3-dedd9e2ec9e3",
+            "actions": [
+                {
+                    "name": "Toggle",
+                    "type": "Button",
+                    "id": "0e626ba3-ad21-4e6a-aff8-cf4ff6127762",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3a0e2927-6fe6-4823-9a42-fd985adcbf48",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

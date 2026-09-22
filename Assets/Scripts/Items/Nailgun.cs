@@ -2,12 +2,9 @@
  * Author: Shelton Joseph
  * Created: 8/30/2026
  */
-using Unity.Cinemachine;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class PlayerGun : MonoBehaviour
+public class Nailgun : MonoBehaviour, IUsable
 {
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
@@ -17,44 +14,31 @@ public class PlayerGun : MonoBehaviour
 
     [SerializeField] private GameObject NailPrefab;
 
-    [SerializeField] private GameObject Gun;
-
     [SerializeField] private Transform Muzzle;
 
     [SerializeField] private LineRenderer bulletTrailPrefab;
-    [SerializeField] private Camera playerCamera;
+    private Camera playerCamera;
 
     [SerializeField] private Animator recoilAnimator;
 
     private float nextFireTime = 0f;
 
-    private InputAction shootAction;
-
     private void Awake()
     {
-        PlayerInput playerInput = GetComponentInParent<PlayerInput>();
-        shootAction = playerInput.actions["Shoot"];
-    }
-
-    private void OnEnable()
-    {
-        Gun.SetActive(true);
-        Debug.Log("Gun activated");
-    }
-
-    private void Update()
-    {
-        if (shootAction.IsPressed())
-        {
-            Shoot();
-        }
+        playerCamera = Camera.main;
     }
 
     //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
     //Also creates a nail object embedded where ray hits object
-    private void Shoot()
+    public void Use()
     {
-        if (Time.time < nextFireTime)
+        if (!isActiveAndEnabled || Time.time < nextFireTime)
+            return;
+
+        if (playerCamera == null)
+            playerCamera = Camera.main;
+
+        if (playerCamera == null)
             return;
 
         nextFireTime = Time.time + fireRate;
@@ -122,10 +106,5 @@ public class PlayerGun : MonoBehaviour
         trail.SetPosition(1, hitPoint);
 
         Destroy(trail.gameObject, 0.05f);
-    }
-
-    private void OnDisable()
-    {
-        Gun.SetActive(false);
     }
 }
