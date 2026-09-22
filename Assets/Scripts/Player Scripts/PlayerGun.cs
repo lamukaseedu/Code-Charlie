@@ -13,6 +13,8 @@ public class PlayerGun : MonoBehaviour
     [SerializeField] private float range = 100f;
     [SerializeField] private float fireRate = 0.5f;
 
+    [SerializeField] private float spread = 2f;
+
     [SerializeField] private GameObject NailPrefab;
 
     [SerializeField] private GameObject Gun;
@@ -21,6 +23,8 @@ public class PlayerGun : MonoBehaviour
 
     [SerializeField] private LineRenderer bulletTrailPrefab;
     [SerializeField] private Camera playerCamera;
+
+    [SerializeField] private Animator recoilAnimator;
 
     private float nextFireTime = 0f;
 
@@ -57,10 +61,23 @@ public class PlayerGun : MonoBehaviour
 
         Debug.Log("Bang");
 
+        Vector3 direction = playerCamera.transform.forward;
+
+        direction = Quaternion.Euler(
+        Random.Range(-spread, spread),
+        Random.Range(-spread, spread),
+        0f
+        ) * direction;
+
         Ray ray = new Ray(
             playerCamera.transform.position,
-            playerCamera.transform.forward
+            direction
         );
+
+        if (recoilAnimator != null)
+        {
+            recoilAnimator.SetTrigger("recoilTrigger");
+        }
 
         Debug.DrawRay(
         ray.origin,
@@ -76,7 +93,7 @@ public class PlayerGun : MonoBehaviour
             hitPoint = hit.point;
 
             GameObject Nail = Instantiate(NailPrefab, hit.point, Quaternion.LookRotation(playerCamera.transform.up));
-            Nail.transform.SetParent(hit.collider.transform);
+            Nail.transform.SetParent(hit.collider.transform, true);
 
             Destroy(Nail, 5.0f);
 
@@ -110,6 +127,5 @@ public class PlayerGun : MonoBehaviour
     private void OnDisable()
     {
         Gun.SetActive(false);
-        Debug.Log("Gun unactivated");
     }
 }

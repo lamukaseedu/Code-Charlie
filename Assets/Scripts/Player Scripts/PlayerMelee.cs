@@ -3,6 +3,7 @@
  * Created: 8/30/2026
  */
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,7 +16,11 @@ public class PlayerMelee : MonoBehaviour
 
     [SerializeField] private GameObject meleeWeapon;
 
+    [SerializeField] private Animator swingAnimator;
+
     private InputAction attackAction;
+
+    private bool swingType = true;
 
     // Caches the Attack action from the player's Input System asset
     private void Awake()
@@ -34,10 +39,21 @@ public class PlayerMelee : MonoBehaviour
     {
         if (attackAction.WasPressedThisFrame())
         {
-            TryAttack();
+            if (swingAnimator != null)
+            {
+                swingAnimator.SetBool("swingAlternator", swingType);
+                swingAnimator.SetTrigger("swingTrigger");
+                swingType = !swingType;
+            }
+            StartCoroutine(HitDelay());
         }
     }
 
+    IEnumerator HitDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        TryAttack();
+    }
     // Overlaps a sphere in look direction and applies damage, skipping the player
     private void TryAttack()
     {
@@ -53,9 +69,14 @@ public class PlayerMelee : MonoBehaviour
             }
 
             IDamageable damageable = hits[i].GetComponentInParent<IDamageable>();
+            IKnockable knockable = hits[i].GetComponentInParent<IKnockable>();
             if (damageable != null)
             {
                 damageable.TakeDamage(damage);
+            }
+            if (knockable != null)
+            {
+                knockable.Execute(transform);
             }
         }
     }
