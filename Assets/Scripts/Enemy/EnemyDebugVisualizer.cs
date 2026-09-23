@@ -1,5 +1,7 @@
 using UnityEngine;
 
+//Author Gabriel[gameplay design]
+
 [RequireComponent(typeof(EnemyDetection))]
 public class EnemyDebugVisualizer : MonoBehaviour
 {

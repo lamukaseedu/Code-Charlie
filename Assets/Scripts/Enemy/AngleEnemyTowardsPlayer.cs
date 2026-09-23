@@ -28,11 +28,17 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private Animator enemyAnimation;
+    [Tooltip("How quickly the enemy rotates to face the player.")]
+    [SerializeField] private float turnSpeed = 8f;
 
     [Header("Direction Debugging")]
     [SerializeField] private float angleToPlayer;
     [SerializeField] private int directionIndex;
-    
+
+    private EnemyLookAround enemyLookAround;
+    private Vector3 lastPosition;
+    private float currentSpriteAngle;
+    private int lastDirectionIndex = 0;
 
     [Header("Target Position and Direction")]
     [SerializeField] private Vector3 targetPosition;
@@ -42,6 +48,13 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
     private void Awake()
     {
         enemyAnimation = GetComponentInChildren<Animator>();
+        enemyLookAround = GetComponent<EnemyLookAround>();
+        if (enemyLookAround != null)
+        {
+            // EnemyDetection still uses transform.forward for LOS, so we keep the rotation here and disable the old look script so they do not fight each other.
+            enemyLookAround.enabled = false;
+        }
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         if (player != null)
@@ -56,31 +69,45 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
             );
         }
 
+        lastPosition = transform.position;
     }
 
-    // Updates the direction index and temporary debug color.
+    // Rotate the enemy smoothly toward the player so the sprite and LOS both turn with a visible delay.
     private void Update()
     {
+        if (playerTarget == null || enemyAnimation == null)
+        {
+            return;
+        }
 
-        targetPosition = new Vector3(
+        Vector3 targetPositionFlat = new Vector3(
             playerTarget.position.x,
             transform.position.y,
             playerTarget.position.z
         );
 
-        directionToPlayer = targetPosition - transform.position;
+        Vector3 directionToPlayer = targetPositionFlat - transform.position;
+        if (directionToPlayer.sqrMagnitude > 0.0001f)
+        {
+            Quaternion desiredRotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                desiredRotation,
+                turnSpeed * Time.deltaTime
+            );
 
-
-        angleToPlayer = Vector3.SignedAngle(
-            directionToPlayer,
-            transform.forward,
-            Vector3.up
-        );
-
-        directionIndex = GetDirectionIndex(angleToPlayer);
+            angleToPlayer = Vector3.SignedAngle(directionToPlayer, transform.forward, Vector3.up);
+            directionIndex = GetDirectionIndex(angleToPlayer);
+            lastDirectionIndex = directionIndex;
+        }
+        else
+        {
+            // Keep the last valid direction when the enemy is not moving or the target is too close.
+            directionIndex = lastDirectionIndex;
+        }
 
         enemyAnimation.SetFloat("SpriteRot", directionIndex);
-
+        lastPosition = transform.position;
     }
 
     // Converts an angle into one of eight 45-degree direction sections.

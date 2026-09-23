@@ -1125,6 +1125,34 @@ MonoBehaviour:
     m_Bits: 0
   eyeHeight: 1.2
   drawGizmos: 1
+--- !u!114 &550140249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550140240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb1a3fb650864249a58bdd68b2f627a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AngleEnemyTowardsPlayer
+  spriteRenderer: {fileID: 0}
+  directionalSprites:
+    front: {fileID: 0}
+    frontRight: {fileID: 0}
+    right: {fileID: 0}
+    backRight: {fileID: 0}
+    back: {fileID: 0}
+    backLeft: {fileID: 0}
+    left: {fileID: 0}
+    frontLeft: {fileID: 0}
+  enemyAnimation: {fileID: 0}
+  turnSpeed: 12
+  angleToPlayer: 0
+  directionIndex: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  directionToPlayer: {x: 0, y: 0, z: 0}
 --- !u!1 &551321421
 GameObject:
   m_ObjectHideFlags: 0
@@ -3790,6 +3818,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestEnemyObject3D
       objectReference: {fileID: 0}
+    - target: {fileID: 2389798138364565802, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3893007734588057090, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
       propertyPath: m_ReceiveShadows
       value: 1
@@ -3838,7 +3870,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2389798138364565802, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -3851,6 +3884,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2200295589236478584, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
       insertIndex: -1
       addedObject: {fileID: 550140245}
+    - targetCorrespondingSourceObject: {fileID: 2200295589236478584, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 550140249}
   m_SourcePrefab: {fileID: 100100000, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
 --- !u!1 &2021893588
 GameObject:
