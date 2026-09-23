@@ -4,34 +4,62 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyDetection))]
 public class EnemyMovement : MonoBehaviour
 {
-    [Header("Speeds")]                          
+    [Header("Speeds")]
     public float investigateSpeed = 1.5f;
     public float chaseSpeed = 3f;
     public float stopDistance = 0.2f;
 
-    EnemyDetection detection; // Enemy movement asks "do we have somewhere to go?" "am i chasing or investigating?"
+    [Header("Turning")]
+    public float turnSpeed = 180f;
 
-    void Awake()
+    private EnemyDetection detection;
+
+    private void Awake()
     {
-        detection = GetComponent<EnemyDetection>(); // This is where you place the enemy detection script in the inspector 
+        detection = GetComponent<EnemyDetection>();
     }
 
-    void Update()
+    private void Update()
     {
-        if (detection == null) return; // If no script, dont do anything
+        if (detection == null || !detection.HasWaypoint)
+            return;
 
-        if (detection.HasWaypoint)
+        Vector3 target = detection.CurrentWaypoint;
+        target.y = transform.position.y;
+
+        Vector3 moveDirection = target - transform.position;
+        moveDirection.y = 0f;
+
+        float distanceToTarget = moveDirection.magnitude;
+
+        if (distanceToTarget > 0.0001f)
         {
-            Vector3 target = detection.CurrentWaypoint; // "CurrentWaypoint"comes from enemy detection.
-            target.y = transform.position.y;  // This marks where the sound/player is.
+            // Gradually turn toward the direction the enemy is moving.
+            Quaternion targetRotation = Quaternion.LookRotation(
+                moveDirection,
+                Vector3.up
+            );
 
-            float speed = detection.State == EnemyDetection.DetectionState.Chasing ? chaseSpeed : investigateSpeed; // Is the enemy investigating or chasing? if chasing, use chase speed, if investigating, use investigate speed.
-            transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
-
-            if (Vector3.Distance(transform.position, target) <= stopDistance)
-            {
-                detection.ClearWaypoint(); // When you reach the player, important this part needs more work, currently no variable to assing when the enemy should atack the player, so it just stops when it reaches the player. 
-            }
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                turnSpeed * Time.deltaTime
+            );
         }
+
+        float speed = detection.State == EnemyDetection.DetectionState.Chasing
+            ? chaseSpeed
+            : investigateSpeed;
+
+        if (distanceToTarget <= stopDistance)
+        {
+            detection.ClearWaypoint();
+            return;
+        }
+
+        float step = speed * Time.deltaTime;
+        float actualMove = Mathf.Min(step, distanceToTarget);
+
+        transform.position += moveDirection.normalized * actualMove;
     }
 }
