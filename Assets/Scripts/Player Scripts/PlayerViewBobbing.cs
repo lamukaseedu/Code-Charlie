@@ -3,16 +3,18 @@
  * Created: 9/1/2026
  */
 
-using System;
 using Unity.Cinemachine;
 using UnityEngine;
 
 public class PlayerViewBobbing : MonoBehaviour
 {
+    [SerializeField, Min(0.01f)] private float dampingTime = 0.2f;
+
     private CharacterController controller;
     private CinemachineBasicMultiChannelPerlin noise;
     private PlayerMovement movement;
-    private float speed;
+    private float amplitudeVelocity;
+    private float frequencyVelocity;
 
     // Assign variables
     private void Awake()
@@ -22,19 +24,24 @@ public class PlayerViewBobbing : MonoBehaviour
         movement = GetComponentInParent<PlayerMovement>();
     }
 
-    // Check if the player is moving, then adjust amplitude and frequency of bobbing based on speed
+    // Ease the bobbing in and out as movement speed changes.
     void Update()
     {
+        float targetAmplitude = 0f;
+        float targetFrequency = 0f;
+
         if (movement.CheckMovement())
         {
-            speed = controller.velocity.magnitude;
-            noise.AmplitudeGain = Mathf.Lerp(0, 0.2f, Mathf.Round((speed / 10f) * 100f) / 100f);
-            noise.FrequencyGain = Mathf.Lerp(0, 2f, Mathf.Round((speed / 10f) * 100f) / 100f);
+            Vector3 velocity = controller.velocity;
+            float speed = new Vector2(velocity.x, velocity.z).magnitude;
+            float speedFactor = Mathf.Clamp01(speed / 10f);
+            targetAmplitude = 0.2f * speedFactor;
+            targetFrequency = 2f * speedFactor;
         }
-        else
-        {
-            noise.AmplitudeGain = 0f;
-            noise.FrequencyGain = 0f;
-        }
+
+        noise.AmplitudeGain = Mathf.SmoothDamp(
+            noise.AmplitudeGain, targetAmplitude, ref amplitudeVelocity, dampingTime);
+        noise.FrequencyGain = Mathf.SmoothDamp(
+            noise.FrequencyGain, targetFrequency, ref frequencyVelocity, dampingTime);
     }
 }
