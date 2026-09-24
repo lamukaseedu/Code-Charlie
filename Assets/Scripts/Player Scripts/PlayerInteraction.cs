@@ -15,23 +15,32 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private LayerMask blockRaycastLayers;
 
     [Header("Input")]
-    [SerializeField] private InputActionReference buttonInteractable;
+    [SerializeField] private InputActionReference[] interactActions;
 
     private IInteractable currentInteractable;
 
     //Begins listening for user to press the key to activate interactable 
     private void OnEnable()
     {
-
-        buttonInteractable.action.performed += OnInteract;
-        buttonInteractable.action.Enable();
+        foreach (InputActionReference actionReference in interactActions)
+        {
+            if (actionReference != null)
+            {
+                actionReference.action.performed += OnInteract;
+            }
+        }
     }
 
     //Stops listening for user to press the key to activate interactable
     private void OnDisable()
     {
-        buttonInteractable.action.performed -= OnInteract;
-        buttonInteractable.action.Disable();
+        foreach (InputActionReference actionReference in interactActions)
+        {
+            if (actionReference != null)
+            {
+                actionReference.action.performed -= OnInteract;
+            }
+        }
         ClearCurrentInteractable();
     }
 
@@ -121,7 +130,10 @@ public class PlayerInteraction : MonoBehaviour
         FindInteractable();
     }
 
-
+    public void ClearTarget()
+    {
+        ClearCurrentInteractable();
+    }
     private void OnInteract(InputAction.CallbackContext context)
     {
         Debug.Log($"E received. Target: {currentInteractable}");

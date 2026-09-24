@@ -1,4 +1,5 @@
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -9,35 +10,35 @@ public class ItemHover : MonoBehaviour, IInteractable
      * Author: Andres Rondon-Villarmosa
      * Created: 9/14/2026
      */
+    [Header("Item")]
+    [SerializeField] private Item item;
 
-    [Header("Player Control")]
-    [SerializeField] private PlayerCamera playerCameraController;
-
-    [Header("Input")]
-    [SerializeField] private PlayerInput playerInput;
+    [Header("Player Inventory")]
+    [SerializeField] private PlayerInventory playerInventory;
+    [SerializeField] private PlayerInteraction playerInteraction;
 
 
     [Header("Hover Highlight")]
     [Tooltip("Renderer whose color changes while the player looks at this interactable.")]
-    [SerializeField] private Renderer highlightRenderer;
+    [SerializeField] private Renderer[] highlightRenderers;
     [SerializeField] private Color highlightColor = new(0.15f, 0.8f, 1f, 1f);
 
     [Header("Interaction Events")]
     [SerializeField] private UnityEvent onHover;
     [SerializeField] private UnityEvent onUnhover;
-    [SerializeField] private UnityEvent onInteractableEntered;
+    [SerializeField] private UnityEvent onItemPickedUp;
 
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
     private static readonly int ColorId = Shader.PropertyToID("_Color");
 
     private MaterialPropertyBlock propertyBlock;
-    private Color normalColor = Color.white;
+    private Color[] normalColors;
     private int colorPropertyId;
 
     private void Awake()
     {
-        if (highlightRenderer == null)
-            highlightRenderer = GetComponentInChildren<Renderer>();
+        if (highlightRenderers == null)
+            highlightRenderers = GetComponentsInChildren<Renderer>();
 
         CacheMaterialColor();
     }
@@ -59,51 +60,67 @@ public class ItemHover : MonoBehaviour, IInteractable
     // Called by PlayerInteraction when the player presses the interact button.
     public void Interact()
     {
-        EnterInteractable();
+        PickUpItem();
     }
 
-    public void EnterInteractable()
+    public void PickUpItem()
     {
-        SetHighlighted(false);
-        onUnhover?.Invoke();
-        onInteractableEntered?.Invoke();
+        bool addedSuccessfully = playerInventory.AddItem(item);
+        if (!addedSuccessfully)
+        {
+            Debug.Log("Inventory is full.");
+            return;
+        }
+        playerInteraction?.ClearTarget();
+        onItemPickedUp?.Invoke();
+        Destroy(gameObject);
     }
 
     public void SetHighlighted(bool highlighted)
     {
-        if (highlightRenderer == null || colorPropertyId == 0)
+        if (highlightRenderers == null)
             return;
 
         propertyBlock ??= new MaterialPropertyBlock();
-
-        highlightRenderer.GetPropertyBlock(propertyBlock);
-        propertyBlock.SetColor(
-            colorPropertyId,
-            highlighted ? highlightColor : normalColor
-        );
-        highlightRenderer.SetPropertyBlock(propertyBlock);
+        
+        for (int i = 0; i< highlightRenderers.Length; i++)
+        {
+            if (highlightRenderers[i] == null)
+                continue;
+            highlightRenderers[i].GetPropertyBlock(propertyBlock);
+            propertyBlock.SetColor(
+                colorPropertyId,
+                highlighted ? highlightColor : normalColors[i]
+            );
+            highlightRenderers[i].SetPropertyBlock(propertyBlock);
+        }
+        
     }
 
     private void CacheMaterialColor()
     {
-        if (highlightRenderer == null || highlightRenderer.sharedMaterial == null)
+        if (highlightRenderers == null)
             return;
 
-        Material material = highlightRenderer.sharedMaterial;
-
-        if (material.HasProperty(BaseColorId))
-            colorPropertyId = BaseColorId;
-        else if (material.HasProperty(ColorId))
-            colorPropertyId = ColorId;
-        else
+        normalColors = new Color[highlightRenderers.Length];
+        for (int i = 0; i < highlightRenderers.Length; i++)
         {
-            Debug.LogWarning(
-                "The interactable material has no _BaseColor or _Color property.",
-                this
-            );
-            return;
-        }
+            Material material = highlightRenderers[i].sharedMaterial;
 
-        normalColor = material.GetColor(colorPropertyId);
+            if (material.HasProperty(BaseColorId))
+                colorPropertyId = BaseColorId;
+            else if (material.HasProperty(ColorId))
+                colorPropertyId = ColorId;
+            else
+            {
+                Debug.LogWarning(
+                    "The interactable material has no _BaseColor or _Color property.",
+                    this
+                );
+                return;
+            }
+
+            normalColors[i] = material.GetColor(colorPropertyId);
+        }
     }
 }
