@@ -10,6 +10,10 @@ public class Nailgun : MonoBehaviour, IUsable
     [SerializeField] private float range = 100f;
     [SerializeField] private float fireRate = 0.5f;
 
+    [Header("Ammo")]
+    [SerializeField] private PlayerInventory playerInventory;
+    [SerializeField] private Item nailAmmo;
+
     [SerializeField] private GameObject NailPrefab;
 
     [SerializeField] private Transform Muzzle;
@@ -36,6 +40,13 @@ public class Nailgun : MonoBehaviour, IUsable
 
         if (playerCamera == null)
             return;
+
+        if (playerInventory == null ||
+        !playerInventory.TryConsumeItem(nailAmmo, 1))
+        {
+            Debug.Log("Out of nails!");
+            return;
+        }
 
         nextFireTime = Time.time + fireRate;
 

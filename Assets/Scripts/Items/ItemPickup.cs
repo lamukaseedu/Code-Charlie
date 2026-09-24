@@ -13,6 +13,9 @@ public class ItemHover : MonoBehaviour, IInteractable
     [Header("Item")]
     [SerializeField] private Item item;
 
+    [Min(1)]
+    [SerializeField] private int quantity = 1;
+
     [Header("Player Inventory")]
     [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private PlayerInteraction playerInteraction;
@@ -65,7 +68,7 @@ public class ItemHover : MonoBehaviour, IInteractable
 
     public void PickUpItem()
     {
-        bool addedSuccessfully = playerInventory.AddItem(item);
+        bool addedSuccessfully = playerInventory.AddItem(item, quantity);
         if (!addedSuccessfully)
         {
             Debug.Log("Inventory is full.");

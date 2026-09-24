@@ -14,6 +14,7 @@ public class PlayerInventory : MonoBehaviour
     public const int HotbarSlotCount = 4;
 
     [SerializeField] private Item[] slots = new Item[SlotCount];
+    [SerializeField] private int[] quantities = new int[SlotCount];
     [SerializeField] private Transform equipmentHolder;
     [SerializeField] private InventoryUI inventoryUI;
 
@@ -31,11 +32,13 @@ public class PlayerInventory : MonoBehaviour
     private void OnValidate()
     {
         Array.Resize(ref slots, SlotCount);
+        Array.Resize(ref quantities, SlotCount);
     }
 
     private void Awake()
     {
         Array.Resize(ref slots, SlotCount);
+        Array.Resize(ref quantities, SlotCount);
         PlayerInput playerInput = GetComponent<PlayerInput>();
         useAction = playerInput.actions["Use"];
         equipAction = playerInput.actions["Equip"];
@@ -81,22 +84,102 @@ public class PlayerInventory : MonoBehaviour
     }
 
     public Item GetItem(int index) => IsValidSlot(index) ? slots[index] : null;
+    public int GetQuantity(int index) => IsValidSlot(index) ? quantities[index] : 0;
 
-    public bool AddItem(Item item)
+    public bool AddItem(Item item, int amount = 1)
     {
-        if (item == null)
+        if (item == null || amount <= 0)
             return false;
+
+        if (!CanAddItem(item, amount))
+            return false;
+
+        int remaining = amount;
+
+        if (item.Stackable)
+        {
+            for (int i = 0; i < SlotCount; i++)
+            {
+                if (slots[i] != item)
+                    continue;
+
+                if (quantities[i] >= item.MaxStackSize)
+                    continue;
+
+                int availableSpace =
+                    item.MaxStackSize - quantities[i];
+
+                int amountToAdd =
+                    Mathf.Min(availableSpace, remaining);
+
+                quantities[i] += amountToAdd;
+                remaining -= amountToAdd;
+
+                if (remaining <= 0)
+                    break;
+            }
+        }
 
         for (int i = 0; i < SlotCount; i++)
         {
             if (slots[i] != null)
                 continue;
             slots[i] = item;
+
+            int amountToAdd = item.Stackable ? Mathf.Min(item.MaxStackSize, remaining) : 1;
+
+            quantities[i] = amountToAdd;
+            remaining -= amountToAdd;
+
             if (i == SelectedSlot || slots[SelectedSlot] == null) RefreshEquipment();
             Changed?.Invoke();
             return true;
         }
         return false;
+    }
+
+    public bool CanAddItem(Item item, int amount = 1)
+    {
+        if (item == null || amount <= 0)
+            return false;
+
+        int availableSpace = 0;
+
+        for (int i = 0; i < SlotCount; i++)
+        {
+            // Empty slot.
+            if (slots[i] == null)
+            {
+                availableSpace += item.MaxStackSize;
+            }
+            // Existing stack of this same item.
+            else if (item.Stackable && slots[i] == item)
+            {
+                availableSpace +=
+                    item.MaxStackSize - quantities[i];
+            }
+
+            if (availableSpace >= amount)
+                return true;
+        }
+
+        return false;
+    }
+
+    public int GetItemCount(Item item)
+    {
+        if (item == null)
+            return 0;
+
+        int total = 0;
+
+        for (int i = 0; i < SlotCount; i++)
+        {
+            if (slots[i] == item)
+                total += quantities[i];
+        }
+
+        return total;
     }
 
     public Item RemoveItem(int index)
@@ -106,6 +189,7 @@ public class PlayerInventory : MonoBehaviour
 
         Item removed = slots[index];
         slots[index] = null;
+        quantities[index] = 0;
         if (instances[index] != null)
         {
             instances[index].SetActive(false);
@@ -117,12 +201,59 @@ public class PlayerInventory : MonoBehaviour
         return removed;
     }
 
+    public bool TryConsumeItem(Item item, int amount = 1)
+    {
+        if (item == null || amount <= 0)
+            return false;
+
+        if (GetItemCount(item) < amount)
+            return false;
+
+        int remaining = amount;
+
+        // Work backwards so smaller/newer stacks
+        // tend to disappear first.
+        for (int i = SlotCount - 1; i >= 0; i--)
+        {
+            if (slots[i] != item)
+                continue;
+
+            int amountToRemove =
+                Mathf.Min(quantities[i], remaining);
+
+            quantities[i] -= amountToRemove;
+            remaining -= amountToRemove;
+
+            if (quantities[i] <= 0)
+            {
+                quantities[i] = 0;
+                slots[i] = null;
+
+                if (instances[i] != null)
+                {
+                    instances[i].SetActive(false);
+                    Destroy(instances[i]);
+                    instances[i] = null;
+                }
+            }
+
+            if (remaining <= 0)
+                break;
+        }
+
+        RefreshEquipment();
+        Changed?.Invoke();
+
+        return true;
+    }
+
     public void SwapSlots(int first, int second)
     {
         if (!IsValidSlot(first) || !IsValidSlot(second) || first == second)
             return;
 
         (slots[first], slots[second]) = (slots[second], slots[first]);
+        (quantities[first], quantities[second]) = (quantities[second], quantities[first]);
         (instances[first], instances[second]) = (instances[second], instances[first]);
         if (first == SelectedSlot || second == SelectedSlot || slots[SelectedSlot] == null)
             RefreshEquipment();
