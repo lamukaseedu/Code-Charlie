@@ -32,18 +32,19 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
     [Header("Direction Debugging")]
     [SerializeField] private float angleToPlayer;
     [SerializeField] private int directionIndex;
-    
 
     [Header("Target Position and Direction")]
     [SerializeField] private Vector3 targetPosition;
     [SerializeField] private Vector3 directionToPlayer;
 
-    // Finds the player and obtains the enemy's SpriteRenderer.
+    // Finds the player, SpriteRenderer, and Animator.
     private void Awake()
     {
         enemyAnimation = GetComponentInChildren<Animator>();
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
         if (player != null)
         {
             playerTarget = player.transform;
@@ -55,12 +56,12 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
                 this
             );
         }
-
     }
 
-    // Updates the direction index and temporary debug color.
     private void Update()
     {
+        if (playerTarget == null || enemyAnimation == null)
+            return;
 
         targetPosition = new Vector3(
             playerTarget.position.x,
@@ -70,7 +71,7 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
 
         directionToPlayer = targetPosition - transform.position;
 
-
+        // Compare where the player is with the direction the enemy is facing.
         angleToPlayer = Vector3.SignedAngle(
             directionToPlayer,
             transform.forward,
@@ -80,10 +81,9 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
         directionIndex = GetDirectionIndex(angleToPlayer);
 
         enemyAnimation.SetFloat("SpriteRot", directionIndex);
-
     }
 
-    // Converts an angle into one of eight 45-degree direction sections.
+    // Converts the angle into one of eight directions.
     private int GetDirectionIndex(float angle)
     {
         float normalizedAngle = (angle + 360f) % 360f;
@@ -91,7 +91,7 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
         return Mathf.RoundToInt(normalizedAngle / 45f) % 8;
     }
 
-    // Returns the temporary individual sprite corresponding to the current direction index.CAN BE USED FOR DEBUGGING.
+    // Returns a sprite for debugging.
     private Sprite GetDirectionalSprite(int index)
     {
         switch (index)
@@ -125,40 +125,6 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
         }
     }
 
-    // Returns a temporary color representing the current direction. CAN BE USED FOR DEBUGGING.
-    private Color GetDirectionColor(int index)
-    {
-        switch (index)
-        {
-            case 0:
-                return Color.red;       
-
-            case 1:
-                return new Color(1f, 0.5f, 0f); 
-
-            case 2:
-                return Color.yellow;    
-
-            case 3:
-                return Color.green;     
-
-            case 4:
-                return Color.cyan;      
-
-            case 5:
-                return Color.blue;      
-
-            case 6:
-                return Color.magenta;   
-
-            case 7:
-                return new Color(1f, 0.4f, 0.7f); 
-
-            default:
-                return Color.white;
-        }
-    }
-
     // Draws the enemy's forward direction and direction toward the player.
     private void OnDrawGizmosSelected()
     {
@@ -166,11 +132,9 @@ public class AngleEnemyTowardsPlayer : MonoBehaviour
         Gizmos.DrawRay(transform.position, transform.forward);
 
         if (playerTarget == null)
-        {
             return;
-        }
 
-        Gizmos.color = Color.blue; 
+        Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, targetPosition);
     }
 }
