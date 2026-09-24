@@ -3,7 +3,6 @@
  * Created: 8/30/2026
  */
 
-using System.Collections;
 using UnityEngine;
 
 public class Pipe : MonoBehaviour, IUsable
@@ -12,53 +11,24 @@ public class Pipe : MonoBehaviour, IUsable
     [SerializeField] float range = 2f;
     [SerializeField] float radius = 0.6f;
     [SerializeField] LayerMask hitMask = ~0;
-
-    [SerializeField] private GameObject meleeWeapon;
-
     [SerializeField] private Animator swingAnimator;
-
-    private InputAction attackAction;
-
     private bool swingType = true;
 
-    // Caches the Attack action from the player's Input System asset
-    private void Awake()
-    {
-        PlayerInput playerInput = GetComponentInParent<PlayerInput>();
-        attackAction = playerInput.actions["Attack"];
-    }
-
-    private void OnEnable()
-    {
-        meleeWeapon.SetActive(true);
-    }
-
     // Damages IDamageable targets in a sphere in front of the camera on click
-    private void Update()
-    {
-        if (attackAction.WasPressedThisFrame())
-        {
-            if (swingAnimator != null)
-            {
-                swingAnimator.SetBool("swingAlternator", swingType);
-                swingAnimator.SetTrigger("swingTrigger");
-                swingType = !swingType;
-            }
-            StartCoroutine(HitDelay());
-        }
-    }
-
-    IEnumerator HitDelay()
-    {
-        yield return new WaitForSeconds(0.2f);
-        TryAttack();
-    }
     // Overlaps a sphere in look direction and applies damage, skipping the player
     public void Use()
     {
         Transform origin = Camera.main.transform;
         Vector3 center = origin.position + origin.forward * range;
         Collider[] hits = Physics.OverlapSphere(center, radius, hitMask);
+
+        if (swingAnimator != null)
+        {
+            swingAnimator.SetBool("swingAlternator", swingType);
+            swingAnimator.SetTrigger("swingTrigger");
+            swingType = !swingType;
+        }
+
 
         for (int i = 0; i < hits.Length; i++)
         {
@@ -77,7 +47,10 @@ public class Pipe : MonoBehaviour, IUsable
             {
                 knockable.Execute(transform);
             }
+
         }
+
+
     }
 
     // Draws the melee hit sphere in the Scene view when this object is selected

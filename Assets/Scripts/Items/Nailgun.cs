@@ -2,7 +2,9 @@
  * Author: Shelton Joseph
  * Created: 8/30/2026
  */
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Nailgun : MonoBehaviour, IUsable
 {
@@ -11,6 +13,8 @@ public class Nailgun : MonoBehaviour, IUsable
     [SerializeField] private float fireRate = 0.5f;
 
     [SerializeField] private float spread = 2f;
+
+    [SerializeField] private int magSize = 10;
 
     [SerializeField] private GameObject NailPrefab;
 
@@ -23,13 +27,34 @@ public class Nailgun : MonoBehaviour, IUsable
 
     private float nextFireTime = 0f;
 
+    private int nailsInMag = 10;
+
+    private int totalNails = 100;
+
+    private InputAction reloadGun;
+
     private void Awake()
     {
+        PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         playerCamera = Camera.main;
+        reloadGun = playerInput.actions["Reload"];
+    }
+
+    private void Update()
+    {
+        if (reloadGun.WasPressedThisFrame())
+        {
+            if (totalNails > magSize)
+            {
+                nailsInMag = magSize;
+            }
+            else nailsInMag = totalNails;
+        }
     }
 
     //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
     //Also creates a nail object embedded where ray hits object
+
     public void Use()
     {
         if (!isActiveAndEnabled || Time.time < nextFireTime)
@@ -40,6 +65,11 @@ public class Nailgun : MonoBehaviour, IUsable
 
         if (playerCamera == null)
             return;
+
+        if (nailsInMag == 0)
+        {
+            return;
+        }
 
         nextFireTime = Time.time + fireRate;
 
@@ -94,9 +124,11 @@ public class Nailgun : MonoBehaviour, IUsable
         {
             hitPoint = ray.origin + ray.direction * range;
         }
-
+        nailsInMag--;
+        totalNails--;
         CreateBulletTrail(hitPoint);
     }
+
 
     private void CreateBulletTrail(Vector3 hitPoint)
     {
