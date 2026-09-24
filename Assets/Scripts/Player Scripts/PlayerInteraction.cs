@@ -115,8 +115,16 @@ public class PlayerInteraction : MonoBehaviour
         currentInteractable?.Hover();
     }
 
+    public void RefreshTarget()
+    {
+        ClearCurrentInteractable();
+        FindInteractable();
+    }
+
+
     private void OnInteract(InputAction.CallbackContext context)
     {
+        Debug.Log($"E received. Target: {currentInteractable}");
         currentInteractable?.Interact();
     }
 

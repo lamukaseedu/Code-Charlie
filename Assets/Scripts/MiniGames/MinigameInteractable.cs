@@ -17,6 +17,7 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
     [Header("Player Control")]
     [SerializeField] private PlayerCamera playerCameraController;
+    [SerializeField] private PlayerInteraction playerInteraction;
 
     [Header("Input")]
     [SerializeField] private PlayerInput playerInput;
@@ -111,6 +112,8 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
     public void EnterInteractable()
     {
+        Debug.Log($"Enter requested. Active: {IsActive}, Transitioning: {IsTransitioning}");
+
         if (IsActive || IsTransitioning)
             return;
 
@@ -187,6 +190,7 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
         IsActive = false;
         IsTransitioning = false;
+        playerInteraction?.RefreshTarget();
     }
 
     private void OnExitInput(InputAction.CallbackContext context)
