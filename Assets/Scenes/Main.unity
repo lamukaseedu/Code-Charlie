@@ -468,6 +468,10 @@ PrefabInstance:
       propertyPath: m_Shadows.m_Type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7182839529642625195, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7889337853586066869, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2481,6 +2485,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439220938}
   m_CullTransparentMesh: 1
+--- !u!114 &447109173 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5739027237830699251, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+  m_PrefabInstance: {fileID: 5589942388895307335}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dafed808b19760f489626d9ca1c8a65f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MinigameInteractable
 --- !u!1 &490992336
 GameObject:
   m_ObjectHideFlags: 0
@@ -8222,6 +8237,42 @@ PrefabInstance:
       propertyPath: interactionCamera
       value: 
       objectReference: {fileID: 43369579}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 447109173}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: SetInteractionPrompt
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: MinigameInteractable, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_StringArgument
+      value: PRESS E TO CHECK ITEMS
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852375872454853038, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: onAccessGranted.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5739027237830699251, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
       propertyPath: playerInput
       value: 
@@ -8288,7 +8339,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8326953152569430017, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
       propertyPath: quantity
-      value: 1000
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8326953152569430017, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
       propertyPath: playerInventory
@@ -8310,8 +8361,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Safe
       objectReference: {fileID: 0}
+    - target: {fileID: 8905313967838733771, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
+      propertyPath: m_Name
+      value: Nails Clutter (TEST)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 0}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}

@@ -108,6 +108,13 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         }
     }
 
+    //Called when we want to change the interaction prompt
+    public void SetInteractionPrompt(string newPrompt)
+    {
+        interactionPrompt = newPrompt;
+        playerInteraction?.RefreshPrompt(this);
+    }
+
     // Called by PlayerInteraction when the player presses the interact button.
     public void Interact()
     {

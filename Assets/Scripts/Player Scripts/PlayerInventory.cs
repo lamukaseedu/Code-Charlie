@@ -143,6 +143,8 @@ public class PlayerInventory : MonoBehaviour
         return amountAdded;
     }
 
+    //THIS FUNCTION IS FOR WHETHER WE WANT THE PICKUP SYSTEM TO PICK UP THE ENTIRE AMMO AMOUNT OR NONE OF IT
+    /*
     public bool CanAddItem(Item item, int amount = 1)
     {
         if (item == null || amount <= 0)
@@ -170,7 +172,7 @@ public class PlayerInventory : MonoBehaviour
 
         return false;
     }
-
+    */
     public int GetItemCount(Item item)
     {
         if (item == null)

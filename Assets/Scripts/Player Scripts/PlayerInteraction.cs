@@ -141,6 +141,14 @@ public class PlayerInteraction : MonoBehaviour
         FindInteractable();
     }
 
+    public void RefreshPrompt(IInteractable interactable)
+    {
+        if (currentInteractable == interactable)
+        {
+            interactionPromptUI?.Show(interactable.InteractionPrompt);
+        }
+    }
+
     public void ClearTarget()
     {
         ClearCurrentInteractable();
