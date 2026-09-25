@@ -1629,6 +1629,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5518280825499552401}
   - component: {fileID: 3618014807393716526}
+  - component: {fileID: -7411376943870167884}
   m_Layer: 0
   m_Name: Nailgun Prefab
   m_TagString: Untagged
@@ -1667,9 +1668,33 @@ MonoBehaviour:
   damage: 25
   range: 100
   fireRate: 0.5
+  spread: 2
   NailPrefab: {fileID: 2034603179677174668, guid: 2dd50cc2c2416f84587f06e64dbbcfc5, type: 3}
   Muzzle: {fileID: 4937842418255792760}
   bulletTrailPrefab: {fileID: 4744646803173004771, guid: bd69c8c48c9996946ac1772a121228cf, type: 3}
+  recoilAnimator: {fileID: -7411376943870167884}
+--- !u!95 &-7411376943870167884
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410629846513635114}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8851d9f6b5a35cf4cabe0380686e746d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8522112053187270854
 GameObject:
   m_ObjectHideFlags: 0
