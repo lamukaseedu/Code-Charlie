@@ -26,10 +26,15 @@ public class ItemHover : MonoBehaviour, IInteractable
     [SerializeField] private Renderer[] highlightRenderers;
     [SerializeField] private Color highlightColor = new(0.15f, 0.8f, 1f, 1f);
 
+    [Header("InteractionPrompt")]
+    [SerializeField] private string interactionPrompt;
+    public string InteractionPrompt => $"{interactionPrompt} (x{quantity})";
+
     [Header("Interaction Events")]
     [SerializeField] private UnityEvent onHover;
     [SerializeField] private UnityEvent onUnhover;
     [SerializeField] private UnityEvent onItemPickedUp;
+
 
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
     private static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -68,12 +73,35 @@ public class ItemHover : MonoBehaviour, IInteractable
 
     public void PickUpItem()
     {
-        bool addedSuccessfully = playerInventory.AddItem(item, quantity);
-        if (!addedSuccessfully)
+        if (playerInventory == null || item == null)
+            return;
+
+        int amountAdded = playerInventory.AddItem(item, quantity);
+
+        // Nothing could fit.
+        if (amountAdded <= 0)
         {
             Debug.Log("Inventory is full.");
             return;
         }
+
+        // Remove however many were successfully picked up
+        // from this world pickup.
+        quantity -= amountAdded;
+
+        Debug.Log(
+            $"Picked up {amountAdded} {item.ItemName}. " +
+            $"{quantity} remaining."
+        );
+
+        // Some items are still left in the world.
+        if (quantity > 0)
+        {
+            playerInteraction?.RefreshTarget();
+            return;
+        }
+
+        // Entire pickup has now been collected.
         playerInteraction?.ClearTarget();
         onItemPickedUp?.Invoke();
         Destroy(gameObject);

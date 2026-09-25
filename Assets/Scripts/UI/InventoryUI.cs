@@ -44,7 +44,7 @@ public class InventoryUI : MonoBehaviour
         for (int i = 0; i < slotViews.Length; i++)
         {
             if (slotViews[i] != null)
-                slotViews[i].Display(inventory.GetItem(i), i == inventory.SelectedSlot);
+                slotViews[i].Display(inventory.GetItem(i), inventory.GetQuantity(i), i == inventory.SelectedSlot);
         }
     }
 

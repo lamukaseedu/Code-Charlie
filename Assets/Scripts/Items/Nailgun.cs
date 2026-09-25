@@ -4,14 +4,13 @@
  */
 using UnityEngine;
 
-public class Nailgun : MonoBehaviour, IUsable
+public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 {
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
     [SerializeField] private float fireRate = 0.5f;
 
     [Header("Ammo")]
-    [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private Item nailAmmo;
 
     [SerializeField] private GameObject NailPrefab;
@@ -22,6 +21,13 @@ public class Nailgun : MonoBehaviour, IUsable
     private Camera playerCamera;
 
     private float nextFireTime = 0f;
+
+    private PlayerInventory playerInventory;
+
+    public void Initialize(PlayerInventory inventory)
+    {
+        playerInventory = inventory;
+    }
 
     private void Awake()
     {

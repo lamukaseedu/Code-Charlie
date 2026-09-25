@@ -86,19 +86,17 @@ public class PlayerInventory : MonoBehaviour
     public Item GetItem(int index) => IsValidSlot(index) ? slots[index] : null;
     public int GetQuantity(int index) => IsValidSlot(index) ? quantities[index] : 0;
 
-    public bool AddItem(Item item, int amount = 1)
+    public int AddItem(Item item, int amount = 1)
     {
         if (item == null || amount <= 0)
-            return false;
-
-        if (!CanAddItem(item, amount))
-            return false;
+            return 0;
 
         int remaining = amount;
 
+        // First fill existing stacks.
         if (item.Stackable)
         {
-            for (int i = 0; i < SlotCount; i++)
+            for (int i = 0; i < SlotCount && remaining > 0; i++)
             {
                 if (slots[i] != item)
                     continue;
@@ -114,28 +112,35 @@ public class PlayerInventory : MonoBehaviour
 
                 quantities[i] += amountToAdd;
                 remaining -= amountToAdd;
-
-                if (remaining <= 0)
-                    break;
             }
         }
 
-        for (int i = 0; i < SlotCount; i++)
+        // Then create new stacks in empty slots.
+        for (int i = 0; i < SlotCount && remaining > 0; i++)
         {
             if (slots[i] != null)
                 continue;
+
+            int amountToAdd = item.Stackable
+                ? Mathf.Min(item.MaxStackSize, remaining)
+                : 1;
+
             slots[i] = item;
-
-            int amountToAdd = item.Stackable ? Mathf.Min(item.MaxStackSize, remaining) : 1;
-
             quantities[i] = amountToAdd;
+
             remaining -= amountToAdd;
 
-            if (i == SelectedSlot || slots[SelectedSlot] == null) RefreshEquipment();
-            Changed?.Invoke();
-            return true;
+            if (i == SelectedSlot || slots[SelectedSlot] == null)
+                RefreshEquipment();
         }
-        return false;
+
+        
+        int amountAdded = amount - remaining;
+
+        if (amountAdded > 0)
+            Changed?.Invoke();
+
+        return amountAdded;
     }
 
     public bool CanAddItem(Item item, int amount = 1)
@@ -296,9 +301,14 @@ public class PlayerInventory : MonoBehaviour
             return;
 
         if (instances[SelectedSlot] == null)
+        {
             instances[SelectedSlot] = Instantiate(item.Prefab, equipmentHolder, false);
 
-        GameObject equipped = instances[SelectedSlot];
+            IInventoryItem inventoryItem = instances[SelectedSlot].GetComponentInChildren<IInventoryItem>();
+
+            inventoryItem?.Initialize(this);
+        }
+            GameObject equipped = instances[SelectedSlot];
         equipped.SetActive(isActiveAndEnabled);
         equippedUse = equipped.GetComponentInChildren<IUsable>();
     }

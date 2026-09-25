@@ -39,6 +39,10 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
     [SerializeField] private Renderer highlightRenderer;
     [SerializeField] private Color highlightColor = new(0.15f, 0.8f, 1f, 1f);
 
+    [Header("InteractionPrompt")]
+    [SerializeField] private string interactionPrompt;
+    public string InteractionPrompt => interactionPrompt;
+
     [Header("Interaction Events")]
     [SerializeField] private UnityEvent onHover;
     [SerializeField] private UnityEvent onUnhover;

@@ -17,6 +17,9 @@ public class PlayerInteraction : MonoBehaviour
     [Header("Input")]
     [SerializeField] private InputActionReference[] interactActions;
 
+    [Header("UI")]
+    [SerializeField] private InteractionPromptUI interactionPromptUI;
+
     private IInteractable currentInteractable;
 
     //Begins listening for user to press the key to activate interactable 
@@ -117,11 +120,19 @@ public class PlayerInteraction : MonoBehaviour
 
         // The player stopped looking at the previous object.
         currentInteractable?.Unhover();
-
         currentInteractable = detectedInteractable;
 
-        // The player started looking at a new object.
-        currentInteractable?.Hover();
+        if (currentInteractable != null)
+        {
+            currentInteractable.Hover();
+            interactionPromptUI?.Show(
+                currentInteractable.InteractionPrompt
+            );
+        }
+        else
+        {
+            interactionPromptUI?.Hide();
+        }
     }
 
     public void RefreshTarget()
@@ -144,6 +155,8 @@ public class PlayerInteraction : MonoBehaviour
     {
         currentInteractable?.Unhover();
         currentInteractable = null;
+
+        interactionPromptUI?.Hide();
     }
 
     //Helps for debugging raycast
