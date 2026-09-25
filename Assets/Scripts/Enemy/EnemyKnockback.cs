@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyKnockback : MonoBehaviour, IKnockable
 {
-    [SerializeField] float thrust = 5f;
+    [SerializeField] float thrust = 12f;
     private Rigidbody rb; 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

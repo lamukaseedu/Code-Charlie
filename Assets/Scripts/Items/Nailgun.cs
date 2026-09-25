@@ -16,6 +16,8 @@ public class Nailgun : MonoBehaviour, IUsable
 
     [SerializeField] private int magSize = 10;
 
+    [SerializeField] private int totalNails = 100;
+
     [SerializeField] private GameObject NailPrefab;
 
     [SerializeField] private Transform Muzzle;
@@ -28,8 +30,6 @@ public class Nailgun : MonoBehaviour, IUsable
     private float nextFireTime = 0f;
 
     private int nailsInMag = 10;
-
-    private int totalNails = 100;
 
     private InputAction reloadGun;
 
