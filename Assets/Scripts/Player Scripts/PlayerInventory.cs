@@ -17,6 +17,9 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private int[] quantities = new int[SlotCount];
     [SerializeField] private Transform equipmentHolder;
     [SerializeField] private InventoryUI inventoryUI;
+    [SerializeField] private Transform dropSpawnPoint;
+    [SerializeField] private PlayerInteraction playerInteraction;
+    [SerializeField] private InputActionReference dropAction;
 
     private readonly GameObject[] instances = new GameObject[SlotCount];
     private IUsable equippedUse;
@@ -81,6 +84,9 @@ public class PlayerInventory : MonoBehaviour
 
         if (useAction.WasPressedThisFrame())
             UseEquippedItem();
+
+        if (dropAction != null && dropAction.action.WasPressedThisFrame())
+            DropEquippedItem();
     }
 
     public Item GetItem(int index) => IsValidSlot(index) ? slots[index] : null;
@@ -208,6 +214,46 @@ public class PlayerInventory : MonoBehaviour
         return removed;
     }
 
+    // Called by the hotbar drop input while the player is holding an item.
+    public bool DropEquippedItem()
+    {
+        if (!isActiveAndEnabled || IsOpen || Time.timeScale == 0f ||
+            Cursor.lockState != CursorLockMode.Locked || EquippedObject == null)
+            return false;
+
+        return DropSlot(SelectedSlot);
+    }
+
+    // Connect each inventory slot's Drop button to this method with that slot's index.
+    public bool DropSlot(int index)
+    {
+        if (!isActiveAndEnabled || Time.timeScale == 0f || !IsValidSlot(index))
+            return false;
+
+        Item item = slots[index];
+        int amount = quantities[index];
+        if (item == null || amount <= 0 || item.WorldPickupPrefab == null || dropSpawnPoint == null)
+            return false;
+
+        GameObject pickup = Instantiate(item.WorldPickupPrefab,
+            dropSpawnPoint.position, dropSpawnPoint.rotation);
+        if (pickup == null)
+            return false;
+
+        ItemHover itemHover = pickup.GetComponentInChildren<ItemHover>();
+        if (itemHover == null)
+        {
+            Debug.LogError($"World pickup prefab for {item.ItemName} needs ItemHover.", item);
+            Destroy(pickup);
+            return false;
+        }
+
+        itemHover.InitializeDrop(item, amount, this, playerInteraction);
+        RemoveItem(index);
+        return true;
+    }
+
+
     public bool TryConsumeItem(Item item, int amount = 1)
     {
         if (item == null || amount <= 0)
@@ -309,6 +355,9 @@ public class PlayerInventory : MonoBehaviour
             IInventoryItem inventoryItem = instances[SelectedSlot].GetComponentInChildren<IInventoryItem>();
 
             inventoryItem?.Initialize(this);
+
+            ItemHover itemHover = instances[SelectedSlot].GetComponentInChildren<ItemHover>(true);
+            itemHover?.InitializeDrop(item, quantities[SelectedSlot], this, playerInteraction);
         }
             GameObject equipped = instances[SelectedSlot];
         equipped.SetActive(isActiveAndEnabled);

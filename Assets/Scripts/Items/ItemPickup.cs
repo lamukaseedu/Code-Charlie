@@ -107,25 +107,60 @@ public class ItemHover : MonoBehaviour, IInteractable
         Destroy(gameObject);
     }
 
+    public void InitializeDrop(Item droppedItem, int droppedQuantity, PlayerInventory inventory, PlayerInteraction interaction)
+    {
+        item = droppedItem;
+        quantity = droppedQuantity;
+        playerInventory = inventory;
+        playerInteraction = interaction;
+    }
+
     public void SetHighlighted(bool highlighted)
     {
         if (highlightRenderers == null)
             return;
 
-        propertyBlock ??= new MaterialPropertyBlock();
-        
-        for (int i = 0; i< highlightRenderers.Length; i++)
+        var block = new MaterialPropertyBlock();
+
+        foreach (Renderer renderer in highlightRenderers)
         {
-            if (highlightRenderers[i] == null)
+            if (renderer == null)
                 continue;
-            highlightRenderers[i].GetPropertyBlock(propertyBlock);
-            propertyBlock.SetColor(
-                colorPropertyId,
-                highlighted ? highlightColor : normalColors[i]
-            );
-            highlightRenderers[i].SetPropertyBlock(propertyBlock);
+
+            Material[] materials = renderer.sharedMaterials;
+
+            for (int i = 0; i < materials.Length; i++)
+            {
+                Material material = materials[i];
+                if (material == null)
+                    continue;
+
+                int colorId = material.HasProperty(BaseColorId)
+                    ? BaseColorId
+                    : material.HasProperty(ColorId) ? ColorId : 0;
+
+                if (colorId == 0)
+                    continue;
+
+                renderer.GetPropertyBlock(block, i);
+                block.SetColor(
+                    colorId,
+                    highlighted ? highlightColor : material.GetColor(colorId)
+                );
+
+                if (material.HasProperty("_EmissionColor"))
+                {
+                    block.SetColor(
+                        "_EmissionColor",
+                        highlighted
+                            ? highlightColor * 3f
+                            : material.GetColor("_EmissionColor")
+                    );
+                }
+
+                renderer.SetPropertyBlock(block, i);
+            }
         }
-        
     }
 
     private void CacheMaterialColor()
