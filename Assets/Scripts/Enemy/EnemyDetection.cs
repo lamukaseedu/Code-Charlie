@@ -88,10 +88,10 @@ public class EnemyDetection : MonoBehaviour
             // fieldOfView is split in half because vision extends to both sides of forward.
             if (angle <= fieldOfView * 0.5f)
             {
-                // Raycast acts like an invisible line checking if something blocks the view.
+                // Check only the space between the enemy and player so objects behind the player do not block sight.
                 Ray ray = new Ray(eyePos, dirToPlayer.normalized);
 
-                if (!Physics.Raycast(ray, out RaycastHit hit, visionRange, obstacleMask))
+                if (!Physics.Raycast(ray, out RaycastHit hit, distToPlayer, obstacleMask))
                 {
                     HasLineOfSightToPlayer = true;
                 }
