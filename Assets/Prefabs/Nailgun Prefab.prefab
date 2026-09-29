@@ -1665,10 +1665,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965d8bcfc020751488afe78137b82d5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGun
-  damage: 25
+  damage: 4
   range: 100
+  layersToIgnore:
+    serializedVersion: 2
+    m_Bits: 1024
   fireRate: 0.5
   spread: 2
+  magSize: 10
+  totalNails: 100
   NailPrefab: {fileID: 2034603179677174668, guid: 2dd50cc2c2416f84587f06e64dbbcfc5, type: 3}
   Muzzle: {fileID: 4937842418255792760}
   bulletTrailPrefab: {fileID: 4744646803173004771, guid: bd69c8c48c9996946ac1772a121228cf, type: 3}

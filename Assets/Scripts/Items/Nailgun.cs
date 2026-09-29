@@ -10,6 +10,7 @@ public class Nailgun : MonoBehaviour, IUsable
 {
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
+    [SerializeField] private LayerMask layersToIgnore;
     [SerializeField] private float fireRate = 0.5f;
 
     [SerializeField] private float spread = 2f;
@@ -102,7 +103,7 @@ public class Nailgun : MonoBehaviour, IUsable
 
         Vector3 hitPoint;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, range))
+        if (Physics.Raycast(ray, out RaycastHit hit, range, ~layersToIgnore.value))
         {
             hitPoint = hit.point;
 
