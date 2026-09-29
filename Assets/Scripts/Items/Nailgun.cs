@@ -9,6 +9,9 @@ public class Nailgun : MonoBehaviour, IUsable
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
     [SerializeField] private float fireRate = 0.5f;
+    [SerializeField] private float spreadAngle = 4f;
+    [SerializeField] private float upgradedSpreadAngle = 0f;
+    [SerializeField] private int ammoPerShot = 1;
 
     [SerializeField] private GameObject NailPrefab;
 
@@ -16,12 +19,20 @@ public class Nailgun : MonoBehaviour, IUsable
 
     [SerializeField] private LineRenderer bulletTrailPrefab;
     private Camera playerCamera;
+    private PlayerAmmo ammo;
+    private PlayerWeaponUpgrades upgrades;
 
     private float nextFireTime = 0f;
 
     private void Awake()
     {
         playerCamera = Camera.main;
+    }
+
+    private void OnEnable()
+    {
+        ammo = GetComponentInParent<PlayerAmmo>();
+        upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
     }
 
     //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
@@ -37,13 +48,16 @@ public class Nailgun : MonoBehaviour, IUsable
         if (playerCamera == null)
             return;
 
+        if (ammo != null && !ammo.TryConsume(ammoPerShot))
+            return;
+
         nextFireTime = Time.time + fireRate;
 
         Debug.Log("Bang");
 
         Ray ray = new Ray(
             playerCamera.transform.position,
-            playerCamera.transform.forward
+            GetShotDirection()
         );
 
         Debug.DrawRay(
@@ -66,7 +80,7 @@ public class Nailgun : MonoBehaviour, IUsable
 
             Debug.Log("Hit: " + hit.collider.name);
 
-            IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+            IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
             if (damageable != null)
             {
@@ -89,5 +103,18 @@ public class Nailgun : MonoBehaviour, IUsable
         trail.SetPosition(1, hitPoint);
 
         Destroy(trail.gameObject, 0.05f);
+    }
+
+    private Vector3 GetShotDirection()
+    {
+        Vector3 forward = playerCamera.transform.forward;
+        float spread = upgrades != null && upgrades.IsUpgraded(WeaponUpgradeId.NailgunAccuracy)
+            ? upgradedSpreadAngle
+            : spreadAngle;
+        if (spread <= 0f)
+            return forward;
+
+        Vector2 offset = UnityEngine.Random.insideUnitCircle * Mathf.Tan(spread * Mathf.Deg2Rad);
+        return (forward + playerCamera.transform.right * offset.x + playerCamera.transform.up * offset.y).normalized;
     }
 }
