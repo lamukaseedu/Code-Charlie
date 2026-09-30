@@ -365,15 +365,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 25235936468653763}
     - target: {fileID: 2326529068542717487, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
-      propertyPath: slots.Array.data[2]
+      propertyPath: 'slots.Array.data[2]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2326529068542717487, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
-      propertyPath: quantities.Array.data[0]
+      propertyPath: 'quantities.Array.data[0]'
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2326529068542717487, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
-      propertyPath: quantities.Array.data[1]
+      propertyPath: 'quantities.Array.data[1]'
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3845105952862407739, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
@@ -392,6 +392,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3982302211803669302, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: interactionPromptUI
+      value: 
+      objectReference: {fileID: 75904287}
+    - target: {fileID: 3982302211803669302, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: interactActions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982302211803669302, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: 'interactActions.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7071939386602526578, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+    - target: {fileID: 3982302211803669302, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: 'interactActions.Array.data[1]'
+      value: 
+      objectReference: {fileID: -1640001529635569923, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
     - target: {fileID: 4059518128724312984, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -548,7 +564,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3982302211803669302, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6768979416999183104, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
@@ -7418,7 +7435,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3893007734588057090, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: bc5c8be5afc3a804488b2b0567cf43a1, type: 2}
     - target: {fileID: 5397830656217975868, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
@@ -8172,11 +8189,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGun
   damage: 25
   range: 100
+  layersToIgnore:
+    serializedVersion: 2
+    m_Bits: 0
   fireRate: 0.5
   nailAmmo: {fileID: 0}
+  magSize: 10
+  spread: 2
   NailPrefab: {fileID: 0}
   Muzzle: {fileID: 0}
   bulletTrailPrefab: {fileID: 0}
+  recoilAnimator: {fileID: 0}
 --- !u!114 &25235936468653757 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 25235935112057516, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
@@ -8343,7 +8366,7 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8856822822659762866}
     - target: {fileID: 5739027237830699251, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}
-      propertyPath: playerRenderers.Array.data[0]
+      propertyPath: 'playerRenderers.Array.data[0]'
       value: 
       objectReference: {fileID: 1607280865}
     - target: {fileID: 5739027237830699251, guid: e7d8a2aff35b76944bd8ad1ffc5f7d26, type: 3}

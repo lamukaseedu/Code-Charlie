@@ -90,9 +90,16 @@
                     "name": "Drop",
                     "type": "Button",
                     "id": "0234f0ab-9a00-4a87-b177-c96935c76781",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
                     "name": "Reload",
                     "type": "Button",
-                    "id": "802ecc62-02a8-4c35-85c8-5a10ee389329",
+                    "id": "05379ef3-1805-4701-9e23-f39a58fe4366",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -274,7 +281,12 @@
                     "processors": "",
                     "groups": "",
                     "action": "Drop",
-                    "id": "a356e8ae-f5bb-43f0-8a5f-437d69ef914d",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9f26705c-b5c9-454b-8ed3-d85078926955",
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
