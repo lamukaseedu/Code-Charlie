@@ -51,12 +51,16 @@ public class Nailgun : MonoBehaviour, IUsable
         if (reloadGun == null || !reloadGun.WasPressedThisFrame())
             return;
 
-        int missing = magSize - nailsInMag;
-        if (missing <= 0)
+        if (nailsInMag >= magSize)
             return;
 
+        nailsInMag = ammo != null ? Mathf.Min(magSize, ammo.Current) : magSize;
+    }
+
+    private void Start()
+    {
         if (ammo != null)
-            nailsInMag += ammo.ConsumeUpTo(missing);
+            nailsInMag = Mathf.Min(nailsInMag, ammo.Current);
     }
 
     //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
@@ -73,6 +77,9 @@ public class Nailgun : MonoBehaviour, IUsable
             return;
 
         if (nailsInMag <= 0)
+            return;
+
+        if (ammo != null && !ammo.TryConsume(1))
             return;
 
         nextFireTime = Time.time + fireRate;
