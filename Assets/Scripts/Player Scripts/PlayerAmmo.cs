@@ -31,6 +31,17 @@ public class PlayerAmmo : MonoBehaviour
         return true;
     }
 
+    public int ConsumeUpTo(int amount)
+    {
+        if (amount <= 0 || Current <= 0)
+            return 0;
+
+        int taken = Mathf.Min(amount, Current);
+        Current -= taken;
+        Changed?.Invoke();
+        return taken;
+    }
+
     public int Add(int amount)
     {
         if (amount <= 0 || maxAmmo <= 0 || Current >= maxAmmo)

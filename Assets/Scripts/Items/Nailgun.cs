@@ -3,15 +3,17 @@
  * Created: 8/30/2026
  */
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Nailgun : MonoBehaviour, IUsable
 {
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
+    [SerializeField] private LayerMask layersToIgnore;
     [SerializeField] private float fireRate = 0.5f;
     [SerializeField] private float spreadAngle = 4f;
     [SerializeField] private float upgradedSpreadAngle = 0f;
-    [SerializeField] private int ammoPerShot = 1;
+    [SerializeField] private int magSize = 10;
 
     [SerializeField] private GameObject NailPrefab;
 
@@ -22,17 +24,39 @@ public class Nailgun : MonoBehaviour, IUsable
     private PlayerAmmo ammo;
     private PlayerWeaponUpgrades upgrades;
 
+    [SerializeField] private Animator recoilAnimator;
+
     private float nextFireTime = 0f;
+
+    private int nailsInMag = 10;
+
+    private InputAction reloadGun;
 
     private void Awake()
     {
         playerCamera = Camera.main;
+        PlayerInput playerInput = GetComponentInParent<PlayerInput>();
+        if (playerInput != null)
+            reloadGun = playerInput.actions["Reload"];
     }
 
     private void OnEnable()
     {
         ammo = GetComponentInParent<PlayerAmmo>();
         upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
+    }
+
+    private void Update()
+    {
+        if (reloadGun == null || !reloadGun.WasPressedThisFrame())
+            return;
+
+        int missing = magSize - nailsInMag;
+        if (missing <= 0)
+            return;
+
+        if (ammo != null)
+            nailsInMag += ammo.ConsumeUpTo(missing);
     }
 
     //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
@@ -48,10 +72,11 @@ public class Nailgun : MonoBehaviour, IUsable
         if (playerCamera == null)
             return;
 
-        if (ammo != null && !ammo.TryConsume(ammoPerShot))
+        if (nailsInMag <= 0)
             return;
 
         nextFireTime = Time.time + fireRate;
+        nailsInMag--;
 
         Debug.Log("Bang");
 
@@ -59,6 +84,11 @@ public class Nailgun : MonoBehaviour, IUsable
             playerCamera.transform.position,
             GetShotDirection()
         );
+
+        if (recoilAnimator != null)
+        {
+            recoilAnimator.SetTrigger("recoilTrigger");
+        }
 
         Debug.DrawRay(
         ray.origin,
@@ -69,12 +99,12 @@ public class Nailgun : MonoBehaviour, IUsable
 
         Vector3 hitPoint;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, range))
+        if (Physics.Raycast(ray, out RaycastHit hit, range, ~layersToIgnore.value))
         {
             hitPoint = hit.point;
 
             GameObject Nail = Instantiate(NailPrefab, hit.point, Quaternion.LookRotation(playerCamera.transform.up));
-            Nail.transform.SetParent(hit.collider.transform);
+            Nail.transform.SetParent(hit.collider.transform, true);
 
             Destroy(Nail, 5.0f);
 
@@ -114,7 +144,7 @@ public class Nailgun : MonoBehaviour, IUsable
         if (spread <= 0f)
             return forward;
 
-        Vector2 offset = UnityEngine.Random.insideUnitCircle * Mathf.Tan(spread * Mathf.Deg2Rad);
+        Vector2 offset = Random.insideUnitCircle * Mathf.Tan(spread * Mathf.Deg2Rad);
         return (forward + playerCamera.transform.right * offset.x + playerCamera.transform.up * offset.y).normalized;
     }
 }

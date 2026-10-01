@@ -12,14 +12,16 @@ public class Pipe : MonoBehaviour, IUsable
     [SerializeField] float range = 2f;
     [SerializeField] float radius = 0.6f;
     [SerializeField] LayerMask hitMask = ~0;
+    [SerializeField] private Animator swingAnimator;
 
     private PlayerWeaponUpgrades upgrades;
+    private bool swingType = true;
 
     private void OnEnable()
     {
         upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
     }
-    
+
     // Damages IDamageable targets in a sphere in front of the camera on click
     // Overlaps a sphere in look direction and applies damage, skipping the player
     public void Use()
@@ -31,6 +33,14 @@ public class Pipe : MonoBehaviour, IUsable
             ? upgradedDamage
             : damage;
 
+        if (swingAnimator != null)
+        {
+            swingAnimator.SetBool("swingAlternator", swingType);
+            swingAnimator.SetTrigger("swingTrigger");
+            swingType = !swingType;
+        }
+
+
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].GetComponentInParent<PlayerMovement>() != null)
@@ -39,11 +49,19 @@ public class Pipe : MonoBehaviour, IUsable
             }
 
             IDamageable damageable = hits[i].GetComponentInParent<IDamageable>();
+            IKnockable knockable = hits[i].GetComponentInParent<IKnockable>();
             if (damageable != null)
             {
                 damageable.TakeDamage(hitDamage);
             }
+            if (knockable != null)
+            {
+                knockable.Execute(transform);
+            }
+
         }
+
+
     }
 
     // Draws the melee hit sphere in the Scene view when this object is selected
