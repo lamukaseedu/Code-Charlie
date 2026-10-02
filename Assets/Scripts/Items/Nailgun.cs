@@ -5,15 +5,21 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Nailgun : MonoBehaviour, IUsable
+public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 {
     [SerializeField] private float damage = 25f;
     [SerializeField] private float range = 100f;
     [SerializeField] private LayerMask layersToIgnore;
     [SerializeField] private float fireRate = 0.5f;
+
+    [Header("Ammo")]
+    [SerializeField] private Item nailAmmo;
+    [Min(1)]
+    [SerializeField] private int magSize = 10;
+
+    private int nailsInMag = 0;
     [SerializeField] private float spreadAngle = 4f;
     [SerializeField] private float upgradedSpreadAngle = 0f;
-    [SerializeField] private int magSize = 10;
 
     [SerializeField] private GameObject NailPrefab;
 
@@ -28,9 +34,14 @@ public class Nailgun : MonoBehaviour, IUsable
 
     private float nextFireTime = 0f;
 
-    private int nailsInMag = 10;
-
     private InputAction reloadGun;
+
+    private PlayerInventory playerInventory;
+
+    public void Initialize(PlayerInventory inventory)
+    {
+        playerInventory = inventory;
+    }
 
     private void Awake()
     {
@@ -48,21 +59,42 @@ public class Nailgun : MonoBehaviour, IUsable
 
     private void Update()
     {
-        if (reloadGun == null || !reloadGun.WasPressedThisFrame())
+        if (playerInventory == null || playerInventory.IsOpen || Time.timeScale == 0f || Cursor.lockState != CursorLockMode.Locked)
             return;
 
-        if (nailsInMag >= magSize)
-            return;
-
-        nailsInMag = ammo != null ? Mathf.Min(magSize, ammo.Current) : magSize;
+        if (reloadGun.WasPressedThisFrame())
+        {
+            Reload();
+        }
     }
 
-    private void Start()
+    //Reloads mag by first checking amount needed and if the inventory contains at least 1 to the amount needed insert that ammo from the inventory into the nailgun using PlayerInventory. 
+    private void Reload()
     {
-        if (ammo != null)
-            nailsInMag = Mathf.Min(nailsInMag, ammo.Current);
-    }
+        if (playerInventory == null || nailAmmo == null)
+            return;
 
+        int nailsNeeded = magSize - nailsInMag;
+
+        if (nailsNeeded <= 0)
+            return;
+
+        int reserveNails = playerInventory.GetItemCount(nailAmmo);
+        int nailsToLoad = Mathf.Min(nailsNeeded, reserveNails);
+
+        if (nailsToLoad <= 0)
+        {
+            Debug.Log("No reserve nails!");
+            return;
+        }
+
+        // Transfer only the nails needed to top up the magazine.
+        if (playerInventory.TryConsumeItem(nailAmmo, nailsToLoad))
+        {
+            nailsInMag += nailsToLoad;
+            Debug.Log($"Reloaded! Magazine: {nailsInMag}/{magSize}");
+        }
+    }
     //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
     //Also creates a nail object embedded where ray hits object
     public void Use()
@@ -77,10 +109,17 @@ public class Nailgun : MonoBehaviour, IUsable
             return;
 
         if (nailsInMag <= 0)
+        {
+            Debug.Log("Magazine empty! Reload!");
             return;
+        }
 
-        if (ammo != null && !ammo.TryConsume(1))
+        if (playerInventory == null ||
+        !playerInventory.TryConsumeItem(nailAmmo, 1))
+        {
+            Debug.Log("Out of nails!");
             return;
+        }
 
         nextFireTime = Time.time + fireRate;
         nailsInMag--;
@@ -128,7 +167,6 @@ public class Nailgun : MonoBehaviour, IUsable
         {
             hitPoint = ray.origin + ray.direction * range;
         }
-
         CreateBulletTrail(hitPoint);
     }
 

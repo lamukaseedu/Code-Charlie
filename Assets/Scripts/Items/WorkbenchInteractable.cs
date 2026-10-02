@@ -10,6 +10,8 @@ public class WorkbenchInteractable : MonoBehaviour, IInteractable
     [SerializeField] private WorkbenchUI workbenchUI;
 
     private InteractableHoverHighlight hoverHighlight;
+    [SerializeField] private string interactionPrompt;
+    public string InteractionPrompt => interactionPrompt;
 
     private void Awake()
     {
