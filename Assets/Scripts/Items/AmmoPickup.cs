@@ -11,6 +11,9 @@ public class AmmoPickup : MonoBehaviour, IInteractable
 
     private InteractableHoverHighlight hoverHighlight;
 
+    [SerializeField] private string interactionPrompt;
+    public string InteractionPrompt => interactionPrompt;
+
     private void Awake()
     {
         hoverHighlight = GetComponentInChildren<InteractableHoverHighlight>();

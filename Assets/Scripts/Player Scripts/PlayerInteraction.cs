@@ -50,7 +50,7 @@ public class PlayerInteraction : MonoBehaviour
     //Constantly finding objects that lie in the interactable layer
     private void Update()
     {
-        if (Time.timeScale == 0f || Cursor.lockState != CursorLockMode.Locked || WorkbenchUI.AnyOpen)
+        if (Time.timeScale == 0f || WorkbenchUI.AnyOpen)
         {
             ClearCurrentInteractable();
             return;

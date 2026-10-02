@@ -936,9 +936,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5518280825499552401}
-  - component: {fileID: 3618014807393716526}
-  - component: {fileID: 393851378077244729}
   - component: {fileID: 698295802417078771}
+  - component: {fileID: 2667036338484983363}
+  - component: {fileID: 5144631064594205181}
   m_Layer: 0
   m_Name: Nailgun Prefab PICKUP
   m_TagString: Untagged
@@ -962,55 +962,6 @@ Transform:
   - {fileID: 3789414145360028297}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3618014807393716526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8410629846513635114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 965d8bcfc020751488afe78137b82d5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerGun
-  damage: 25
-  range: 100
-  fireRate: 0.5
-  nailAmmo: {fileID: 11400000, guid: 8956422968aaa0d4ca969c40c0e32a81, type: 2}
-  NailPrefab: {fileID: 2034603179677174668, guid: 2dd50cc2c2416f84587f06e64dbbcfc5, type: 3}
-  Muzzle: {fileID: 4937842418255792760}
-  bulletTrailPrefab: {fileID: 4744646803173004771, guid: bd69c8c48c9996946ac1772a121228cf, type: 3}
---- !u!114 &393851378077244729
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8410629846513635114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbaba387f2f242d4098502fd7168721a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemHover
-  item: {fileID: 11400000, guid: 823f49bf638ffcc4c928db9422d0eebe, type: 2}
-  quantity: 1
-  playerInventory: {fileID: 0}
-  playerInteraction: {fileID: 0}
-  highlightRenderers:
-  - {fileID: 2320991061971612345}
-  - {fileID: 2726534881577858214}
-  highlightColor: {r: 1, g: 0, b: 1, a: 1}
-  interactionPrompt: PRESS E TO PICK UP NAILGUN
-  onHover:
-    m_PersistentCalls:
-      m_Calls: []
-  onUnhover:
-    m_PersistentCalls:
-      m_Calls: []
-  onItemPickedUp:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!54 &698295802417078771
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1038,6 +989,60 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2667036338484983363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410629846513635114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965d8bcfc020751488afe78137b82d5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerGun
+  damage: 4
+  range: 100
+  layersToIgnore:
+    serializedVersion: 2
+    m_Bits: 1024
+  fireRate: 0.5
+  nailAmmo: {fileID: 11400000, guid: 8956422968aaa0d4ca969c40c0e32a81, type: 2}
+  magSize: 10
+  spreadAngle: 4
+  upgradedSpreadAngle: 0
+  NailPrefab: {fileID: 2034603179677174668, guid: 2dd50cc2c2416f84587f06e64dbbcfc5, type: 3}
+  Muzzle: {fileID: 4937842418255792760, guid: 5d6d82f93b4af364a9f2211300fcfcdc, type: 3}
+  bulletTrailPrefab: {fileID: 4744646803173004771, guid: bd69c8c48c9996946ac1772a121228cf, type: 3}
+  recoilAnimator: {fileID: -7411376943870167884, guid: 5d6d82f93b4af364a9f2211300fcfcdc, type: 3}
+--- !u!114 &5144631064594205181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410629846513635114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbaba387f2f242d4098502fd7168721a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemHover
+  item: {fileID: 11400000, guid: 823f49bf638ffcc4c928db9422d0eebe, type: 2}
+  quantity: 1
+  playerInventory: {fileID: 0}
+  playerInteraction: {fileID: 0}
+  highlightRenderers: []
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  interactionPrompt: PRESS E TO PICK UP NAILGUN
+  onHover:
+    m_PersistentCalls:
+      m_Calls: []
+  onUnhover:
+    m_PersistentCalls:
+      m_Calls: []
+  onItemPickedUp:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8522112053187270854
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,7 +16,6 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     [SerializeField] private Item nailAmmo;
     [Min(1)]
     [SerializeField] private int magSize = 10;
-    [SerializeField] private float spread = 2f;
 
     private int nailsInMag = 0;
     [SerializeField] private float spreadAngle = 4f;
