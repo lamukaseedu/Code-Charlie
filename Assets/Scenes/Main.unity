@@ -4606,6 +4606,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lester
       objectReference: {fileID: 0}
+    - target: {fileID: 704859991370543729, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 704859991370543729, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      propertyPath: showRuntime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467961660312992913, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 6994155631049469000, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6994155631049469000, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      propertyPath: turnSpeed
+      value: 540
+      objectReference: {fileID: 0}
+    - target: {fileID: 7117722219608217161, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8597454022478939642, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.5
@@ -13987,6 +14011,11 @@ MonoBehaviour:
   stopDistance: 0.2
   acceleration: 10
   turnSpeed: 180
+  debugWaypoint: {x: 0, y: 0, z: 0}
+  debugHasWaypoint: 0
+  debugState: 0
+  debugDistance: 0
+  debugTurnAngle: 0
 --- !u!114 &1452182723
 MonoBehaviour:
   m_ObjectHideFlags: 0
