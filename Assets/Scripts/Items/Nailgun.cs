@@ -2,7 +2,6 @@
  * Author: Shelton Joseph
  * Created: 8/30/2026
  */
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,6 +19,8 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     [SerializeField] private float spread = 2f;
 
     private int nailsInMag = 0;
+    [SerializeField] private float spreadAngle = 4f;
+    [SerializeField] private float upgradedSpreadAngle = 0f;
 
     [SerializeField] private GameObject NailPrefab;
 
@@ -27,6 +28,8 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
     [SerializeField] private LineRenderer bulletTrailPrefab;
     private Camera playerCamera;
+    private PlayerAmmo ammo;
+    private PlayerWeaponUpgrades upgrades;
 
     [SerializeField] private Animator recoilAnimator;
 
@@ -43,9 +46,16 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
     private void Awake()
     {
-        PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         playerCamera = Camera.main;
-        reloadGun = playerInput.actions["Reload"];
+        PlayerInput playerInput = GetComponentInParent<PlayerInput>();
+        if (playerInput != null)
+            reloadGun = playerInput.actions["Reload"];
+    }
+
+    private void OnEnable()
+    {
+        ammo = GetComponentInParent<PlayerAmmo>();
+        upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
     }
 
     private void Update()
@@ -88,7 +98,6 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     }
     //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
     //Also creates a nail object embedded where ray hits object
-
     public void Use()
     {
         if (!isActiveAndEnabled || Time.time < nextFireTime)
@@ -118,17 +127,9 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
         Debug.Log("Bang");
 
-        Vector3 direction = playerCamera.transform.forward;
-
-        direction = Quaternion.Euler(
-        Random.Range(-spread, spread),
-        Random.Range(-spread, spread),
-        0f
-        ) * direction;
-
         Ray ray = new Ray(
             playerCamera.transform.position,
-            direction
+            GetShotDirection()
         );
 
         if (recoilAnimator != null)
@@ -156,7 +157,7 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
             Debug.Log("Hit: " + hit.collider.name);
 
-            IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+            IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
             if (damageable != null)
             {
@@ -170,7 +171,6 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         CreateBulletTrail(hitPoint);
     }
 
-
     private void CreateBulletTrail(Vector3 hitPoint)
     {
         LineRenderer trail = Instantiate(bulletTrailPrefab);
@@ -179,5 +179,18 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         trail.SetPosition(1, hitPoint);
 
         Destroy(trail.gameObject, 0.05f);
+    }
+
+    private Vector3 GetShotDirection()
+    {
+        Vector3 forward = playerCamera.transform.forward;
+        float spread = upgrades != null && upgrades.IsUpgraded(WeaponUpgradeId.NailgunAccuracy)
+            ? upgradedSpreadAngle
+            : spreadAngle;
+        if (spread <= 0f)
+            return forward;
+
+        Vector2 offset = Random.insideUnitCircle * Mathf.Tan(spread * Mathf.Deg2Rad);
+        return (forward + playerCamera.transform.right * offset.x + playerCamera.transform.up * offset.y).normalized;
     }
 }

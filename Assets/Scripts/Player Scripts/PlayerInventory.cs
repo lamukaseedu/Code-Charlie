@@ -195,6 +195,36 @@ public class PlayerInventory : MonoBehaviour
         return total;
     }
 
+    public bool HasItem(Item item)
+    {
+        if (item == null)
+            return false;
+
+        for (int i = 0; i < SlotCount; i++)
+        {
+            if (slots[i] == item)
+                return true;
+        }
+
+        return false;
+    }
+
+    public bool TryRemoveItem(Item item)
+    {
+        if (item == null)
+            return false;
+
+        for (int i = 0; i < SlotCount; i++)
+        {
+            if (slots[i] != item)
+                continue;
+            RemoveItem(i);
+            return true;
+        }
+
+        return false;
+    }
+
     public Item RemoveItem(int index)
     {
         if (!IsValidSlot(index) || slots[index] == null)
