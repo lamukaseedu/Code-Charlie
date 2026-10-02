@@ -4,6 +4,7 @@
  */
 
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Pipe : MonoBehaviour, IUsable
 {
@@ -41,24 +42,35 @@ public class Pipe : MonoBehaviour, IUsable
         }
 
 
+        var damagedTargets = new HashSet<IDamageable>();
+        var knockedTargets = new HashSet<IKnockable>();
+
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].GetComponentInParent<PlayerMovement>() != null)
+            Collider hit = hits[i];
+
+            if (hit == null ||
+                hit.GetComponentInParent<PlayerMovement>() != null)
             {
                 continue;
             }
 
-            IDamageable damageable = hits[i].GetComponentInParent<IDamageable>();
-            IKnockable knockable = hits[i].GetComponentInParent<IKnockable>();
-            if (damageable != null)
+            // Resolve both before applying damage, which may destroy the enemy.
+            IDamageable damageable =
+                hit.GetComponentInParent<IDamageable>();
+
+            IKnockable knockable =
+                hit.GetComponentInParent<IKnockable>();
+
+            if (damageable != null && damagedTargets.Add(damageable))
             {
                 damageable.TakeDamage(hitDamage);
             }
-            if (knockable != null)
+
+            if (knockable != null && knockedTargets.Add(knockable))
             {
                 knockable.Execute(transform);
             }
-
         }
 
 
