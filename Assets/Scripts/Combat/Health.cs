@@ -2,7 +2,7 @@
  * Author: Savio Xavier
  * Created: 8/30/2026
  * Edited By: Andres Rondon-Villarmosa
- * Edited:9/2/2026
+ * Edited: 9/10/2026
  */
 
 using UnityEngine.Events;
@@ -16,14 +16,20 @@ public interface IDamageable
 public class Health : MonoBehaviour, IDamageable
 {
     [SerializeField] float maxHealth = 10f;
+    [SerializeField] bool destroyOnDeath = true;
 
     [Header("Health Events")]
     [SerializeField] private UnityEvent onDamaged;
     [SerializeField] private UnityEvent onDeath;
+    [SerializeField] private UnityEvent<float> onHealthChanged;
 
     private float currentHealth;
     private bool isDead;
 
+    public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
+    public float HealthPercent => maxHealth <= 0f ? 0f : currentHealth / maxHealth;
+    public UnityEvent<float> OnHealthChanged => onHealthChanged;
 
     private void Awake()
     {
@@ -40,6 +46,7 @@ public class Health : MonoBehaviour, IDamageable
 
         currentHealth = Mathf.Max(0f, currentHealth - amount);
         onDamaged?.Invoke();
+        onHealthChanged?.Invoke(HealthPercent);
 
         if (currentHealth <= 0f)
         {
@@ -47,11 +54,38 @@ public class Health : MonoBehaviour, IDamageable
         }
     }
 
-    // Marks the object as dead and invokes events for death behavior. 
+    public void Heal(float amount)
+    {
+        if (isDead || amount <= 0f)
+        {
+            return;
+        }
+
+        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        onHealthChanged?.Invoke(HealthPercent);
+    }
+
+
     private void Die()
     {
         isDead = true;
         onDeath?.Invoke();
-        Destroy(gameObject);
+
+        if (destroyOnDeath)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    [ContextMenu("Debug Take Damage")]
+    private void DebugTakeDamage()
+    {
+        TakeDamage(10f);
+    }
+
+    [ContextMenu("Debug Heal")]
+    private void DebugHeal()
+    {
+        Heal(10f);
     }
 }

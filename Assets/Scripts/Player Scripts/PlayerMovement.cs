@@ -60,6 +60,21 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(movement * Time.deltaTime);
     }
     
+    public void SetMovementEnabled(bool enabled)
+    {
+        if (enabled)
+        {
+            moveAction.Enable();
+            sprintAction.Enable();
+        }
+        else
+        {
+            moveAction.Disable();
+            sprintAction.Disable();
+            isMoving = false;
+        }
+    }
+
     // Return whether a movement key is being inputted.
     public bool CheckMovement()
     {

@@ -82,13 +82,13 @@ public class PlayerWeaponSwitcher : MonoBehaviour
     // Enables or disables every melee and gun script on the player, including duplicates
     private void SetAllWeaponScriptsEnabled(bool enabled)
     {
-        PlayerMelee melee = GetComponent<PlayerMelee>();
+        Pipe melee = GetComponent<Pipe>();
         if (melee != null)
         {
             melee.enabled = enabled;
         }
 
-        PlayerGun[] guns = GetComponentsInChildren<PlayerGun>(true);
+        Nailgun[] guns = GetComponentsInChildren<Nailgun>(true);
         for (int i = 0; i < guns.Length; i++)
         {
             guns[i].enabled = enabled;
