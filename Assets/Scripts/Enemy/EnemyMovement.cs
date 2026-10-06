@@ -17,6 +17,13 @@ public class EnemyMovement : MonoBehaviour
     private EnemyDetection detection;
     private Rigidbody rb;
 
+    [Header("Waypoint Debug")]
+    [SerializeField] private Vector3 debugWaypoint;
+    [SerializeField] private bool debugHasWaypoint;
+    [SerializeField] private EnemyDetection.DetectionState debugState;
+    [SerializeField] private float debugDistance;
+    [SerializeField] private float debugTurnAngle;
+
     private void Awake()
     {
         detection = GetComponent<EnemyDetection>();
@@ -30,9 +37,22 @@ public class EnemyMovement : MonoBehaviour
 
         if (!detection.HasWaypoint)
         {
-            AccelerateTowards(Vector3.zero);
+            StopAtWaypoint();
             return;
         }
+
+        debugWaypoint = detection.CurrentWaypoint;
+        debugHasWaypoint = detection.HasWaypoint;
+        debugState = detection.State;
+
+        Vector3 direction = debugWaypoint - rb.position;
+        direction.y = 0f;
+
+        debugDistance = direction.magnitude;
+
+        debugTurnAngle = direction.sqrMagnitude > 0.000001f
+            ? Vector3.SignedAngle(transform.forward, direction, Vector3.up)
+            : 0f;
 
         Vector3 target = detection.CurrentWaypoint;
         target.y = rb.position.y;
@@ -41,6 +61,13 @@ public class EnemyMovement : MonoBehaviour
         moveDirection.y = 0f;
 
         float distanceToTarget = moveDirection.magnitude;
+
+        if (distanceToTarget <= stopDistance)
+        {
+            detection.ClearWaypoint();
+            StopAtWaypoint();
+            return;
+        }
 
         if (distanceToTarget > 0.0001f)
         {
@@ -63,13 +90,6 @@ public class EnemyMovement : MonoBehaviour
             ? chaseSpeed
             : investigateSpeed;
 
-        if (distanceToTarget <= stopDistance)
-        {
-            detection.ClearWaypoint();
-            AccelerateTowards(Vector3.zero);
-            return;
-        }
-
         Vector3 desiredVelocity = moveDirection.normalized * speed;
         AccelerateTowards(desiredVelocity);
     }
@@ -89,5 +109,31 @@ public class EnemyMovement : MonoBehaviour
         );
 
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
+    }
+
+    private void StopAtWaypoint()
+    {
+        // Preserve vertical movement for gravity.
+        Vector3 velocity = rb.linearVelocity;
+        rb.linearVelocity = new Vector3(0f, velocity.y, 0f);
+
+        // Remove any remaining physical spin.
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (!Application.isPlaying || !debugHasWaypoint)
+            return;
+
+        Vector3 waypoint = debugWaypoint;
+        waypoint.y = transform.position.y;
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(waypoint, 0.2f);
+        Gizmos.DrawLine(transform.position, waypoint);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, transform.forward * 2f);
     }
 }

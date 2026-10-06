@@ -6,13 +6,14 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 [RequireComponent(typeof(Image))]
 public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler,
     IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     private Image icon;
-
+    [SerializeField] private TMP_Text quantityText;
     private InventoryUI owner;
     private int index;
     public Image Icon => icon;
@@ -25,7 +26,7 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler,
         icon.raycastTarget = true;
     }
 
-    public void Display(Item item, bool selected)
+    public void Display(Item item, int quantity, bool selected)
     {
         if (icon != null)
         {
@@ -34,6 +35,16 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler,
             icon.enabled = true;
             icon.color = selected ? Color.green : Color.white;
             icon.preserveAspect = true;
+        }
+        if (item != null && item.Stackable)
+        {
+            quantityText.text = "x" + quantity;
+            quantityText.gameObject.SetActive(true);
+        }
+        else
+        {
+            quantityText.text = "";
+            quantityText.gameObject.SetActive(false);
         }
     }
 

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2eb98213889f2b45b07654e44c760ed, type: 3}
-  m_Name: Pipe Item
+  m_Name: Nail Item
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  itemName: Pipe
-  inventoryIcon: {fileID: -4305721113290326376, guid: a90b2440337aafd43bb7db4b4baae247, type: 3}
-  prefab: {fileID: 8443380414641146386, guid: d4d5554cd2803ad4ca65709d86edc09d, type: 3}
-  worldPickupPrefab: {fileID: 8443380414641146386, guid: 60e51d2c27ec07648b220246f3bfc968, type: 3}
-  stackable: 0
-  maxStackSize: 1
+  itemName: Nail
+  inventoryIcon: {fileID: 21300000, guid: 8d752c4a10b9ba149b3f7767f21d949c, type: 3}
+  prefab: {fileID: 2034603179677174668, guid: c2838210ba5984c42ae714b3f821e461, type: 3}
+  worldPickupPrefab: {fileID: 5692537638561553838, guid: 15a6ce9b5cf6181439aa304c22cdb7bb, type: 3}
+  stackable: 1
+  maxStackSize: 25

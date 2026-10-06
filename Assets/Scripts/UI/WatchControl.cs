@@ -16,8 +16,11 @@ public class WatchControl : MonoBehaviour
     private InputAction lookAction;
     private bool watchEnabled = false;
     private PlayerInventory playerInventory;
+    private PlayerInteraction playerInteraction;
     private bool opening;
     private bool closing;
+    private bool interactionsSuspended;
+    private bool interactionWasEnabled;
 
     public bool IsOpenOrTransitioning => watchEnabled || opening || closing;
     public bool IsOpen => watchEnabled && !closing;
@@ -27,6 +30,7 @@ public class WatchControl : MonoBehaviour
         playerInput = GetComponentInParent<PlayerInput>();
         playerMovement = GetComponentInParent<PlayerMovement>();
         playerInventory = GetComponentInParent<PlayerInventory>();
+        playerInteraction = GetComponentInParent<PlayerInteraction>();
         watchAnimator = GetComponent<Animator>();
         toggleAction = playerInput.actions.FindAction("Watch/Toggle");
         lookAction = playerInput.actions["Look"];
@@ -57,6 +61,7 @@ public class WatchControl : MonoBehaviour
                 RequestClose();
             else if (Cursor.lockState == CursorLockMode.Locked)
             {
+                SuspendWorldInteractions();
                 opening = true;
                 watchAnimator.SetTrigger(ToggleTrigger);
             }
@@ -99,6 +104,7 @@ public class WatchControl : MonoBehaviour
         if (Time.timeScale == 0f)
             return;
 
+        RestoreWorldInteractions();
         playerMovement.SetMovementEnabled(!watchEnabled);
         if (watchEnabled)
             lookAction.Disable();
@@ -107,5 +113,24 @@ public class WatchControl : MonoBehaviour
         Cursor.lockState = watchEnabled ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = watchEnabled;
     }
-    
+
+    private void SuspendWorldInteractions()
+    {
+        if (interactionsSuspended) return;
+
+        interactionWasEnabled = playerInteraction != null && playerInteraction.enabled;
+        interactionsSuspended = true;
+
+        if (playerInteraction != null) playerInteraction.enabled = false;
+    }
+
+    private void RestoreWorldInteractions()
+    {
+        if (!interactionsSuspended) return;
+
+        if (playerInteraction != null) playerInteraction.enabled = interactionWasEnabled;
+
+        interactionsSuspended = false;
+    }
+
 }
