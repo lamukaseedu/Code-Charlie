@@ -20,6 +20,8 @@ public class EnemyDetection : MonoBehaviour
     public float eyeHeight = 1.2f;
     public bool drawGizmos = true;
 
+
+
     // Important! other scripts can read State, but only EnemyDetection is allowed to change it.
     public DetectionState State { get; private set; } = DetectionState.Idle;
 
@@ -58,8 +60,12 @@ public class EnemyDetection : MonoBehaviour
             HasHeardSound = true;
 
             // The sound location becomes the place EnemyMovement will walk toward.
-            CurrentWaypoint = soundPosition;
-            HasWaypoint = true;
+            if (State != DetectionState.Chasing)
+            {
+                CurrentWaypoint = soundPosition;
+                HasWaypoint = true;
+                State = DetectionState.Investigating;
+            }
 
             // Hearing a sound won't interrupt the enemy if it is already chasing the player.
             if (State != DetectionState.Chasing) State = DetectionState.Investigating;
@@ -88,10 +94,10 @@ public class EnemyDetection : MonoBehaviour
             // fieldOfView is split in half because vision extends to both sides of forward.
             if (angle <= fieldOfView * 0.5f)
             {
-                // Raycast acts like an invisible line checking if something blocks the view.
+                // Check only the space between the enemy and player so objects behind the player do not block sight.
                 Ray ray = new Ray(eyePos, dirToPlayer.normalized);
 
-                if (!Physics.Raycast(ray, out RaycastHit hit, visionRange, obstacleMask))
+                if (!Physics.Raycast(ray, out RaycastHit hit, distToPlayer, obstacleMask))
                 {
                     HasLineOfSightToPlayer = true;
                 }
