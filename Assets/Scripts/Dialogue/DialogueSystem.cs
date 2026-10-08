@@ -13,7 +13,7 @@ public class DialogueSystem : MonoBehaviour
     [SerializeField] private TMP_Text textBox;
     private List<List<string>> dialogue;
     private WaitForSeconds scrollTime = new WaitForSeconds(0.08f);
-    private WaitForSeconds readTime = new WaitForSeconds(1.5f);
+    private WaitForSeconds promptWaitTime = new WaitForSeconds(1f);
 
     IEnumerator ScrollText(string line)
     {
@@ -35,15 +35,18 @@ public class DialogueSystem : MonoBehaviour
         textBox.text = speaker;
         yield return StartCoroutine(ScrollText(line));
 
-        if (lineNumber < dialogue.Count - 1)
+        
+        yield return promptWaitTime;
+        textBox.text += "   (Press E to Continue)";
+        while (!Keyboard.current.eKey.wasPressedThisFrame)
         {
             yield return null;
+        }
 
-            while (!Keyboard.current.eKey.wasPressedThisFrame)
-            {
-                yield return null;
-            }
+        textBox.text = "";
 
+        if (lineNumber < dialogue.Count - 1)
+        {
             StartCoroutine(ReadLine(lineNumber + 1));
         }
     }
