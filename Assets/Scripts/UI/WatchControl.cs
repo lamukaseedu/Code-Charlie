@@ -3,11 +3,16 @@
  * Created: 9/17/2026
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class WatchControl : MonoBehaviour
 {
+    [SerializeField, Tooltip("Objects to hide while the watch is open.")]
+    private GameObject[] objectsToHideWhileOpen;
+
+    private readonly Dictionary<GameObject, bool> hiddenObjectStates = new Dictionary<GameObject, bool>();
     private PlayerInput playerInput;
     private PlayerMovement playerMovement;
     private Animator watchAnimator;
@@ -75,6 +80,7 @@ public class WatchControl : MonoBehaviour
     {
         opening = false;
         watchEnabled = true;
+        HideConfiguredObjects();
         playerMovement.SetMovementEnabled(false);
         lookAction.Disable();
         Cursor.lockState = CursorLockMode.None;
@@ -87,10 +93,41 @@ public class WatchControl : MonoBehaviour
         opening = false;
         closing = false;
         watchEnabled = false;
+        RestoreHiddenObjects();
         if (playerInventory != null) playerInventory.SetOpen(false);
         if (Time.timeScale == 0f)
             return;
         RestorePlayerControls();
+    }
+
+    private void HideConfiguredObjects()
+    {
+        if (objectsToHideWhileOpen == null)
+            return;
+
+        foreach (GameObject target in objectsToHideWhileOpen)
+        {
+            if (target == null || hiddenObjectStates.ContainsKey(target))
+                continue;
+
+            // Keep this controller active so it can close the watch and restore objects.
+            if (transform.IsChildOf(target.transform))
+                continue;
+
+            hiddenObjectStates.Add(target, target.activeSelf);
+            target.SetActive(false);
+        }
+    }
+
+    private void RestoreHiddenObjects()
+    {
+        foreach (KeyValuePair<GameObject, bool> entry in hiddenObjectStates)
+        {
+            if (entry.Key != null)
+                entry.Key.SetActive(entry.Value);
+        }
+
+        hiddenObjectStates.Clear();
     }
 
     // PauseMenu enables the player map on resume; reapply the watch's restrictions.
