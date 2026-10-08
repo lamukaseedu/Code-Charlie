@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 
 public class DialogueSystem : MonoBehaviour
 {
-    [SerializeField] private string playerName = "Charli";
+    [SerializeField] private string playerName = "Charlie";
     [SerializeField] private TMP_Text textBox;
     private List<List<string>> dialogue;
     private WaitForSeconds scrollTime = new WaitForSeconds(0.08f);
