@@ -7,6 +7,8 @@ public interface IInteractable
      * Created: 9/8/2026
      */
 
+    string InteractionPrompt { get; }
+
     void Hover();
     void Unhover();
     void Interact();

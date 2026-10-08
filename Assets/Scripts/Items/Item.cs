@@ -11,8 +11,17 @@ public class Item : ScriptableObject
     [SerializeField] private string itemName;
     [SerializeField] private Sprite inventoryIcon;
     [SerializeField] private GameObject prefab;
-    
+    [SerializeField] private GameObject worldPickupPrefab;
+    [SerializeField] private bool stackable = false;
+    [Min(1)]
+    [SerializeField] private int maxStackSize = 1;
+
     public string ItemName => itemName;
     public Sprite InventoryIcon => inventoryIcon;
     public GameObject Prefab => prefab;
+    public GameObject WorldPickupPrefab => worldPickupPrefab;
+
+
+    public bool Stackable => stackable;
+    public int MaxStackSize => stackable ? maxStackSize : 1;
 }

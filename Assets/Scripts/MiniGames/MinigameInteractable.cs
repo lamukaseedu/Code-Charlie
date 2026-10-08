@@ -17,6 +17,7 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
     [Header("Player Control")]
     [SerializeField] private PlayerCamera playerCameraController;
+    [SerializeField] private PlayerInteraction playerInteraction;
 
     [Header("Input")]
     [SerializeField] private PlayerInput playerInput;
@@ -37,6 +38,10 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
     [Tooltip("Renderer whose color changes while the player looks at this interactable.")]
     [SerializeField] private Renderer highlightRenderer;
     [SerializeField] private Color highlightColor = new(0.15f, 0.8f, 1f, 1f);
+
+    [Header("InteractionPrompt")]
+    [SerializeField] private string interactionPrompt;
+    public string InteractionPrompt => interactionPrompt;
 
     [Header("Interaction Events")]
     [SerializeField] private UnityEvent onHover;
@@ -103,6 +108,13 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         }
     }
 
+    //Called when we want to change the interaction prompt
+    public void SetInteractionPrompt(string newPrompt)
+    {
+        interactionPrompt = newPrompt;
+        playerInteraction?.RefreshPrompt(this);
+    }
+
     // Called by PlayerInteraction when the player presses the interact button.
     public void Interact()
     {
@@ -111,6 +123,8 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
     public void EnterInteractable()
     {
+        Debug.Log($"Enter requested. Active: {IsActive}, Transitioning: {IsTransitioning}");
+
         if (IsActive || IsTransitioning)
             return;
 
@@ -187,6 +201,7 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
         IsActive = false;
         IsTransitioning = false;
+        playerInteraction?.RefreshTarget();
     }
 
     private void OnExitInput(InputAction.CallbackContext context)

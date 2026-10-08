@@ -15,29 +15,47 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private LayerMask blockRaycastLayers;
 
     [Header("Input")]
-    [SerializeField] private InputActionReference buttonInteractable;
+    [SerializeField] private InputActionReference[] interactActions;
+
+    [Header("UI")]
+    [SerializeField] private InteractionPromptUI interactionPromptUI;
 
     private IInteractable currentInteractable;
 
     //Begins listening for user to press the key to activate interactable 
     private void OnEnable()
     {
-
-        buttonInteractable.action.performed += OnInteract;
-        buttonInteractable.action.Enable();
+        foreach (InputActionReference actionReference in interactActions)
+        {
+            if (actionReference != null)
+            {
+                actionReference.action.performed += OnInteract;
+            }
+        }
     }
 
     //Stops listening for user to press the key to activate interactable
     private void OnDisable()
     {
-        buttonInteractable.action.performed -= OnInteract;
-        buttonInteractable.action.Disable();
+        foreach (InputActionReference actionReference in interactActions)
+        {
+            if (actionReference != null)
+            {
+                actionReference.action.performed -= OnInteract;
+            }
+        }
         ClearCurrentInteractable();
     }
 
     //Constantly finding objects that lie in the interactable layer
     private void Update()
     {
+        if (Time.timeScale == 0f || WorkbenchUI.AnyOpen)
+        {
+            ClearCurrentInteractable();
+            return;
+        }
+
         FindInteractable();
     }
 
@@ -49,7 +67,9 @@ public class PlayerInteraction : MonoBehaviour
         int raycastLayers =
         interactionLayer.value | blockRaycastLayers.value;
 
-        if (playerCamera != null &&
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            if (playerCamera != null &&
             Physics.Raycast(
                 playerCamera.transform.position,
                 playerCamera.transform.forward,
@@ -57,18 +77,46 @@ public class PlayerInteraction : MonoBehaviour
                 interactionDistance,
                 raycastLayers,
                 QueryTriggerInteraction.Collide))
-        {
-            int hitLayer = hit.collider.gameObject.layer;
-
-            bool hitIsInteractable =
-                (interactionLayer.value & (1 << hitLayer)) != 0;
-
-            if (hitIsInteractable)
             {
-                detectedInteractable =
-                    hit.collider.GetComponentInParent<IInteractable>();
+                int hitLayer = hit.collider.gameObject.layer;
+
+                bool hitIsInteractable =
+                    (interactionLayer.value & (1 << hitLayer)) != 0;
+
+                if (hitIsInteractable)
+                {
+                    detectedInteractable =
+                        hit.collider.GetComponentInParent<IInteractable>();
+                }
             }
         }
+        else if (Cursor.lockState == CursorLockMode.None)
+        {
+
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            Ray ray = playerCamera.ScreenPointToRay(mousePosition);
+
+            if (playerCamera != null &&
+            Physics.Raycast(
+                ray,
+                out RaycastHit hit,
+                interactionDistance,
+                raycastLayers,
+                QueryTriggerInteraction.Collide))
+            {
+                int hitLayer = hit.collider.gameObject.layer;
+
+                bool hitIsInteractable =
+                    (interactionLayer.value & (1 << hitLayer)) != 0;
+
+                if (hitIsInteractable)
+                {
+                    detectedInteractable =
+                        hit.collider.GetComponentInParent<IInteractable>();
+                }
+            }
+        }
+        
 
         // The player is still looking at the same object.
         if (detectedInteractable == currentInteractable)
@@ -78,15 +126,45 @@ public class PlayerInteraction : MonoBehaviour
 
         // The player stopped looking at the previous object.
         currentInteractable?.Unhover();
-
         currentInteractable = detectedInteractable;
 
-        // The player started looking at a new object.
-        currentInteractable?.Hover();
+        if (currentInteractable != null)
+        {
+            currentInteractable.Hover();
+            interactionPromptUI?.Show(
+                currentInteractable.InteractionPrompt
+            );
+        }
+        else
+        {
+            interactionPromptUI?.Hide();
+        }
     }
 
+    public void RefreshTarget()
+    {
+        ClearCurrentInteractable();
+        FindInteractable();
+    }
+
+    public void RefreshPrompt(IInteractable interactable)
+    {
+        if (currentInteractable == interactable)
+        {
+            interactionPromptUI?.Show(interactable.InteractionPrompt);
+        }
+    }
+
+    public void ClearTarget()
+    {
+        ClearCurrentInteractable();
+    }
     private void OnInteract(InputAction.CallbackContext context)
     {
+        Debug.Log($"E received. Target: {currentInteractable}");
+        if (Time.timeScale == 0f || WorkbenchUI.AnyOpen)
+            return;
+
         currentInteractable?.Interact();
     }
 
@@ -94,6 +172,8 @@ public class PlayerInteraction : MonoBehaviour
     {
         currentInteractable?.Unhover();
         currentInteractable = null;
+
+        interactionPromptUI?.Hide();
     }
 
     //Helps for debugging raycast
