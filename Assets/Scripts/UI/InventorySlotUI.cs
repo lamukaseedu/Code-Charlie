@@ -56,6 +56,11 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler,
         }
         overlay.raycastTarget = false;
         overlay.rectTransform.SetAsLastSibling();
+        if (quantityText != null)
+        {
+            quantityText.raycastTarget = false;
+            quantityText.transform.SetAsLastSibling();
+        }
         UpdateOverlay();
     }
 
@@ -64,10 +69,15 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (icon != null)
         {
             icon.sprite = item != null ? item.InventoryIcon : null;
-            // Keep the image enabled so empty slots still accept drops.
             icon.enabled = true;
             icon.color = item != null ? Color.white : Color.clear;
             icon.preserveAspect = true;
+        }
+        if (quantityText != null)
+        {
+            bool showQuantity = item != null && item.Stackable && quantity > 0;
+            quantityText.text = showQuantity ? "x" + quantity : string.Empty;
+            quantityText.gameObject.SetActive(showQuantity);
         }
         isSelected = selected;
         UpdateOverlay();
@@ -103,16 +113,6 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler,
             sprite = normalSlotSpriteOverride != null ? normalSlotSpriteOverride : normalSprite;
         overlay.sprite = sprite;
         overlay.enabled = sprite != null;
-        if (item != null && item.Stackable)
-        {
-            quantityText.text = "x" + quantity;
-            quantityText.gameObject.SetActive(true);
-        }
-        else
-        {
-            quantityText.text = "";
-            quantityText.gameObject.SetActive(false);
-        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
