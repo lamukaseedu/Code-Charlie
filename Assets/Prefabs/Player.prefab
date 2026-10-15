@@ -2177,7 +2177,7 @@ MonoBehaviour:
   inventoryUI: {fileID: 3107513707820941102}
   dropSpawnPoint: {fileID: 0}
   playerInteraction: {fileID: 0}
-  dropAction: {fileID: 0}
+  dropAction: {fileID: 9086466234451035067, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
 --- !u!114 &1524755800005068521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2243,11 +2243,13 @@ MonoBehaviour:
   interactionDistance: 3
   interactionLayer:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 1792
   blockRaycastLayers:
     serializedVersion: 2
     m_Bits: 1
-  interactActions: []
+  interactActions:
+  - {fileID: 5680287017942265168, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+  - {fileID: 7071939386602526578, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
   interactionPromptUI: {fileID: 0}
 --- !u!1 &4845993798990113028
 GameObject:
