@@ -10,20 +10,58 @@ using TMPro;
 
 [RequireComponent(typeof(Image))]
 public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler,
-    IEndDragHandler, IDropHandler, IPointerClickHandler
+    IEndDragHandler, IDropHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    [Header("Slot Sprite Overrides")]
+    [Tooltip("Leave empty to use InventoryUI's default normal slot sprite.")]
+    [SerializeField] private Sprite normalSlotSpriteOverride;
+    [Tooltip("Leave empty to use InventoryUI's default hover slot sprite.")]
+    [SerializeField] private Sprite hoverSlotSpriteOverride;
+    [Tooltip("Leave empty to use InventoryUI's default selected slot sprite.")]
+    [SerializeField] private Sprite selectedSlotSpriteOverride;
+
     private Image icon;
+    private Image overlay;
+    private Sprite normalSprite;
+    private Sprite hoverSprite;
+    private Sprite selectedSprite;
+    private bool isHovered;
+    private bool isSelected;
+
     [SerializeField] private TMP_Text quantityText;
     private InventoryUI owner;
     private int index;
     public Image Icon => icon;
 
-    public void Initialize(InventoryUI inventoryUI, int slotIndex)
+    public void Initialize(InventoryUI inventoryUI, int slotIndex,
+        Sprite normal, Sprite hover, Sprite selected)
     {
         owner = inventoryUI;
         index = slotIndex;
+        normalSprite = normal;
+        hoverSprite = hover;
+        selectedSprite = selected;
         icon = GetComponent<Image>();
         icon.raycastTarget = true;
+
+        if (overlay == null)
+        {
+            overlay = new GameObject("Slot Overlay", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+            RectTransform rect = overlay.rectTransform;
+            rect.SetParent(transform, false);
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+        }
+        overlay.raycastTarget = false;
+        overlay.rectTransform.SetAsLastSibling();
+        if (quantityText != null)
+        {
+            quantityText.raycastTarget = false;
+            quantityText.transform.SetAsLastSibling();
+        }
+        UpdateOverlay();
     }
 
     public void Display(Item item, int quantity, bool selected)
@@ -31,21 +69,50 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler,
         if (icon != null)
         {
             icon.sprite = item != null ? item.InventoryIcon : null;
-            // Empty slots stay visible and accept drops.
             icon.enabled = true;
-            icon.color = selected ? Color.green : Color.white;
+            icon.color = item != null ? Color.white : Color.clear;
             icon.preserveAspect = true;
         }
-        if (item != null && item.Stackable)
+        if (quantityText != null)
         {
-            quantityText.text = "x" + quantity;
-            quantityText.gameObject.SetActive(true);
+            bool showQuantity = item != null && item.Stackable && quantity > 0;
+            quantityText.text = showQuantity ? "x" + quantity : string.Empty;
+            quantityText.gameObject.SetActive(showQuantity);
         }
+        isSelected = selected;
+        UpdateOverlay();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        isHovered = true;
+        UpdateOverlay();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        isHovered = false;
+        UpdateOverlay();
+    }
+
+    private void OnDisable()
+    {
+        isHovered = false;
+        UpdateOverlay();
+    }
+
+    private void UpdateOverlay()
+    {
+        if (overlay == null) return;
+        Sprite sprite;
+        if (isSelected)
+            sprite = selectedSlotSpriteOverride != null ? selectedSlotSpriteOverride : selectedSprite;
+        else if (isHovered)
+            sprite = hoverSlotSpriteOverride != null ? hoverSlotSpriteOverride : hoverSprite;
         else
-        {
-            quantityText.text = "";
-            quantityText.gameObject.SetActive(false);
-        }
+            sprite = normalSlotSpriteOverride != null ? normalSlotSpriteOverride : normalSprite;
+        overlay.sprite = sprite;
+        overlay.enabled = sprite != null;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
