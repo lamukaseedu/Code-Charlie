@@ -22182,6 +22182,33 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8416682366524458242, guid: b9454420e1735024785a4a1aab049cea, type: 3}
   m_PrefabInstance: {fileID: 1838406554}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1063438682 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9107735840455801877, guid: 80469648673c40c49aef098326766b54, type: 3}
+  m_PrefabInstance: {fileID: 3661275014648560256}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1063438686
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063438682}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5076798556035486163, guid: 75a8804926a1b1541a4b0455907b03ad, type: 3}
 --- !u!4 &1066191584 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1540441231352898408, guid: 868a6aac6682e684bbc6c9bacae6b11b, type: 3}
@@ -44343,10 +44370,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Medbay Table
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3143391104648391007, guid: 80469648673c40c49aef098326766b54, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9107735840455801877, guid: 80469648673c40c49aef098326766b54, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1063438686}
   m_SourcePrefab: {fileID: 100100000, guid: 80469648673c40c49aef098326766b54, type: 3}
 --- !u!23 &3896294156695556540
 MeshRenderer:
