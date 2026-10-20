@@ -2318,6 +2318,8 @@ GameObject:
   - component: {fileID: 308127766873646117}
   - component: {fileID: 6700286673247354925}
   - component: {fileID: 3982302211803669302}
+  - component: {fileID: 8100000000000000101}
+  - component: {fileID: 8100000000000000102}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4161,3 +4163,32 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8100000000000000101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8720b2e158e418892ae7e9f00e3c5e4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::NoiseEmitter
+  logEmissions: 0
+--- !u!114 &8100000000000000102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df675e1b0d364128a6cda56470190306, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerNoiseEmitter
+  walkingInterval: 0.5
+  runningInterval: 0.3
+  minimumTravelSpeed: 0.1
+  teleportSpeedThreshold: 30
