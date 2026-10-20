@@ -14,6 +14,10 @@ public class EnemyMovement : MonoBehaviour
     [Header("Turning")]
     public float turnSpeed = 180f;
 
+    private Animator enemyAnimation;
+
+    private static readonly int WalkParameter = Animator.StringToHash("Walk");
+
     private EnemyDetection detection;
     private Rigidbody rb;
 
@@ -28,6 +32,33 @@ public class EnemyMovement : MonoBehaviour
     {
         detection = GetComponent<EnemyDetection>();
         rb = GetComponent<Rigidbody>();
+
+        enemyAnimation = GetComponentInChildren<Animator>();
+    }
+
+    private void Update()
+    {
+        Vector3 horizontalVelocity = Vector3.ProjectOnPlane(rb.linearVelocity, Vector3.up);
+        UpdateWalkAnimation(horizontalVelocity.magnitude);
+    }
+
+    private void OnDisable()
+    {
+        UpdateWalkAnimation(0f);
+    }
+
+    public void UpdateWalkAnimation(float movementSpeed)
+    {
+        if (enemyAnimation == null)
+            return;
+
+        bool isWalking = movementSpeed > 0.01f;
+        enemyAnimation.SetBool(WalkParameter, isWalking);
+
+        // Keep idle animations and transitions playing when the enemy stops.
+        enemyAnimation.speed = isWalking
+            ? (chaseSpeed > 0f ? Mathf.Clamp01(movementSpeed / chaseSpeed) : 0f)
+            : 1f;
     }
 
     private void FixedUpdate()
@@ -119,6 +150,7 @@ public class EnemyMovement : MonoBehaviour
 
         // Remove any remaining physical spin.
         rb.angularVelocity = Vector3.zero;
+        UpdateWalkAnimation(0f);
     }
 
     private void OnDrawGizmosSelected()
