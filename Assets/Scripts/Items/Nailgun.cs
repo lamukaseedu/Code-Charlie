@@ -62,7 +62,7 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         if (playerInventory == null || playerInventory.IsOpen || Time.timeScale == 0f || Cursor.lockState != CursorLockMode.Locked)
             return;
 
-        if (reloadGun.WasPressedThisFrame())
+        if (reloadGun != null && reloadGun.WasPressedThisFrame())
         {
             Reload();
         }
@@ -111,13 +111,6 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         if (nailsInMag <= 0)
         {
             Debug.Log("Magazine empty! Reload!");
-            return;
-        }
-
-        if (playerInventory == null ||
-        !playerInventory.TryConsumeItem(nailAmmo, 1))
-        {
-            Debug.Log("Out of nails!");
             return;
         }
 

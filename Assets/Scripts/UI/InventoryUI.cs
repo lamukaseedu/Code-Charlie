@@ -7,6 +7,10 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private InventorySlotUI[] slotViews = new InventorySlotUI[PlayerInventory.SlotCount];
     [Tooltip("Panel containing only slots 5–8. Keep the hotbar outside this panel.")]
     [SerializeField] private GameObject storagePanel;
+    [Header("Slot Overlay Sprites")]
+    [SerializeField] private Sprite normalSlotSprite;
+    [SerializeField] private Sprite hoverSlotSprite;
+    [SerializeField] private Sprite selectedSlotSprite;
     private Image dragIcon;
 
     private PlayerInventory inventory;
@@ -27,7 +31,8 @@ public class InventoryUI : MonoBehaviour
         inventory.Changed += Refresh;
         for (int i = 0; i < slotViews.Length; i++)
         {
-            if (slotViews[i] != null) slotViews[i].Initialize(this, i);
+            if (slotViews[i] != null)
+                slotViews[i].Initialize(this, i, normalSlotSprite, hoverSlotSprite, selectedSlotSprite);
         }
         SetOpen(inventory.IsOpen);
         Refresh();
