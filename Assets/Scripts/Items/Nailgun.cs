@@ -76,7 +76,7 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         if (playerInventory == null || playerInventory.IsOpen || Time.timeScale == 0f || Cursor.lockState != CursorLockMode.Locked)
             return;
 
-        if (reloadGun.WasPressedThisFrame())
+        if (reloadGun != null && reloadGun.WasPressedThisFrame())
         {
             Reload();
         }
@@ -128,17 +128,15 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
             return;
         }
 
-        if (playerInventory == null ||
-        !playerInventory.TryConsumeItem(nailAmmo, 1))
-        {
-            Debug.Log("Out of nails!");
-            return;
-        }
-
         nextFireTime = Time.time + fireRate;
         nailsInMag--;
 
         GameAudio.PlayOneShot(audioSource, fireClip);
+
+        GameObject noiseSource = playerInventory != null ? playerInventory.gameObject : gameObject;
+        NoiseEmitter.EmitAt(Muzzle != null ? Muzzle.position : transform.position,
+            NoiseEmitter.NoiseLevel.Strong, noiseSource);
+
         Debug.Log("Bang");
 
         Ray ray = new Ray(
@@ -171,12 +169,17 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
             Debug.Log("Hit: " + hit.collider.name);
 
+            IImpactable impactable = hit.collider.GetComponentInParent<IImpactable>();
+
             IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
             if (damageable != null)
             {
                 damageable.TakeDamage(damage);
             }
+            // Capture the receiver before damage, then notify after existing damage handling.
+            if (impactable != null && (!(impactable is Object receiver) || receiver != null))
+                impactable.OnImpact(new ImpactInfo(hit.point, hit.normal, ray.direction, noiseSource, hit.collider));
         }
         else
         {

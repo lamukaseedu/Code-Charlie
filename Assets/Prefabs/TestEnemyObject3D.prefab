@@ -16,8 +16,7 @@ GameObject:
   - component: {fileID: 6994155631049469000}
   - component: {fileID: 704859991370543729}
   - component: {fileID: 1922374720375253166}
-  - component: {fileID: 465591211487156374}
-  - component: {fileID: 1998662433156483441}
+  - component: {fileID: 8100000000000000201}
   m_Layer: 0
   m_Name: TestEnemyObject3D
   m_TagString: Untagged
@@ -106,7 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDetection
   hearingRadius: 30
   visionRange: 25
-  fieldOfView: 90
+  fieldOfView: 120
   obstacleMask:
     serializedVersion: 2
     m_Bits: 64
@@ -136,9 +135,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 80
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &6994155631049469000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,7 +154,7 @@ MonoBehaviour:
   chaseSpeed: 7
   stopDistance: 0.2
   acceleration: 15
-  turnSpeed: 180
+  turnSpeed: 250
   debugWaypoint: {x: 0, y: 0, z: 0}
   debugHasWaypoint: 0
   debugState: 0
@@ -168,7 +167,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636542431000081747}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f96cf6f91751b644a8b1ac32fb831525, type: 3}
   m_Name: 
@@ -178,7 +177,7 @@ MonoBehaviour:
   fovColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   losColor: {r: 1, g: 0, b: 0, a: 1}
   lineWidth: 0.05
-  showRuntime: 0
+  showRuntime: 1
 --- !u!136 &1922374720375253166
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -202,125 +201,6 @@ CapsuleCollider:
   m_Height: 2.6
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!82 &465591211487156374
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636542431000081747}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &1998662433156483441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636542431000081747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67dce6fca73d2704e8522d5b9d149a5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAudio
-  attackClips:
-  - {fileID: 8300000, guid: 36005d064d454c04fba1e3a8f28c5da9, type: 3}
-  - {fileID: 8300000, guid: b44f6fe90cdcca94b98b0feb684f84af, type: 3}
-  - {fileID: 8300000, guid: c27a77a1452078c4ca68685352639dc8, type: 3}
-  damageClips:
-  - {fileID: 8300000, guid: a745f12eb48c7994abae65c984c5e02a, type: 3}
-  - {fileID: 8300000, guid: 5fbdf54b83422b94da1b0bf289c03891, type: 3}
-  spatialBlend: 1
-  minDistance: 1
-  maxDistance: 20
 --- !u!1 &961452922116546634
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,3 +399,43 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8100000000000000201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636542431000081747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bf80de25fee469fb65a849619da4905, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAwareness
+  player: {fileID: 0}
+  hearingRadius: 12
+  alertHearingMultiplier: 1.5
+  noisePriorityWindow: 0.15
+  targetPriorityDecayPerSecond: 10
+  initialAlertSuspicion: 50
+  unawareDecayDelay: 2
+  alertDecayDelay: 5
+  suspicionDecayPerSecond: 5
+  visionRange: 12
+  fieldOfView: 90
+  shortVisionRange: 2.5
+  shortFieldOfView: 240
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  eyeHeight: 1.2
+  targetHeight: 1
+  unawareRecognitionTime: 1
+  alertRecognitionTime: 0.4
+  glimpseThreshold: 0.2
+  farRecognitionMultiplier: 0.4
+  edgeRecognitionMultiplier: 0.5
+  recognitionDecayPerSecond: 1
+  lostSightTime: 3
+  proximityRadius: 2.5
+  unawareProximityPerSecond: 40
+  alertProximityPerSecond: 60
