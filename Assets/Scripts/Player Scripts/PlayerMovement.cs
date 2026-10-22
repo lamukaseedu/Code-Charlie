@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] float walkSpeed = 5f;
     [SerializeField] float sprintSpeed = 8f;
+    [SerializeField] float crouchSpeed = 0.75f;
+    [SerializeField] float walkHeight = 2f;
+    [SerializeField] float crouchHeight = 1.2f;
     
     private const float gravity = 10f;
     private bool isMoving = false;
@@ -18,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
     private InputAction moveAction;
     private InputAction sprintAction;
+    private InputAction crouchAction;
 
     // Assign variables
     private void Awake()
@@ -26,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         PlayerInput playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
         sprintAction = playerInput.actions["Sprint"];
+        crouchAction = playerInput.actions["Crouch"];
     }
 
     // Reads input Player Controls and moves the player accordingly
@@ -50,7 +55,21 @@ public class PlayerMovement : MonoBehaviour
         }
         
         // If sprint button is pressed, increase speed
-        float speed = sprintAction.IsPressed() ? sprintSpeed : walkSpeed;
+        float speed;
+        float height;
+        if (sprintAction.IsPressed())
+        {
+            speed = sprintSpeed;
+            height = walkHeight;
+        } else if (crouchAction.IsPressed())
+        {
+            speed = crouchSpeed;
+            height = crouchHeight;
+        } else
+        {
+            speed = walkSpeed;
+            height = walkHeight;
+        }
 
         movement *= speed;
 
@@ -58,6 +77,7 @@ public class PlayerMovement : MonoBehaviour
         movement.y = -gravity;
         
         controller.Move(movement * Time.deltaTime);
+        controller.height = height;
     }
     
     public void SetMovementEnabled(bool enabled)
@@ -66,11 +86,13 @@ public class PlayerMovement : MonoBehaviour
         {
             moveAction.Enable();
             sprintAction.Enable();
+            crouchAction.Enable();
         }
         else
         {
             moveAction.Disable();
             sprintAction.Disable();
+            crouchAction.Disable();
             isMoving = false;
         }
     }
