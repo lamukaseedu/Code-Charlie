@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class DialogueSystem : MonoBehaviour
 {
     [SerializeField] private string playerName = "Charlie";
     [SerializeField] private TMP_Text textBox;
+    [SerializeField] private GameObject player;
     private List<List<string>> dialogue;
     private WaitForSeconds scrollTime = new WaitForSeconds(0.08f);
     private WaitForSeconds promptWaitTime = new WaitForSeconds(1f);
@@ -48,6 +50,9 @@ public class DialogueSystem : MonoBehaviour
         if (lineNumber < dialogue.Count - 1)
         {
             StartCoroutine(ReadLine(lineNumber + 1));
+        } else
+        {
+            SetPlayerMovement(true);
         }
     }
     public void StartDialogue(List<List<string>> script)
@@ -58,5 +63,9 @@ public class DialogueSystem : MonoBehaviour
     public string GetPlayerName()
     {
         return playerName;
+    }
+    public void SetPlayerMovement(bool state)
+    {
+        player.GetComponent<PlayerMovement>().SetMovementEnabled(state);
     }
 }

@@ -6515,6 +6515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSystem
   playerName: Charli
   textBox: {fileID: 1083705765}
+  player: {fileID: 422424749}
 --- !u!4 &622350862
 Transform:
   m_ObjectHideFlags: 0
@@ -15241,6 +15242,7 @@ MonoBehaviour:
   dialogueSystem: {fileID: 622350861}
   triggerTag: Player
   eventTriggered: 0
+  movementEnabled: 0
 --- !u!135 &1582151765
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -2,11 +2,12 @@
  * Author: Savio Xavier
  * Created: 8/30/2026
  * Edited By: Savio Xavier
- * Edited: 10/20/2026
+ * Edited: 10/22/2026
  */
 
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class Pipe : MonoBehaviour, IUsable
@@ -27,6 +28,9 @@ public class Pipe : MonoBehaviour, IUsable
     private AudioSource audioSource;
     private bool swingType = true;
 
+    private float nextAttackTime = 0f;
+    private float attackCooldown = 0.75f;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -46,23 +50,30 @@ public class Pipe : MonoBehaviour, IUsable
     // Overlaps a sphere in look direction and applies damage, skipping the player
     public void Use()
     {
-        Transform origin = Camera.main.transform;
-        Vector3 center = origin.position + origin.forward * range;
-        Collider[] hits = Physics.OverlapSphere(center, radius, hitMask);
+        if (Time.time > nextAttackTime)
+        {
+            if (swingAnimator != null)
+            {
+                swingAnimator.SetBool("swingAlternator", swingType);
+                swingAnimator.SetTrigger("swingTrigger");
+                swingType = !swingType;
+            }
+            GameAudio.PlayOneShot(audioSource, swingClip);
+            StartCoroutine(Startup());
+            nextAttackTime = Time.time + attackCooldown;
+        }
+    }
+
+    IEnumerator Startup()
+    {
+        yield return new WaitForSeconds(0.3f);
+        Debug.Log("Swing!");
         float hitDamage = upgrades != null && upgrades.IsUpgraded(WeaponUpgradeId.PipeDamage)
             ? upgradedDamage
             : damage;
-
-        if (swingAnimator != null)
-        {
-            swingAnimator.SetBool("swingAlternator", swingType);
-            swingAnimator.SetTrigger("swingTrigger");
-            swingType = !swingType;
-        }
-
-
-        GameAudio.PlayOneShot(audioSource, swingClip);
-
+        Transform origin = Camera.main.transform;
+        Vector3 center = origin.position + origin.forward * range;
+        Collider[] hits = Physics.OverlapSphere(center, radius, hitMask);
         var damagedTargets = new HashSet<IDamageable>();
         var knockedTargets = new HashSet<IKnockable>();
         bool hitWorld = false;
@@ -101,6 +112,8 @@ public class Pipe : MonoBehaviour, IUsable
             GameAudio.PlayOneShot(audioSource, hitEnemyClip);
         else if (hitWorld)
             GameAudio.PlayOneShot(audioSource, hitMetalClip);
+
+        yield return new WaitForSeconds(5f);
     }
 
     // Draws the melee hit sphere in the Scene view when this object is selected
