@@ -23,6 +23,9 @@ public class PlayerMovement : MonoBehaviour
     private InputAction sprintAction;
     private InputAction crouchAction;
 
+    public bool IsSprinting => isActiveAndEnabled && isMoving && sprintAction != null && sprintAction.IsPressed();
+    public bool IsWalking => isActiveAndEnabled && isMoving && !IsSprinting;
+
     // Assign variables
     private void Awake()
     {
