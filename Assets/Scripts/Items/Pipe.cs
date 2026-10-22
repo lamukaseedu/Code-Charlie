@@ -3,8 +3,11 @@
  * Created: 8/30/2026
  */
 
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using static Unity.Cinemachine.IInputAxisOwner.AxisDescriptor;
+using static UnityEngine.UI.Image;
 
 public class Pipe : MonoBehaviour, IUsable
 {
@@ -18,30 +21,43 @@ public class Pipe : MonoBehaviour, IUsable
     private PlayerWeaponUpgrades upgrades;
     private bool swingType = true;
 
+    private float nextAttackTime = 0f;
+
+    private float attackCooldown = 0.75f;
+
     private void OnEnable()
     {
         upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
+        //swingAnimator.SetBool("Equip", true);
     }
 
     // Damages IDamageable targets in a sphere in front of the camera on click
     // Overlaps a sphere in look direction and applies damage, skipping the player
     public void Use()
     {
-        Transform origin = Camera.main.transform;
-        Vector3 center = origin.position + origin.forward * range;
-        Collider[] hits = Physics.OverlapSphere(center, radius, hitMask);
+        if (Time.time > nextAttackTime)
+        {
+            if (swingAnimator != null)
+            {
+                swingAnimator.SetBool("swingAlternator", swingType);
+                swingAnimator.SetTrigger("swingTrigger");
+                swingType = !swingType;
+            }
+            StartCoroutine(Startup());
+            nextAttackTime = Time.time + attackCooldown;
+        }
+    }
+
+    IEnumerator Startup()
+    {
+        yield return new WaitForSeconds(0.3f);
+        Debug.Log("Swing!");
         float hitDamage = upgrades != null && upgrades.IsUpgraded(WeaponUpgradeId.PipeDamage)
             ? upgradedDamage
             : damage;
-
-        if (swingAnimator != null)
-        {
-            swingAnimator.SetBool("swingAlternator", swingType);
-            swingAnimator.SetTrigger("swingTrigger");
-            swingType = !swingType;
-        }
-
-
+        Transform origin = Camera.main.transform;
+        Vector3 center = origin.position + origin.forward * range;
+        Collider[] hits = Physics.OverlapSphere(center, radius, hitMask);
         var damagedTargets = new HashSet<IDamageable>();
         var knockedTargets = new HashSet<IKnockable>();
 
@@ -72,8 +88,7 @@ public class Pipe : MonoBehaviour, IUsable
                 knockable.Execute(transform);
             }
         }
-
-
+        yield return new WaitForSeconds(5f);
     }
 
     // Draws the melee hit sphere in the Scene view when this object is selected

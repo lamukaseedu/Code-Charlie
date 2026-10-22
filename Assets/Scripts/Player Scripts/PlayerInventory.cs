@@ -324,7 +324,7 @@ public class PlayerInventory : MonoBehaviour
                 break;
         }
 
-        RefreshEquipment();
+        //RefreshEquipment();
         Changed?.Invoke();
 
         return true;
