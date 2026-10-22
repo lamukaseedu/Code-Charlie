@@ -1,6 +1,8 @@
 /*
  * Author: Savio Xavier
  * Created: 9/15/2026
+ * Edited By: Savio Xavier
+ * Edited: 10/20/2026
  */
 
 using UnityEngine;
@@ -19,6 +21,12 @@ public class HealthZone : MonoBehaviour
     [SerializeField] private bool playerOnly = true;
 
     private float nextTickTime;
+    private EnemyAudio enemyAudio;
+
+    private void Awake()
+    {
+        enemyAudio = GetComponentInParent<EnemyAudio>();
+    }
 
     private void OnTriggerStay(Collider other)
     {
@@ -42,7 +50,10 @@ public class HealthZone : MonoBehaviour
 
         if (mode == Mode.Damage)
         {
+            bool wasAlive = !health.IsDead;
             health.TakeDamage(amountPerTick);
+            if (wasAlive)
+                enemyAudio?.PlayAttack();
         }
         else
         {

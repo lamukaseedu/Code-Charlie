@@ -1,10 +1,13 @@
 /*
  * Author: Shelton Joseph
  * Created: 8/30/2026
+ * Edited By: Savio Xavier
+ * Edited: 10/20/2026
  */
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(AudioSource))]
 public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 {
     [SerializeField] private float damage = 25f;
@@ -32,6 +35,10 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
     [SerializeField] private Animator recoilAnimator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip fireClip;
+
+    private AudioSource audioSource;
     private float nextFireTime = 0f;
 
     private InputAction reloadGun;
@@ -49,6 +56,13 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         if (playerInput != null)
             reloadGun = playerInput.actions["Reload"];
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
+        }
     }
 
     private void OnEnable()
@@ -124,6 +138,7 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         nextFireTime = Time.time + fireRate;
         nailsInMag--;
 
+        GameAudio.PlayOneShot(audioSource, fireClip);
         Debug.Log("Bang");
 
         Ray ray = new Ray(

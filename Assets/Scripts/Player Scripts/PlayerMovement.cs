@@ -1,6 +1,8 @@
 /*
  * Author: Lam Nguyen
  * Created: 8/27/2026
+ * Edited By: Savio Xavier
+ * Edited: 10/20/2026
  */
 
 using UnityEngine;
@@ -14,10 +16,13 @@ public class PlayerMovement : MonoBehaviour
     
     private const float gravity = 10f;
     private bool isMoving = false;
+    private bool isSprinting = false;
 
     private CharacterController controller;
     private InputAction moveAction;
     private InputAction sprintAction;
+
+    public bool IsSprinting => isSprinting;
 
     // Assign variables
     private void Awake()
@@ -49,8 +54,8 @@ public class PlayerMovement : MonoBehaviour
             isMoving = false;
         }
         
-        // If sprint button is pressed, increase speed
-        float speed = sprintAction.IsPressed() ? sprintSpeed : walkSpeed;
+        isSprinting = isMoving && sprintAction.IsPressed();
+        float speed = isSprinting ? sprintSpeed : walkSpeed;
 
         movement *= speed;
 
@@ -72,6 +77,7 @@ public class PlayerMovement : MonoBehaviour
             moveAction.Disable();
             sprintAction.Disable();
             isMoving = false;
+            isSprinting = false;
         }
     }
 

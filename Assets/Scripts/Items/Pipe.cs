@@ -1,11 +1,14 @@
 /*
  * Author: Savio Xavier
  * Created: 8/30/2026
+ * Edited By: Savio Xavier
+ * Edited: 10/20/2026
  */
 
 using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(AudioSource))]
 public class Pipe : MonoBehaviour, IUsable
 {
     [SerializeField] float damage = 10f;
@@ -15,8 +18,24 @@ public class Pipe : MonoBehaviour, IUsable
     [SerializeField] LayerMask hitMask = ~0;
     [SerializeField] private Animator swingAnimator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip swingClip;
+    [SerializeField] private AudioClip hitEnemyClip;
+    [SerializeField] private AudioClip hitMetalClip;
+
     private PlayerWeaponUpgrades upgrades;
+    private AudioSource audioSource;
     private bool swingType = true;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
+        }
+    }
 
     private void OnEnable()
     {
@@ -42,8 +61,11 @@ public class Pipe : MonoBehaviour, IUsable
         }
 
 
+        GameAudio.PlayOneShot(audioSource, swingClip);
+
         var damagedTargets = new HashSet<IDamageable>();
         var knockedTargets = new HashSet<IKnockable>();
+        bool hitWorld = false;
 
         for (int i = 0; i < hits.Length; i++)
         {
@@ -54,6 +76,8 @@ public class Pipe : MonoBehaviour, IUsable
             {
                 continue;
             }
+
+            hitWorld = true;
 
             // Resolve both before applying damage, which may destroy the enemy.
             IDamageable damageable =
@@ -73,7 +97,10 @@ public class Pipe : MonoBehaviour, IUsable
             }
         }
 
-
+        if (damagedTargets.Count > 0)
+            GameAudio.PlayOneShot(audioSource, hitEnemyClip);
+        else if (hitWorld)
+            GameAudio.PlayOneShot(audioSource, hitMetalClip);
     }
 
     // Draws the melee hit sphere in the Scene view when this object is selected
