@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using TMPro;
 using System.Collections;
@@ -22,6 +23,14 @@ public class TerminalLogin : MonoBehaviour
     [SerializeField] private string correctEmployeeID = "PX-0427";
     [SerializeField] private string correctAccessKey = "ORPHEUS";
 
+    [Header("Credential Field Options")]
+    [SerializeField] private bool prefillEmployeeID = false;
+    [SerializeField] private bool lockEmployeeID = false;
+
+    [SerializeField] private bool prefillAccessKey = false;
+    [SerializeField] private bool lockAccessKey = false;
+
+
     [Header("Status Messages")]
     [SerializeField] private string defaultMessage = "LOGIN";
     [SerializeField] private string successMessage = "ACCESS GRANTED";
@@ -34,15 +43,42 @@ public class TerminalLogin : MonoBehaviour
     [SerializeField] private UnityEvent onLoginSuccess;
     [SerializeField] private UnityEvent onLoginFailure;
 
+    [Header("Keyboard Shortcut Options")]
+    [SerializeField] private InputActionReference navigateLoginAction;
+    [SerializeField] private InputActionReference submitLoginAction;
+
     private bool isLoggingIn;
     private Coroutine failureCoroutine;
 
+    private void OnEnable()
+    {
+        navigateLoginAction.action.performed += OnNavigateLogin;
+        submitLoginAction.action.performed += OnSubmitLogin;
+    }
+
+    private void OnDisable()
+    {
+        navigateLoginAction.action.performed -= OnNavigateLogin;
+        submitLoginAction.action.performed -= OnSubmitLogin;
+    }
     private void Start()
     {
+        InitializeLoginFields();
         ResetStatus();
         loginButton.onClick.AddListener(AttemptLogin);
     }
 
+    private void InitializeLoginFields()
+    {
+        if (prefillEmployeeID)
+            employeeIDInput.SetTextWithoutNotify(correctEmployeeID);
+        
+        if (prefillAccessKey)
+            accessKeyInput.SetTextWithoutNotify(correctAccessKey);
+
+        employeeIDInput.readOnly = lockEmployeeID;
+        accessKeyInput.readOnly = lockAccessKey; 
+    }
     public void AttemptLogin()
     {
         if (isLoggingIn)
@@ -78,6 +114,47 @@ public class TerminalLogin : MonoBehaviour
 
             failureCoroutine = StartCoroutine(ShowLoginFailure());
         }
+    }
+
+    private void OnNavigateLogin(InputAction.CallbackContext context)
+    {
+        if (isLoggingIn)
+            return;
+        bool canEditID = !employeeIDInput.readOnly;
+        bool canEditKey = !accessKeyInput.readOnly;
+
+        if (!canEditID && !canEditKey)
+            return;
+
+        if (canEditID && !canEditKey)
+        {
+            employeeIDInput.Select();
+            employeeIDInput.ActivateInputField();
+            return;
+        }
+        if (!canEditID && canEditKey)
+        {
+            accessKeyInput.Select();
+            accessKeyInput.ActivateInputField();
+            return;
+        }
+        if (employeeIDInput.isFocused)
+        {
+            accessKeyInput.Select();
+            accessKeyInput.ActivateInputField();
+        } else
+        {
+            employeeIDInput.Select();
+            employeeIDInput.ActivateInputField();
+        }
+            
+    }
+
+    private void OnSubmitLogin(InputAction.CallbackContext context)
+    {
+        if (isLoggingIn)
+            return;
+        AttemptLogin();
     }
 
     private IEnumerator ShowLoginFailure()
