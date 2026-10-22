@@ -97,6 +97,16 @@
                     "priority": 0
                 },
                 {
+                    "name": "Crouch",
+                    "type": "Button",
+                    "id": "3fc57396-eee2-4c71-907b-a094c1a9b674",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
                     "name": "Reload",
                     "type": "Button",
                     "id": "05379ef3-1805-4701-9e23-f39a58fe4366",
@@ -292,6 +302,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d5304a0-76f2-4f80-a043-68f6a922c2bd",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

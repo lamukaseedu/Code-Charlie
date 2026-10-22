@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6994155631049469000}
   - component: {fileID: 704859991370543729}
   - component: {fileID: 1922374720375253166}
+  - component: {fileID: 8100000000000000201}
   m_Layer: 0
   m_Name: TestEnemyObject3D
   m_TagString: Untagged
@@ -104,7 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDetection
   hearingRadius: 30
   visionRange: 25
-  fieldOfView: 90
+  fieldOfView: 120
   obstacleMask:
     serializedVersion: 2
     m_Bits: 64
@@ -134,9 +135,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 80
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &6994155631049469000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +154,12 @@ MonoBehaviour:
   chaseSpeed: 7
   stopDistance: 0.2
   acceleration: 15
-  turnSpeed: 180
+  turnSpeed: 250
+  debugWaypoint: {x: 0, y: 0, z: 0}
+  debugHasWaypoint: 0
+  debugState: 0
+  debugDistance: 0
+  debugTurnAngle: 0
 --- !u!114 &704859991370543729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,7 +167,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636542431000081747}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f96cf6f91751b644a8b1ac32fb831525, type: 3}
   m_Name: 
@@ -171,7 +177,7 @@ MonoBehaviour:
   fovColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   losColor: {r: 1, g: 0, b: 0, a: 1}
   lineWidth: 0.05
-  showRuntime: 0
+  showRuntime: 1
 --- !u!136 &1922374720375253166
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -393,3 +399,43 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8100000000000000201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636542431000081747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bf80de25fee469fb65a849619da4905, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAwareness
+  player: {fileID: 0}
+  hearingRadius: 12
+  alertHearingMultiplier: 1.5
+  noisePriorityWindow: 0.15
+  targetPriorityDecayPerSecond: 10
+  initialAlertSuspicion: 50
+  unawareDecayDelay: 2
+  alertDecayDelay: 5
+  suspicionDecayPerSecond: 5
+  visionRange: 12
+  fieldOfView: 90
+  shortVisionRange: 2.5
+  shortFieldOfView: 240
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  eyeHeight: 1.2
+  targetHeight: 1
+  unawareRecognitionTime: 1
+  alertRecognitionTime: 0.4
+  glimpseThreshold: 0.2
+  farRecognitionMultiplier: 0.4
+  edgeRecognitionMultiplier: 0.5
+  recognitionDecayPerSecond: 1
+  lostSightTime: 3
+  proximityRadius: 2.5
+  unawareProximityPerSecond: 40
+  alertProximityPerSecond: 60
