@@ -37,6 +37,9 @@ public class EnemyMovement : MonoBehaviour
     public int PatrolIndex => patrolIndex;
     public Vector3[] PathCorners => (Vector3[])corners.Clone();
 
+    private Animator enemyAnimation;
+    private static readonly int WalkParameter = Animator.StringToHash("Walk");
+
     private EnemyAwareness awareness;
     private Rigidbody rb;
     private Collider bodyCollider;
@@ -57,12 +60,35 @@ public class EnemyMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         bodyCollider = GetComponent<Collider>();
         path = new NavMeshPath();
+        enemyAnimation = GetComponentInChildren<Animator>();
+    }
+
+    private void Update()
+    {
+        // Animate actual motion, including bounded braking and external impulses.
+        UpdateWalkAnimation(Horizontal(rb.linearVelocity).magnitude);
     }
 
     private void OnDisable()
     {
         hasRequest = false;
         corners = new Vector3[0];
+        UpdateWalkAnimation(0f);
+    }
+
+    // Also used by EnemyWalkDemo when this motor is disabled.
+    public void UpdateWalkAnimation(float movementSpeed)
+    {
+        if (enemyAnimation == null)
+            return;
+
+        bool isWalking = movementSpeed > 0.01f;
+        enemyAnimation.SetBool(WalkParameter, isWalking);
+
+        // Keep idle animations and transitions playing when the enemy stops.
+        enemyAnimation.speed = isWalking
+            ? (chaseSpeed > 0f ? Mathf.Clamp01(movementSpeed / chaseSpeed) : 0f)
+            : 1f;
     }
 
     private void FixedUpdate()

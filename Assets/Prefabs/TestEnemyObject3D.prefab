@@ -105,7 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDetection
   hearingRadius: 30
   visionRange: 25
-  fieldOfView: 90
+  fieldOfView: 120
   obstacleMask:
     serializedVersion: 2
     m_Bits: 64
@@ -135,9 +135,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 80
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &6994155631049469000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +154,12 @@ MonoBehaviour:
   chaseSpeed: 7
   stopDistance: 0.2
   acceleration: 15
-  turnSpeed: 180
+  turnSpeed: 250
+  debugWaypoint: {x: 0, y: 0, z: 0}
+  debugHasWaypoint: 0
+  debugState: 0
+  debugDistance: 0
+  debugTurnAngle: 0
 --- !u!114 &704859991370543729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,7 +167,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636542431000081747}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f96cf6f91751b644a8b1ac32fb831525, type: 3}
   m_Name: 
@@ -172,7 +177,7 @@ MonoBehaviour:
   fovColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   losColor: {r: 1, g: 0, b: 0, a: 1}
   lineWidth: 0.05
-  showRuntime: 0
+  showRuntime: 1
 --- !u!136 &1922374720375253166
 CapsuleCollider:
   m_ObjectHideFlags: 0
