@@ -117,6 +117,10 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         nextFireTime = Time.time + fireRate;
         nailsInMag--;
 
+        GameObject noiseSource = playerInventory != null ? playerInventory.gameObject : gameObject;
+        NoiseEmitter.EmitAt(Muzzle != null ? Muzzle.position : transform.position,
+            NoiseEmitter.NoiseLevel.Strong, noiseSource);
+
         Debug.Log("Bang");
 
         Ray ray = new Ray(
@@ -149,12 +153,17 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
             Debug.Log("Hit: " + hit.collider.name);
 
+            IImpactable impactable = hit.collider.GetComponentInParent<IImpactable>();
+
             IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
             if (damageable != null)
             {
                 damageable.TakeDamage(damage);
             }
+            // Capture the receiver before damage, then notify after existing damage handling.
+            if (impactable != null && (!(impactable is Object receiver) || receiver != null))
+                impactable.OnImpact(new ImpactInfo(hit.point, hit.normal, ray.direction, noiseSource, hit.collider));
         }
         else
         {
