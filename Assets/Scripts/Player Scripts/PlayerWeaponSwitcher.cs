@@ -67,6 +67,8 @@ public class PlayerWeaponSwitcher : MonoBehaviour
     // Activates the weapon at the specified index
     private void SelectWeapon(int index)
     {
+        Debug.Log($"SelectWeapon called with index {index}");
+
         if (weapons == null || index < 0 || index >= weapons.Length)
         {
             return;

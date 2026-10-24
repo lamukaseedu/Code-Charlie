@@ -3,6 +3,8 @@
  * Created: 8/30/2026
  * Edited By: Andres Rondon-Villarmosa
  * Edited: 9/10/2026
+ * Edited By: Savio Xavier
+ * Edited: 10/20/2026
  */
 
 using UnityEngine.Events;
@@ -29,6 +31,8 @@ public class Health : MonoBehaviour, IDamageable
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
     public float HealthPercent => maxHealth <= 0f ? 0f : currentHealth / maxHealth;
+    public bool IsDead => isDead;
+    public UnityEvent OnDamaged => onDamaged;
     public UnityEvent<float> OnHealthChanged => onHealthChanged;
 
     private void Awake()
