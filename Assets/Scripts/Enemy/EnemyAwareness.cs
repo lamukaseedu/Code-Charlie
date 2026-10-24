@@ -79,9 +79,11 @@ public class EnemyAwareness : MonoBehaviour
     private Vector3 candidatePosition;
     private float recentNoiseStrength;
     private float lastNoiseWindowTime = float.NegativeInfinity;
+    private Health health;
 
     private void Awake()
     {
+        health = GetComponent<Health>();
         // Runtime state must never be restored from an accidental Inspector edit.
         state = AwarenessState.Unaware;
         unawareSuspicion = alertSuspicion = visualRecognition = lostSightElapsed = 0f;
@@ -92,11 +94,42 @@ public class EnemyAwareness : MonoBehaviour
             if (target != null) player = target.transform;
         }
     }
-    private void OnEnable() { NoiseEmitter.NoiseProduced += HearNoise; }
+    private void OnEnable()
+    {
+        NoiseEmitter.NoiseProduced += HearNoise;
+        if (health != null) health.DamagedBy += OnDamagedBy;
+    }
     private void OnDisable()
     {
         NoiseEmitter.NoiseProduced -= HearNoise;
+        if (health != null) health.DamagedBy -= OnDamagedBy;
         hasLineOfSightToPlayer = hasProximityAwareness = false;
+    }
+
+    private void OnDamagedBy(GameObject source)
+    {
+        if (!isActiveAndEnabled || source == null) return;
+        Transform attacker = source.transform;
+        if (player != null && (attacker == player || attacker.IsChildOf(player)))
+            attacker = player;
+        else
+        {
+            var playerMovement = source.GetComponentInParent<PlayerMovement>();
+            if (playerMovement == null) return;
+            attacker = playerMovement.transform;
+        }
+
+        // A player hit reveals an exact position without requiring vision or hearing.
+        player = attacker;
+        lastKnownPlayerPosition = attacker.position;
+        lostSightElapsed = 0f;
+        visualRecognition = 1f;
+        unawareSuspicion = 0f;
+        alertSuspicion = 100f;
+        lastStimulusTime = Time.time;
+        RememberTarget(lastKnownPlayerPosition, 100f);
+        SetWaypoint(lastKnownPlayerPosition);
+        ChangeState(AwarenessState.Active);
     }
     private void Update()
     {

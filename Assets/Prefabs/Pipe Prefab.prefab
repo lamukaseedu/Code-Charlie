@@ -1023,6 +1023,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8548457303386726278}
+  - component: {fileID: 6188380023466398996}
   m_Layer: 0
   m_Name: Pipe
   m_TagString: Untagged
@@ -1053,6 +1054,27 @@ Transform:
   - {fileID: 559881080418604767}
   m_Father: {fileID: 8135104871486545660}
   m_LocalEulerAnglesHint: {x: 79.884, y: 90, z: 370.68}
+--- !u!65 &6188380023466398996
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5579430455288222229}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.02, y: 0.02, z: 0.25}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5674773298876685864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1469,13 +1491,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1824ee43f56e9442befdd2e25bff0c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMelee
-  damage: 10
-  upgradedDamage: 20
-  range: 2
-  radius: 0.8
-  hitMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+  damage: 5
+  upgradedDamage: 8
+  damageCollider: {fileID: 6188380023466398996}
   swingAnimator: {fileID: 9006693538659654936}
   swingClip: {fileID: 8300000, guid: 354414205b22d904abc993024f8b72e3, type: 3}
   hitEnemyClip: {fileID: 8300000, guid: a2b282532db80004a823f9bfa0416eb4, type: 3}
