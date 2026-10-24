@@ -1,14 +1,15 @@
 /*
  * Author: Savio Xavier
  * Created: 8/30/2026
+ * Edited By: Savio Xavier
+ * Edited: 10/22/2026
  */
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Unity.Cinemachine.IInputAxisOwner.AxisDescriptor;
-using static UnityEngine.UI.Image;
 
+[RequireComponent(typeof(AudioSource))]
 public class Pipe : MonoBehaviour, IUsable
 {
     [SerializeField] float damage = 10f;
@@ -18,17 +19,31 @@ public class Pipe : MonoBehaviour, IUsable
     [SerializeField] LayerMask hitMask = ~0;
     [SerializeField] private Animator swingAnimator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip swingClip;
+    [SerializeField] private AudioClip hitEnemyClip;
+    [SerializeField] private AudioClip hitMetalClip;
+
     private PlayerWeaponUpgrades upgrades;
+    private AudioSource audioSource;
     private bool swingType = true;
 
     private float nextAttackTime = 0f;
-
     private float attackCooldown = 0.75f;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
+        }
+    }
 
     private void OnEnable()
     {
         upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
-        //swingAnimator.SetBool("Equip", true);
     }
 
     // Damages IDamageable targets in a sphere in front of the camera on click
@@ -43,6 +58,7 @@ public class Pipe : MonoBehaviour, IUsable
                 swingAnimator.SetTrigger("swingTrigger");
                 swingType = !swingType;
             }
+            GameAudio.PlayOneShot(audioSource, swingClip);
             StartCoroutine(Startup());
             nextAttackTime = Time.time + attackCooldown;
         }
@@ -60,6 +76,7 @@ public class Pipe : MonoBehaviour, IUsable
         Collider[] hits = Physics.OverlapSphere(center, radius, hitMask);
         var damagedTargets = new HashSet<IDamageable>();
         var knockedTargets = new HashSet<IKnockable>();
+        bool hitWorld = false;
 
         for (int i = 0; i < hits.Length; i++)
         {
@@ -70,6 +87,8 @@ public class Pipe : MonoBehaviour, IUsable
             {
                 continue;
             }
+
+            hitWorld = true;
 
             // Resolve both before applying damage, which may destroy the enemy.
             IDamageable damageable =
@@ -88,6 +107,12 @@ public class Pipe : MonoBehaviour, IUsable
                 knockable.Execute(transform);
             }
         }
+
+        if (damagedTargets.Count > 0)
+            GameAudio.PlayOneShot(audioSource, hitEnemyClip);
+        else if (hitWorld)
+            GameAudio.PlayOneShot(audioSource, hitMetalClip);
+
         yield return new WaitForSeconds(5f);
     }
 
