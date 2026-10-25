@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 2683211573790086429}
   - component: {fileID: 8232084898583914812}
   - component: {fileID: 5547017546813653742}
-  - component: {fileID: 5440063129051797133}
-  m_Layer: 0
+  - component: {fileID: -6238923400537464464}
+  - component: {fileID: 2621048396922047926}
+  - component: {fileID: 5887381878316740304}
+  m_Layer: 10
   m_Name: Keycard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,8 +93,62 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5440063129051797133
-MeshCollider:
+--- !u!114 &-6238923400537464464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7303700427411677659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbaba387f2f242d4098502fd7168721a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemHover
+  item: {fileID: 11400000, guid: 0399a44df32a3b549a0f3f24db7c4dfd, type: 2}
+  quantity: 1
+  highlightRenderers:
+  - {fileID: 5547017546813653742}
+  highlightColor: {r: 0.15, g: 0.8, b: 1, a: 1}
+  interactionPrompt: PRESS E TO PICKUP KEYCARD
+  onHover:
+    m_PersistentCalls:
+      m_Calls: []
+  onUnhover:
+    m_PersistentCalls:
+      m_Calls: []
+  onItemPickedUp:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!54 &2621048396922047926
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7303700427411677659}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &5887381878316740304
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,7 +165,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4068373912626513877, guid: e3675eff377ee594581ff53e7b6ec67e, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.009999999, y: 0.010000003, z: 0.024061283}
+  m_Center: {x: 0, y: 0.0000000011625164, z: 0.0070306403}
