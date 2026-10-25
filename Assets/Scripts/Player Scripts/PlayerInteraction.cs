@@ -9,7 +9,6 @@ public class PlayerInteraction : MonoBehaviour
      */
 
     [Header("Raycast")]
-    [SerializeField] private Camera playerCamera;
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private LayerMask interactionLayer;
     [SerializeField] private LayerMask blockRaycastLayers;
@@ -17,40 +16,62 @@ public class PlayerInteraction : MonoBehaviour
     [Header("Input")]
     [SerializeField] private InputActionReference[] interactActions;
 
-    [Header("UI")]
-    [SerializeField] private InteractionPromptUI interactionPromptUI;
-
+    private Camera playerCamera;
+    private InteractionPromptUI interactionPromptUI;
     private IInteractable currentInteractable;
 
-    //Begins listening for user to press the key to activate interactable 
+    private bool interactionLocked;
+
+    private void Awake()
+    {
+        // Automatically find the Main Camera and interaction prompt UI.
+        playerCamera = Camera.main;
+
+        interactionPromptUI =
+            FindFirstObjectByType<InteractionPromptUI>(
+                FindObjectsInactive.Include
+            );
+
+        if (playerCamera == null)
+            Debug.LogWarning("Main Camera not found!", this);
+
+        if (interactionPromptUI == null)
+            Debug.LogWarning("InteractionPromptUI not found!", this);
+    }
+
+    // Begins listening for interaction inputs.
     private void OnEnable()
     {
+        if (interactActions == null)
+            return;
+
         foreach (InputActionReference actionReference in interactActions)
         {
             if (actionReference != null)
-            {
                 actionReference.action.performed += OnInteract;
-            }
         }
     }
 
-    //Stops listening for user to press the key to activate interactable
+    // Stops listening for interaction inputs.
     private void OnDisable()
     {
-        foreach (InputActionReference actionReference in interactActions)
+        if (interactActions != null)
         {
-            if (actionReference != null)
+            foreach (InputActionReference actionReference in interactActions)
             {
-                actionReference.action.performed -= OnInteract;
+                if (actionReference != null)
+                    actionReference.action.performed -= OnInteract;
             }
         }
+
         ClearCurrentInteractable();
     }
 
-    //Constantly finding objects that lie in the interactable layer
     private void Update()
     {
-        if (Time.timeScale == 0f || WorkbenchUI.AnyOpen)
+        if (interactionLocked ||
+            Time.timeScale == 0f ||
+            WorkbenchUI.AnyOpen)
         {
             ClearCurrentInteractable();
             return;
@@ -59,149 +80,177 @@ public class PlayerInteraction : MonoBehaviour
         FindInteractable();
     }
 
-    //Finds Interactable but filters out what raycast layers to ignore and what raycast layers contain the interactables. 
+    // Finds an interactable using a raycast from the player camera.
     private void FindInteractable()
     {
+        if (playerCamera == null)
+        {
+            playerCamera = Camera.main;
+
+            if (playerCamera == null)
+                return;
+        }
+
         IInteractable detectedInteractable = null;
 
         int raycastLayers =
-        interactionLayer.value | blockRaycastLayers.value;
+            interactionLayer.value | blockRaycastLayers.value;
+
+        Ray ray;
 
         if (Cursor.lockState == CursorLockMode.Locked)
         {
-            if (playerCamera != null &&
-            Physics.Raycast(
+            ray = new Ray(
                 playerCamera.transform.position,
-                playerCamera.transform.forward,
-                out RaycastHit hit,
-                interactionDistance,
-                raycastLayers,
-                QueryTriggerInteraction.Collide))
-            {
-                int hitLayer = hit.collider.gameObject.layer;
-
-                bool hitIsInteractable =
-                    (interactionLayer.value & (1 << hitLayer)) != 0;
-
-                if (hitIsInteractable)
-                {
-                    detectedInteractable =
-                        hit.collider.GetComponentInParent<IInteractable>();
-                }
-            }
+                playerCamera.transform.forward
+            );
         }
-        else if (Cursor.lockState == CursorLockMode.None)
+        else
         {
+            if (Mouse.current == null)
+                return;
 
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
-            Ray ray = playerCamera.ScreenPointToRay(mousePosition);
+            Vector2 mousePosition =
+                Mouse.current.position.ReadValue();
 
-            if (playerCamera != null &&
-            Physics.Raycast(
-                ray,
-                out RaycastHit hit,
-                interactionDistance,
-                raycastLayers,
-                QueryTriggerInteraction.Collide))
+            ray = playerCamera.ScreenPointToRay(mousePosition);
+        }
+
+        if (Physics.Raycast(
+            ray,
+            out RaycastHit hit,
+            interactionDistance,
+            raycastLayers,
+            QueryTriggerInteraction.Collide))
+        {
+            int hitLayer = hit.collider.gameObject.layer;
+
+            bool hitIsInteractable =
+                (interactionLayer.value & (1 << hitLayer)) != 0;
+
+            if (hitIsInteractable)
             {
-                int hitLayer = hit.collider.gameObject.layer;
-
-                bool hitIsInteractable =
-                    (interactionLayer.value & (1 << hitLayer)) != 0;
-
-                if (hitIsInteractable)
-                {
-                    detectedInteractable =
-                        hit.collider.GetComponentInParent<IInteractable>();
-                }
+                detectedInteractable =
+                    hit.collider.GetComponentInParent<IInteractable>();
             }
         }
-        
 
-        // The player is still looking at the same object.
+        // The player is still looking at the same interactable.
         if (detectedInteractable == currentInteractable)
-        {
             return;
-        }
 
-        // The player stopped looking at the previous object.
-        currentInteractable?.Unhover();
+        // Clear the previous interactable and its prompt.
+        ClearCurrentInteractable();
+
         currentInteractable = detectedInteractable;
 
         if (currentInteractable != null)
         {
             currentInteractable.Hover();
+
             interactionPromptUI?.Show(
                 currentInteractable.InteractionPrompt
             );
         }
-        else
-        {
-            interactionPromptUI?.Hide();
-        }
     }
 
-    public void RefreshTarget()
-    {
-        ClearCurrentInteractable();
-        FindInteractable();
-    }
-
-    public void RefreshPrompt(IInteractable interactable)
-    {
-        if (currentInteractable == interactable)
-        {
-            interactionPromptUI?.Show(interactable.InteractionPrompt);
-        }
-    }
-
-    public void ClearTarget()
-    {
-        ClearCurrentInteractable();
-    }
+    // Called when the player presses an interaction button.
     private void OnInteract(InputAction.CallbackContext context)
     {
-        Debug.Log($"E received. Target: {currentInteractable}");
-        if (Time.timeScale == 0f || WorkbenchUI.AnyOpen)
+        if (interactionLocked ||
+            Time.timeScale == 0f ||
+            WorkbenchUI.AnyOpen)
             return;
 
         currentInteractable?.Interact();
     }
 
+    // Locks or unlocks interaction, mainly for minigames.
+    public void SetInteractionLocked(bool locked)
+    {
+        interactionLocked = locked;
+
+        if (locked)
+        {
+            ClearCurrentInteractable();
+        }
+        else
+        {
+            RefreshTarget();
+        }
+    }
+
+    // Rechecks the current object and refreshes its prompt.
+    public void RefreshTarget()
+    {
+        ClearCurrentInteractable();
+
+        if (!interactionLocked &&
+            Time.timeScale != 0f &&
+            !WorkbenchUI.AnyOpen)
+        {
+            FindInteractable();
+        }
+    }
+
+    // Updates the displayed prompt for the current interactable.
+    public void RefreshPrompt(IInteractable interactable)
+    {
+        if (!interactionLocked &&
+            currentInteractable == interactable)
+        {
+            interactionPromptUI?.Show(
+                interactable.InteractionPrompt
+            );
+        }
+    }
+
+    // Clears the current interaction target.
+    public void ClearTarget()
+    {
+        ClearCurrentInteractable();
+    }
+
     private void ClearCurrentInteractable()
     {
-        currentInteractable?.Unhover();
-        currentInteractable = null;
+        if (currentInteractable != null)
+        {
+            currentInteractable.Unhover();
+            currentInteractable = null;
+        }
 
         interactionPromptUI?.Hide();
     }
 
-    //Helps for debugging raycast
+    // Draws the interaction ray in the Scene view for debugging.
     private void OnDrawGizmosSelected()
     {
-        if (playerCamera == null)
-        {
+        Camera camera = playerCamera;
+
+        if (camera == null)
+            camera = Camera.main;
+
+        if (camera == null)
             return;
-        }
 
         Gizmos.color = Color.yellow;
+
         Gizmos.DrawRay(
-            playerCamera.transform.position,
-            playerCamera.transform.forward * interactionDistance
+            camera.transform.position,
+            camera.transform.forward * interactionDistance
         );
     }
 
-    //Unlocks cursor when needed
     public void UnlockCursor()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    //Locks cursor when needed
     public void LockCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 }
+

@@ -11,19 +11,8 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
      * Created: 9/13/2026
      */
 
-    [Header("Cinemachine Cameras")]
-    [SerializeField] private CinemachineCamera playerCamera;
+    [Header("Cinemachine Camera")]
     [SerializeField] private CinemachineCamera interactableCamera;
-
-    [Header("Player Control")]
-    [SerializeField] private PlayerCamera playerCameraController;
-    [SerializeField] private PlayerInteraction playerInteraction;
-
-    [Header("Input")]
-    [SerializeField] private PlayerInput playerInput;
-    [SerializeField] private InputActionReference exitInteractableAction;
-    [SerializeField] private string defaultActionMap = "Player";
-    [SerializeField] private string interactableActionMap = "Minigame";
 
     [Header("Transition")]
     [Tooltip("Set this to the Cinemachine Brain blend duration.")]
@@ -31,17 +20,25 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
     [SerializeField] private int activeCameraPriority = 20;
     [SerializeField] private int inactiveCameraPriority = 10;
 
+    [Header("Minigame Interaction")]
+    [SerializeField] private bool allowInteractionsWhileActive = false;
+
     [Header("Cursor")]
     [SerializeField] private bool unlockCursorWhileActive = true;
 
     [Header("Hover Highlight")]
-    [Tooltip("Renderer whose color changes while the player looks at this interactable.")]
     [SerializeField] private Renderer highlightRenderer;
-    [SerializeField] private Color highlightColor = new(0.15f, 0.8f, 1f, 1f);
+    [SerializeField]
+    private Color highlightColor =
+        new(0.15f, 0.8f, 1f, 1f);
 
-    [Header("InteractionPrompt")]
+    [Header("Interaction Prompt")]
     [SerializeField] private string interactionPrompt;
     public string InteractionPrompt => interactionPrompt;
+
+    [Header("Interaction Trigger")]
+    [Tooltip("Optional interaction colliders to disable while active.")]
+    [SerializeField] private Collider[] interactionTriggers;
 
     [Header("Interaction Events")]
     [SerializeField] private UnityEvent onHover;
@@ -49,22 +46,27 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
     [SerializeField] private UnityEvent onInteractableEntered;
     [SerializeField] private UnityEvent onInteractableExited;
 
-    [Header("Player Visuals")]
-    [Tooltip("Only assign the renderers for the player's visible body/model.")]
-    [SerializeField] private Renderer[] playerRenderers;
 
     public bool IsActive { get; private set; }
     public bool IsTransitioning { get; private set; }
 
+    private PlayerMinigameContext player;
+
     private CursorLockMode previousCursorLockMode;
     private bool previousCursorVisibility;
 
-    private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-    private static readonly int ColorId = Shader.PropertyToID("_Color");
+    private static readonly int BaseColorId =
+        Shader.PropertyToID("_BaseColor");
+
+    private static readonly int ColorId =
+        Shader.PropertyToID("_Color");
 
     private MaterialPropertyBlock propertyBlock;
     private Color normalColor = Color.white;
     private int colorPropertyId;
+
+    private bool[] originalTriggerStates;
+    private bool exitSubscribed;
 
     private void Awake()
     {
@@ -74,48 +76,91 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         CacheMaterialColor();
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        if (exitInteractableAction != null)
-            exitInteractableAction.action.performed += OnExitInput;
+        InitializePlayer();
+    }
+
+    private bool InitializePlayer()
+    {
+        if (player == null)
+            player = PlayerMinigameContext.Instance;
+
+        if (player == null)
+        {
+            Debug.LogError(
+                "PlayerMinigameContext not found!", this);
+            return false;
+        }
+
+        if (interactableCamera == null ||
+            player.PlayerCamera == null ||
+            player.Input == null)
+        {
+            Debug.LogError(
+                "Missing camera or player input reference!", this);
+            return false;
+        }
+
+        return true;
+    }
+
+    private void SubscribeToExit()
+    {
+        if (exitSubscribed || player.ExitAction == null)
+            return;
+
+        player.ExitAction.action.performed += OnExitInput;
+        exitSubscribed = true;
+    }
+
+    private void UnsubscribeFromExit()
+    {
+        if (!exitSubscribed || player == null)
+            return;
+
+        if (player.ExitAction != null)
+            player.ExitAction.action.performed -= OnExitInput;
+
+        exitSubscribed = false;
     }
 
     private void OnDisable()
     {
-        if (exitInteractableAction != null)
-            exitInteractableAction.action.performed -= OnExitInput;
-
+        UnsubscribeFromExit();
         SetHighlighted(false);
     }
 
-    // Called by PlayerInteraction when its raycast begins targeting this object.
+    // Called when the player looks at this interactable.
     public void Hover()
     {
-        if (!IsActive && !IsTransitioning)
-        {
-            SetHighlighted(true);
-            onHover?.Invoke();
-        }
+        if (IsActive || IsTransitioning)
+            return;
+
+        SetHighlighted(true);
+        onHover?.Invoke();
     }
 
-    // Called by PlayerInteraction when its raycast stops targeting this object.
+    // Called when the player stops looking at this interactable.
     public void Unhover()
     {
-        if (!IsActive)
-        {
-            SetHighlighted(false);
-            onUnhover?.Invoke();
-        }
+        if (IsActive)
+            return;
+
+        SetHighlighted(false);
+        onUnhover?.Invoke();
     }
 
-    //Called when we want to change the interaction prompt
     public void SetInteractionPrompt(string newPrompt)
     {
         interactionPrompt = newPrompt;
-        playerInteraction?.RefreshPrompt(this);
+
+        if (player == null)
+            player = PlayerMinigameContext.Instance;
+
+        player?.Interaction?.RefreshPrompt(this);
     }
 
-    // Called by PlayerInteraction when the player presses the interact button.
     public void Interact()
     {
         EnterInteractable();
@@ -123,9 +168,10 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
     public void EnterInteractable()
     {
-        Debug.Log($"Enter requested. Active: {IsActive}, Transitioning: {IsTransitioning}");
-
         if (IsActive || IsTransitioning)
+            return;
+
+        if (!InitializePlayer())
             return;
 
         StartCoroutine(EnterRoutine());
@@ -139,60 +185,89 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         StartCoroutine(ExitRoutine());
     }
 
-    //Run this routine for entering the minigame which does a couple things such as disabling the highlighted interactable object, disable the default player map, and activate the minigame action map.
+    // Handles entering the minigame.
     private IEnumerator EnterRoutine()
     {
         IsTransitioning = true;
+        if (!allowInteractionsWhileActive)
+        {
+            player.Interaction?.SetInteractionLocked(true);
+        } else
+        {
+            player.Interaction?.ClearTarget();
+        }
         SetHighlighted(false);
         onUnhover?.Invoke();
 
-        playerInput.currentActionMap.Disable();
+        previousCursorLockMode = Cursor.lockState;
+        previousCursorVisibility = Cursor.visible;
 
-        if (playerCameraController != null)
-            playerCameraController.enabled = false;
+        // Disable interaction colliders.
+        SetInteractionTriggers(false);
 
-        SetPlayerVisible(false);
+        // Disable regular player controls.
+        player.Input.currentActionMap?.Disable();
 
+        if (player.CameraController != null)
+            player.CameraController.enabled = false;
+
+        // Hide the player model and held item.
+        player.SetPlayerVisible(false);
+
+        // Switch cameras.
         interactableCamera.Priority = activeCameraPriority;
-        playerCamera.Priority = inactiveCameraPriority;
+        player.PlayerCamera.Priority = inactiveCameraPriority;
 
         yield return new WaitForSeconds(transitionDuration);
 
-        playerInput.SwitchCurrentActionMap(interactableActionMap);
+        // Enable minigame input.
+        player.Input.SwitchCurrentActionMap(
+            player.InteractableActionMap
+        );
+
+        SubscribeToExit();
 
         if (unlockCursorWhileActive)
         {
-            previousCursorLockMode = Cursor.lockState;
-            previousCursorVisibility = Cursor.visible;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
 
         IsActive = true;
         IsTransitioning = false;
+
         onInteractableEntered?.Invoke();
     }
 
-    //Run this routine when exiting the minigame which disables the minigame action map, reenables the default player action map, locks the cursor and switches the cameras. 
+    // Handles exiting the minigame.
     private IEnumerator ExitRoutine()
     {
         IsTransitioning = true;
+
         onInteractableExited?.Invoke();
 
-        playerInput.currentActionMap.Disable();
+        UnsubscribeFromExit();
 
-        playerCamera.Priority = activeCameraPriority;
+        player.Input.currentActionMap?.Disable();
+
+        // Switch back to the player camera.
+        player.PlayerCamera.Priority = activeCameraPriority;
         interactableCamera.Priority = inactiveCameraPriority;
 
         yield return new WaitForSeconds(transitionDuration);
 
-        SetPlayerVisible(true);
+        // Restore player visuals.
+        player.SetPlayerVisible(true);
 
-        playerInput.SwitchCurrentActionMap(defaultActionMap);
+        // Restore player controls.
+        player.Input.SwitchCurrentActionMap(
+            player.DefaultActionMap
+        );
 
-        if (playerCameraController != null)
-            playerCameraController.enabled = true;
+        if (player.CameraController != null)
+            player.CameraController.enabled = true;
 
+        // Restore cursor.
         if (unlockCursorWhileActive)
         {
             Cursor.lockState = previousCursorLockMode;
@@ -200,13 +275,55 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         }
 
         IsActive = false;
+
+        // Restore interaction colliders.
+        SetInteractionTriggers(true);
+
         IsTransitioning = false;
-        playerInteraction?.RefreshTarget();
+
+        // Refresh the interaction prompt.
+        if (!allowInteractionsWhileActive)
+        {
+            player.Interaction?.SetInteractionLocked(false);
+        } else
+        {
+            player.Interaction?.RefreshTarget();
+        }
     }
 
     private void OnExitInput(InputAction.CallbackContext context)
     {
         ExitInteractable();
+    }
+
+    // Disables and restores interaction colliders.
+    private void SetInteractionTriggers(bool enabled)
+    {
+        if (interactionTriggers == null)
+            return;
+
+        if (!enabled)
+            originalTriggerStates =
+                new bool[interactionTriggers.Length];
+
+        for (int i = 0; i < interactionTriggers.Length; i++)
+        {
+            Collider trigger = interactionTriggers[i];
+
+            if (trigger == null)
+                continue;
+
+            if (!enabled)
+            {
+                originalTriggerStates[i] = trigger.enabled;
+                trigger.enabled = false;
+            }
+            else if (originalTriggerStates != null &&
+                     i < originalTriggerStates.Length)
+            {
+                trigger.enabled = originalTriggerStates[i];
+            }
+        }
     }
 
     public void SetHighlighted(bool highlighted)
@@ -215,27 +332,21 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
             return;
 
         propertyBlock ??= new MaterialPropertyBlock();
+
         highlightRenderer.GetPropertyBlock(propertyBlock);
+
         propertyBlock.SetColor(
             colorPropertyId,
             highlighted ? highlightColor : normalColor
         );
-        highlightRenderer.SetPropertyBlock(propertyBlock);
-    }
 
-    //Shows or hides the player's model without disabling the actual player.
-    private void SetPlayerVisible(bool visible)
-    {
-        foreach (Renderer playerRenderer in playerRenderers)
-        {
-            if (playerRenderer != null)
-                playerRenderer.enabled = visible;
-        }
+        highlightRenderer.SetPropertyBlock(propertyBlock);
     }
 
     private void CacheMaterialColor()
     {
-        if (highlightRenderer == null || highlightRenderer.sharedMaterial == null)
+        if (highlightRenderer == null ||
+            highlightRenderer.sharedMaterial == null)
             return;
 
         Material material = highlightRenderer.sharedMaterial;
@@ -256,3 +367,4 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         normalColor = material.GetColor(colorPropertyId);
     }
 }
+
