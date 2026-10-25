@@ -34,7 +34,7 @@ public class PlayerNoiseEmitter : MonoBehaviour
         float speed = displacement.magnitude / Time.deltaTime;
         bool travelling = controller.enabled && controller.isGrounded &&
             speed >= minimumTravelSpeed && speed < teleportSpeedThreshold;
-        if (!travelling || !movement.isActiveAndEnabled)
+        if (!travelling || !movement.isActiveAndEnabled || movement.IsCrouching)
         {
             walkingTimer = 0f;
             runningTimer = 0f;

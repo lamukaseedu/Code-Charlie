@@ -157,17 +157,12 @@ public class EnemyDebugVisualizer : MonoBehaviour
         displayDestination = awareness.CurrentWaypoint;
         string kind = state == EnemyAwareness.AwarenessState.Active ? "Chase memory" :
             state == EnemyAwareness.AwarenessState.Alert ? "Investigation" : "Turn toward suspicion";
-        if (!hasDisplayDestination && state == EnemyAwareness.AwarenessState.Unaware &&
-            movement != null && movement.isActiveAndEnabled && movement.patrolPoints != null && movement.patrolPoints.Length > 0)
+        if (!hasDisplayDestination && (state == EnemyAwareness.AwarenessState.Unaware || state == EnemyAwareness.AwarenessState.Alert) &&
+            movement != null && movement.isActiveAndEnabled && movement.HasPatrolTarget)
         {
-            int index = Mathf.Clamp(movement.PatrolIndex, 0, movement.patrolPoints.Length - 1);
-            var point = movement.patrolPoints[index];
-            if (point != null)
-            {
-                hasDisplayDestination = true;
-                displayDestination = point.position;
-                kind = "Patrol " + (index + 1) + "/" + movement.patrolPoints.Length;
-            }
+            hasDisplayDestination = true;
+            displayDestination = movement.PatrolTarget;
+            kind = movement.IsAlertSearching ? "Alert search" : "Random patrol " + (movement.PatrolIndex + 1);
         }
         destinationLabel = hasDisplayDestination ? kind + ": " + Position(displayDestination) : "Destination: none / waiting";
         navigationLabel = movement == null ? "Navigation: no movement component" :

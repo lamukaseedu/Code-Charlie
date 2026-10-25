@@ -185,7 +185,10 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
             if (damageable != null)
             {
-                damageable.TakeDamage(damage);
+                if (damageable is Health health)
+                    health.TakeDamage(damage, noiseSource);
+                else
+                    damageable.TakeDamage(damage);
             }
             // Capture the receiver before damage, then notify after existing damage handling.
             if (impactable != null && (!(impactable is Object receiver) || receiver != null))

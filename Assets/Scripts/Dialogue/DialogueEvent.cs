@@ -4,33 +4,57 @@
  */
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections.Generic;
 using UnityEngine.Playables;
 
 public class DialogueEvent : MonoBehaviour
 {
+    public enum TriggerMode { Collider, UnityEvent }
+
+    [Tooltip("Choose whether dialogue starts when the tagged object enters the trigger collider or when a Unity Event calls TriggerDialogue.")]
+    [SerializeField] private TriggerMode triggerMode = TriggerMode.Collider;
     [SerializeField] List<string> speakerNames = new();
     [SerializeField] TextAsset dialogueFile;
     [SerializeField] DialogueSystem dialogueSystem;
     [SerializeField] private string triggerTag = "Player";
     [SerializeField] private bool eventTriggered = false;
     [SerializeField] private bool movementEnabled = true;
+    [Tooltip("Seconds to wait after each line finishes appearing before automatically advancing. Set to 0 to require the advance input.")]
+    [Min(0f)]
+    [SerializeField] private float autoAdvanceDelay = 0f;
+    [Tooltip("Invoked after the final line of this dialogue advances and player movement is restored.")]
+    [SerializeField] private UnityEvent onDialogueEnded = new UnityEvent();
     private string playerName;
     private readonly List<List<string>> script = new();
 
-    void Start()
-    {
-        playerName = dialogueSystem.GetPlayerName();
-    }
-
     void OnTriggerEnter(Collider other)
     {
-        if (!eventTriggered && other.CompareTag(triggerTag))
+        if (triggerMode == TriggerMode.Collider && !eventTriggered && other.CompareTag(triggerTag))
+            BeginDialogue();
+    }
+
+    // Select this method in a Unity Event when Trigger Mode is UnityEvent.
+    public void TriggerDialogue()
+    {
+        if (triggerMode == TriggerMode.UnityEvent)
+            BeginDialogue();
+    }
+
+    private void BeginDialogue()
+    {
+        if (eventTriggered || !isActiveAndEnabled) return;
+        if (dialogueSystem == null || dialogueFile == null)
         {
-            dialogueSystem.SetPlayerMovement(movementEnabled);
-            eventTriggered = true;
-            ProcessText();
+            Debug.LogWarning("Assign a Dialogue System and Dialogue File before triggering dialogue.", this);
+            return;
         }
+
+        // Resolve here so scene-loaded Unity Events can trigger dialogue before Start.
+        playerName = dialogueSystem.GetPlayerName();
+        dialogueSystem.SetPlayerMovement(movementEnabled);
+        eventTriggered = true;
+        ProcessText();
     }
 
     void ProcessText()
@@ -54,6 +78,12 @@ public class DialogueEvent : MonoBehaviour
             script.Add(attributedLine);
         }
 
-        dialogueSystem.StartDialogue(script);
+        dialogueSystem.StartDialogue(script, HandleDialogueEnded, autoAdvanceDelay);
+    }
+
+    private void HandleDialogueEnded()
+    {
+        if (this != null)
+            onDialogueEnded?.Invoke();
     }
 }
