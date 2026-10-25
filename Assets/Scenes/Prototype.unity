@@ -574,6 +574,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6700286673247354925, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6700286673247354925, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6700286673247354925, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1232793530}
+    - target: {fileID: 6700286673247354925, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6700286673247354925, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ResetScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 6700286673247354925, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6700286673247354925, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7032144274194714636, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: m_Range
       value: 100
@@ -3836,6 +3864,10 @@ PrefabInstance:
     - target: {fileID: 636542431000081747, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
       propertyPath: m_Name
       value: Lester
+      objectReference: {fileID: 0}
+    - target: {fileID: 636542431000081747, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 704859991370543729, guid: f412bf592ca1ab545b215f78bfad6324, type: 3}
       propertyPath: m_Enabled
@@ -13693,15 +13725,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -14776,6 +14808,65 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2101265499404579720, guid: 318f6385639e75845abcf1ac1d38187d, type: 3}
   m_PrefabInstance: {fileID: 1212830077}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1232793529
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1232793531}
+  - component: {fileID: 1232793530}
+  m_Layer: 0
+  m_Name: SceneManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1232793530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232793529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8d50c69878ef7e44ae5d3415c9187ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneManager
+  OnSceneLoaded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1554191659}
+        m_TargetAssemblyTypeName: DialogueEvent, Assembly-CSharp
+        m_MethodName: TriggerDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &1232793531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232793529}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -18.71786, y: 2.52059, z: -4.51936}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1236820693
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16834,6 +16925,72 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2101265499404579720, guid: 318f6385639e75845abcf1ac1d38187d, type: 3}
   m_PrefabInstance: {fileID: 1528280641}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1554191658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1554191660}
+  - component: {fileID: 1554191659}
+  m_Layer: 0
+  m_Name: StartDialogue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1554191659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554191658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a271048287a01a74ea3b100a573198dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueEvent
+  triggerMode: 1
+  speakerNames: []
+  dialogueFile: {fileID: 4900000, guid: 805de86d193fb074ea592268ad78838d, type: 3}
+  dialogueSystem: {fileID: 622350861}
+  triggerTag: Player
+  eventTriggered: 0
+  movementEnabled: 1
+  onDialogueEnded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 425834890}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!4 &1554191660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554191658}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -18.71786, y: 2.52059, z: -4.51936}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1580958864
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16934,6 +17091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a271048287a01a74ea3b100a573198dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEvent
+  triggerMode: 0
   speakerNames:
   - Retsel
   - Retsel (Second Personality)
@@ -16942,6 +17100,9 @@ MonoBehaviour:
   triggerTag: Player
   eventTriggered: 0
   movementEnabled: 0
+  onDialogueEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!135 &1582151765
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -20740,10 +20901,13 @@ SceneRoots:
   - {fileID: 43369580}
   - {fileID: 817053277}
   - {fileID: 1470052225}
+  - {fileID: 157665947}
   - {fileID: 551321425}
   - {fileID: 1198695597}
+  - {fileID: 645658366}
   - {fileID: 1919015830}
   - {fileID: 964126810}
+  - {fileID: 1715961172}
   - {fileID: 1894195662}
   - {fileID: 1582151766}
   - {fileID: 24679781}
@@ -20757,9 +20921,8 @@ SceneRoots:
   - {fileID: 776852573}
   - {fileID: 1796132462}
   - {fileID: 1291476150}
+  - {fileID: 1554191660}
+  - {fileID: 1232793531}
   - {fileID: 520084485}
-  - {fileID: 645658366}
-  - {fileID: 157665947}
   - {fileID: 622350862}
   - {fileID: 1290639995}
-  - {fileID: 1715961172}

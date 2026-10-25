@@ -14,6 +14,7 @@ public class DialogueSystem : MonoBehaviour
     [SerializeField] private TMP_Text textBox;
     [SerializeField] private GameObject player;
     private List<List<string>> dialogue;
+    private System.Action dialogueCompleted;
     private WaitForSeconds scrollTime = new WaitForSeconds(0.08f);
     private WaitForSeconds promptWaitTime = new WaitForSeconds(1f);
 
@@ -53,11 +54,23 @@ public class DialogueSystem : MonoBehaviour
         } else
         {
             SetPlayerMovement(true);
+            // Clear before invoking so an event can safely start another dialogue.
+            System.Action completed = dialogueCompleted;
+            dialogueCompleted = null;
+            completed?.Invoke();
         }
     }
     public void StartDialogue(List<List<string>> script)
     {
+        StartDialogue(script, null);
+    }
+
+    public void StartDialogue(List<List<string>> script, System.Action onCompleted)
+    {
+        // Replacing a dialogue cancels its playback and completion callback.
+        StopAllCoroutines();
         dialogue = script;
+        dialogueCompleted = onCompleted;
         StartCoroutine(ReadLine(0));
     }
     public string GetPlayerName()
