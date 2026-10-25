@@ -1491,8 +1491,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1824ee43f56e9442befdd2e25bff0c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMelee
-  damage: 5
-  upgradedDamage: 8
+  damage: 7
+  upgradedDamage: 10
   damageCollider: {fileID: 6188380023466398996}
   swingAnimator: {fileID: 9006693538659654936}
   swingClip: {fileID: 8300000, guid: 354414205b22d904abc993024f8b72e3, type: 3}
@@ -1534,8 +1534,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemHover
   item: {fileID: 11400000, guid: 722346347b5731f4393df24a8599a00f, type: 2}
   quantity: 1
-  playerInventory: {fileID: 0}
-  playerInteraction: {fileID: 0}
   highlightRenderers: []
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   interactionPrompt: PRESS E TO PICK UP PIPE
