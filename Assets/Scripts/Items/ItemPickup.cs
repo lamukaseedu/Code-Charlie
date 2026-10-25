@@ -16,9 +16,8 @@ public class ItemHover : MonoBehaviour, IInteractable
     [Min(1)]
     [SerializeField] private int quantity = 1;
 
-    [Header("Player Inventory")]
-    [SerializeField] private PlayerInventory playerInventory;
-    [SerializeField] private PlayerInteraction playerInteraction;
+    private PlayerInventory playerInventory;
+    private PlayerInteraction playerInteraction;
 
 
     [Header("Hover Highlight")]
@@ -45,6 +44,9 @@ public class ItemHover : MonoBehaviour, IInteractable
 
     private void Awake()
     {
+        playerInventory = FindFirstObjectByType<PlayerInventory>();
+        playerInteraction = FindFirstObjectByType<PlayerInteraction>();
+
         if (highlightRenderers == null)
             highlightRenderers = GetComponentsInChildren<Renderer>();
 
