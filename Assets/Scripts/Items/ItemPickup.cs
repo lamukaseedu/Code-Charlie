@@ -56,8 +56,8 @@ public class ItemHover : MonoBehaviour, IInteractable
     // Called by PlayerInteraction when its raycast begins targeting this object.
     public void Hover()
     {
-         SetHighlighted(true);
-         onHover?.Invoke();
+        SetHighlighted(true);
+        onHover?.Invoke();
     }
 
     // Called by PlayerInteraction when its raycast stops targeting this object.
