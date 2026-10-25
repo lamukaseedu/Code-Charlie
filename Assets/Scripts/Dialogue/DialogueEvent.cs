@@ -14,6 +14,7 @@ public class DialogueEvent : MonoBehaviour
     [SerializeField] DialogueSystem dialogueSystem;
     [SerializeField] private string triggerTag = "Player";
     [SerializeField] private bool eventTriggered = false;
+    [SerializeField] private bool movementEnabled = true;
     private string playerName;
     private readonly List<List<string>> script = new();
 
@@ -24,9 +25,9 @@ public class DialogueEvent : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-
         if (!eventTriggered && other.CompareTag(triggerTag))
         {
+            dialogueSystem.SetPlayerMovement(movementEnabled);
             eventTriggered = true;
             ProcessText();
         }
