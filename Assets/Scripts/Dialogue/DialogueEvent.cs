@@ -20,7 +20,10 @@ public class DialogueEvent : MonoBehaviour
     [SerializeField] private string triggerTag = "Player";
     [SerializeField] private bool eventTriggered = false;
     [SerializeField] private bool movementEnabled = true;
-    [Tooltip("Invoked after the player advances past the final line of this dialogue and player movement is restored.")]
+    [Tooltip("Seconds to wait after each line finishes appearing before automatically advancing. Set to 0 to require the advance input.")]
+    [Min(0f)]
+    [SerializeField] private float autoAdvanceDelay = 0f;
+    [Tooltip("Invoked after the final line of this dialogue advances and player movement is restored.")]
     [SerializeField] private UnityEvent onDialogueEnded = new UnityEvent();
     private string playerName;
     private readonly List<List<string>> script = new();
@@ -75,7 +78,7 @@ public class DialogueEvent : MonoBehaviour
             script.Add(attributedLine);
         }
 
-        dialogueSystem.StartDialogue(script, HandleDialogueEnded);
+        dialogueSystem.StartDialogue(script, HandleDialogueEnded, autoAdvanceDelay);
     }
 
     private void HandleDialogueEnded()
