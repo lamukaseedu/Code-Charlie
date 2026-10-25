@@ -5839,11 +5839,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989879651}
   m_CullTransparentMesh: 1
---- !u!1 &995459493 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1845692414772917617, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
-  m_PrefabInstance: {fileID: 24679781}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &999208179
 GameObject:
   m_ObjectHideFlags: 0
@@ -8194,10 +8189,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 708894712122877710, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
+    - target: {fileID: 223550763975286741, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
+      propertyPath: onInteractableExited.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2100000, guid: 54140ae08b1686a4cb97dbe120506e66, type: 2}
+      objectReference: {fileID: 75904283}
     - target: {fileID: 1796062567494160521, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
       propertyPath: m_LocalPosition.x
       value: 14.9
@@ -8238,74 +8233,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2290883648327647409, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 54140ae08b1686a4cb97dbe120506e66, type: 2}
-    - target: {fileID: 2462442850675656956, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -9.322
-      objectReference: {fileID: 0}
-    - target: {fileID: 2852988489514147178, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 54140ae08b1686a4cb97dbe120506e66, type: 2}
     - target: {fileID: 2946891243412336093, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
       propertyPath: m_Name
       value: Medbay
       objectReference: {fileID: 0}
-    - target: {fileID: 4380043192417564464, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 7.36
-      objectReference: {fileID: 0}
-    - target: {fileID: 4403714611217306099, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 54140ae08b1686a4cb97dbe120506e66, type: 2}
-    - target: {fileID: 5033024233054395666, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 54140ae08b1686a4cb97dbe120506e66, type: 2}
-    - target: {fileID: 5682973710943579885, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 54140ae08b1686a4cb97dbe120506e66, type: 2}
-    - target: {fileID: 6984524368000825990, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: playerInput
-      value: 
-      objectReference: {fileID: 25235936468653757}
-    - target: {fileID: 6984524368000825990, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: playerCamera
-      value: 
-      objectReference: {fileID: 1782816594}
-    - target: {fileID: 6984524368000825990, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: playerInteraction
-      value: 
-      objectReference: {fileID: 25235936468653763}
-    - target: {fileID: 6984524368000825990, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: playerCameraController
-      value: 
-      objectReference: {fileID: 8856822822659762866}
-    - target: {fileID: 6984524368000825990, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: 'playerRenderers.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1836164565}
-    - target: {fileID: 6984524368000825990, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: onInteractableExited.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 75904283}
-    - target: {fileID: 6984524368000825990, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: onInteractableExited.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 995459493}
-    - target: {fileID: 6984524368000825990, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: onInteractableEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 995459493}
-    - target: {fileID: 7518835950671591491, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 54140ae08b1686a4cb97dbe120506e66, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8809,9 +8740,11 @@ MonoBehaviour:
   stopDistance: 0.2
   acceleration: 10
   turnSpeed: 180
-  patrolPoints: []
   patrolSpeed: 1.5
-  patrolWaitTime: 2
+  patrolRadius: 15
+  maxPatrolDistance: 25
+  patrolArrivalDistance: 1
+  alertSearchRadius: 4
   agentTypeID: 0
   areaMask: -1
   repathInterval: 0.25
@@ -8825,6 +8758,8 @@ MonoBehaviour:
   debugTurnAngle: 0
   navigationStatus: Idle
   patrolIndex: 0
+  patrolTarget: {x: 0, y: 0, z: 0}
+  hasPatrolTarget: 0
 --- !u!114 &1452182723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9347,6 +9282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a271048287a01a74ea3b100a573198dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEvent
+  triggerMode: 0
   speakerNames:
   - Retsel
   - Retsel (Second Personality)
@@ -9355,6 +9291,10 @@ MonoBehaviour:
   triggerTag: Player
   eventTriggered: 0
   movementEnabled: 1
+  autoAdvanceDelay: 0
+  onDialogueEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!135 &1582151765
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -9969,17 +9909,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1782816594 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 68588210569305835, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
-  m_PrefabInstance: {fileID: 24679781}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
 --- !u!1 &1804509359
 GameObject:
   m_ObjectHideFlags: 0
@@ -10188,11 +10117,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &1836164565 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 812677828713384181, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
-  m_PrefabInstance: {fileID: 24679781}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1854157533
 GameObject:
   m_ObjectHideFlags: 0
@@ -11840,7 +11764,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d910391ac8fe7145abab93e0c664c30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  playerCamera: {fileID: 43369579}
   interactionDistance: 3
   interactionLayer:
     serializedVersion: 2
@@ -11851,7 +11774,6 @@ MonoBehaviour:
   interactActions:
   - {fileID: 5680287017942265168, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
   - {fileID: 7071939386602526578, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
-  interactionPromptUI: {fileID: 75904287}
 --- !u!1 &7778692973803841075 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7778692973113614882, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
