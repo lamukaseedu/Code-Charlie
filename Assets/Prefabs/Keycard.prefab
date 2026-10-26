@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 8232084898583914812}
   - component: {fileID: 5547017546813653742}
   - component: {fileID: -6238923400537464464}
+  - component: {fileID: 2621048396922047926}
   - component: {fileID: 5887381878316740304}
   m_Layer: 10
-  m_Name: Keycard InHand
+  m_Name: Keycard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,13 +29,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7303700427411677659}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.678845, y: 0.11014018, z: 0.10406474, w: 0.718477}
-  m_LocalPosition: {x: 0.06949822, y: -0.0005359454, z: 0.000030425901}
+  m_LocalRotation: {x: 0.68677676, y: 0, z: 0, w: 0.7268685}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 38.087696, y: 24.575, z: 1.6627216}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 72.278, y: 79.767, z: 79.269}
+  m_LocalEulerAnglesHint: {x: 86.751, y: 0, z: 0}
 --- !u!33 &8232084898583914812
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -108,7 +109,9 @@ MonoBehaviour:
   quantity: 1
   highlightRenderers:
   - {fileID: 5547017546813653742}
-  highlightColor: {r: 0.15, g: 0.8, b: 1, a: 1}
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  useHoverMaterial: 1
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   interactionPrompt: PICKUP KEYCARD
   onHover:
     m_PersistentCalls:
@@ -118,7 +121,46 @@ MonoBehaviour:
       m_Calls: []
   onItemPickedUp:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!54 &2621048396922047926
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7303700427411677659}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!65 &5887381878316740304
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -136,7 +178,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.009999999, y: 0.010000003, z: 0.024061283}
   m_Center: {x: 0, y: 0.0000000011625164, z: 0.0070306403}

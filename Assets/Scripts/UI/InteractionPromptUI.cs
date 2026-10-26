@@ -17,6 +17,12 @@ public class InteractionPromptUI : MonoBehaviour
 
     public void Show(string message)
     {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            Hide();
+            return;
+        }
+
         if (promptText != null)
             promptText.text = message;
 

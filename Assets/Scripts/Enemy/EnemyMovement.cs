@@ -69,6 +69,7 @@ public class EnemyMovement : MonoBehaviour
     public Vector3[] PathCorners => (Vector3[])corners.Clone();
 
     private Animator enemyAnimation;
+    private EnemyAttack attack;
     private static readonly int WalkParameter = Animator.StringToHash("Walk");
 
     private EnemyAwareness awareness;
@@ -98,6 +99,7 @@ public class EnemyMovement : MonoBehaviour
         if (bodyCollider != null && bodyCollider.enabled) spawnPosition.y = bodyCollider.bounds.min.y;
         path = new NavMeshPath();
         enemyAnimation = GetComponentInChildren<Animator>();
+        attack = GetComponent<EnemyAttack>();
         patrolIndex = 0;
         hasPatrolTarget = false;
     }
@@ -124,6 +126,13 @@ public class EnemyMovement : MonoBehaviour
         if (enemyAnimation == null)
             return;
 
+        if (attack != null && attack.IsAttacking)
+        {
+            enemyAnimation.SetBool(WalkParameter, false);
+            enemyAnimation.speed = 1f;
+            return;
+        }
+
         bool isWalking = movementSpeed > 0.01f;
         enemyAnimation.SetBool(WalkParameter, isWalking);
 
@@ -136,6 +145,11 @@ public class EnemyMovement : MonoBehaviour
     private void FixedUpdate()
     {
         debugHasWaypoint = false;
+        if (attack != null && attack.ShouldPauseMovement)
+        {
+            navigationStatus = "Attacking";
+            return;
+        }
         if (awareness == null || !awareness.isActiveAndEnabled)
         {
             Idle("Awareness disabled");

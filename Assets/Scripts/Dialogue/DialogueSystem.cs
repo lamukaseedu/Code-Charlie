@@ -13,10 +13,17 @@ public class DialogueSystem : MonoBehaviour
     [SerializeField] private string playerName = "Charlie";
     [SerializeField] private TMP_Text textBox;
     [SerializeField] private GameObject player;
-    private List<List<string>> dialogue;
-    private System.Action dialogueCompleted;
-    private float autoAdvanceDelay;
-    private WaitForSeconds scrollTime = new WaitForSeconds(0.08f);
+    private sealed class DialogueRequest
+    {
+        public List<List<string>> Lines;
+        public System.Action OnCompleted;
+        public float AutoAdvanceDelay;
+        public bool MovementEnabled;
+    }
+
+    private readonly Queue<DialogueRequest> dialogueQueue = new Queue<DialogueRequest>();
+    private bool isPlayingDialogue;
+    private const float ScrollDelay = 0.08f;
     private WaitForSeconds promptWaitTime = new WaitForSeconds(1f);
     private InputAction advanceDialogueAction;
     private bool enabledAdvanceDialogueAction;
@@ -30,10 +37,20 @@ public class DialogueSystem : MonoBehaviour
     {
         enabledAdvanceDialogueAction = !advanceDialogueAction.enabled;
         advanceDialogueAction.Enable();
+        StartQueuedDialogue();
     }
 
     private void OnDisable()
     {
+        StopAllCoroutines();
+        dialogueQueue.Clear();
+        if (isPlayingDialogue)
+        {
+            isPlayingDialogue = false;
+            textBox.text = "";
+            SetPlayerMovement(true);
+        }
+
         if (enabledAdvanceDialogueAction)
             advanceDialogueAction.Disable();
     }
@@ -46,14 +63,29 @@ public class DialogueSystem : MonoBehaviour
         {
             textBox.text += line[character];
             character++;
-            yield return scrollTime;
+
+            // Check input every frame, including between character reveals.
+            float elapsed = 0f;
+            while (elapsed < ScrollDelay)
+            {
+                if (Time.timeScale > 0f && advanceDialogueAction.WasPressedThisFrame())
+                {
+                    textBox.text += line.Substring(character);
+                    // Consume this frame so revealing the text cannot also advance it.
+                    yield return null;
+                    yield break;
+                }
+
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
         }
     }
 
-    IEnumerator ReadLine(int lineNumber)
+    IEnumerator ReadLine(List<string> dialogueLine, float autoAdvanceDelay)
     {
-        string speaker = dialogue[lineNumber][0];
-        string line = dialogue[lineNumber][1];
+        string speaker = dialogueLine[0];
+        string line = dialogueLine[1];
         
         textBox.text = speaker;
         yield return StartCoroutine(ScrollText(line));
@@ -81,19 +113,52 @@ public class DialogueSystem : MonoBehaviour
         }
 
         textBox.text = "";
-
-        if (lineNumber < dialogue.Count - 1)
-        {
-            StartCoroutine(ReadLine(lineNumber + 1));
-        } else
-        {
-            SetPlayerMovement(true);
-            // Clear before invoking so an event can safely start another dialogue.
-            System.Action completed = dialogueCompleted;
-            dialogueCompleted = null;
-            completed?.Invoke();
-        }
     }
+
+    private void StartQueuedDialogue()
+    {
+        if (isPlayingDialogue || dialogueQueue.Count == 0 || !isActiveAndEnabled)
+            return;
+        
+        isPlayingDialogue = true;
+        StartCoroutine(ProcessDialogueQueue());
+    }
+
+    private IEnumerator ProcessDialogueQueue()
+    {
+        while (dialogueQueue.Count > 0)
+        {
+            DialogueRequest request = dialogueQueue.Dequeue();
+            SetPlayerMovement(request.MovementEnabled);
+            foreach (List<string> line in request.Lines)
+                yield return ReadLine(line, request.AutoAdvanceDelay);
+
+            SetPlayerMovement(true);
+            try
+            {
+                request.OnCompleted?.Invoke();
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogException(exception, this);
+            }
+
+            if (!isActiveAndEnabled)
+                yield break;
+        }
+
+        isPlayingDialogue = false;
+    }
+
+    // Select this method in a Unity Event and enter the player's dialogue text.
+    public void StartPlayerDialogue(string text)
+    {
+        StartDialogue(new List<List<string>>
+        {
+            new List<string> { playerName + ": ", text }
+        }, null, 2f);
+    }
+
     public void StartDialogue(List<List<string>> script)
     {
         StartDialogue(script, null);
@@ -106,12 +171,37 @@ public class DialogueSystem : MonoBehaviour
 
     public void StartDialogue(List<List<string>> script, System.Action onCompleted, float autoAdvanceDelay)
     {
-        // Replacing a dialogue cancels its playback and completion callback.
-        StopAllCoroutines();
-        dialogue = script;
-        dialogueCompleted = onCompleted;
-        this.autoAdvanceDelay = Mathf.Max(0f, autoAdvanceDelay);
-        StartCoroutine(ReadLine(0));
+        StartDialogue(script, onCompleted, autoAdvanceDelay, true);
+    }
+
+    public void StartDialogue(List<List<string>> script, System.Action onCompleted, float autoAdvanceDelay, bool movementEnabled)
+    {
+        if (script == null || script.Count == 0)
+        {
+            Debug.LogWarning("Cannot queue an empty dialogue script.", this);
+            return;
+        }
+        
+        List<List<string>> lines = new List<List<string>>(script.Count);
+        foreach (List<string> line in script)
+        {
+            if (line == null || line.Count < 2 || line[0] == null || line[1] == null)
+            {
+                Debug.LogWarning("Each dialogue line must contain a speaker and text.", this);
+                return;
+            }
+
+            lines.Add(new List<string> { line[0], line[1] });
+        }
+
+        dialogueQueue.Enqueue(new DialogueRequest
+        {
+            Lines = lines,
+            OnCompleted = onCompleted,
+            AutoAdvanceDelay = Mathf.Max(0f, autoAdvanceDelay),
+            MovementEnabled = movementEnabled
+        });
+        StartQueuedDialogue();
     }
     public string GetPlayerName()
     {

@@ -46,4 +46,14 @@ public class SceneManager : MonoBehaviour
     {
         UnitySceneManager.LoadScene(sceneName);
     }
+
+    // Closes the built application, or stops Play Mode in the Unity Editor.
+    public void QuitApplication()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }

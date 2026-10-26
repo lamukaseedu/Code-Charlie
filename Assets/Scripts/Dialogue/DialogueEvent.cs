@@ -52,7 +52,6 @@ public class DialogueEvent : MonoBehaviour
 
         // Resolve here so scene-loaded Unity Events can trigger dialogue before Start.
         playerName = dialogueSystem.GetPlayerName();
-        dialogueSystem.SetPlayerMovement(movementEnabled);
         eventTriggered = true;
         ProcessText();
     }
@@ -78,7 +77,7 @@ public class DialogueEvent : MonoBehaviour
             script.Add(attributedLine);
         }
 
-        dialogueSystem.StartDialogue(script, HandleDialogueEnded, autoAdvanceDelay);
+        dialogueSystem.StartDialogue(script, HandleDialogueEnded, autoAdvanceDelay, movementEnabled);
     }
 
     private void HandleDialogueEnded()

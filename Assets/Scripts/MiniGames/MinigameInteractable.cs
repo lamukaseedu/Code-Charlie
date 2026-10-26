@@ -125,10 +125,18 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         exitSubscribed = false;
     }
 
+    private void OnEnable()
+    {
+        if (IsActive)
+            player?.SetMinigameActive(this, true);
+    }
+
     private void OnDisable()
     {
         UnsubscribeFromExit();
         SetHighlighted(false);
+        if (player != null)
+            player.SetMinigameActive(this, false);
     }
 
     // Called when the player looks at this interactable.
@@ -235,6 +243,7 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
         IsActive = true;
         IsTransitioning = false;
+        player.SetMinigameActive(this, true);
 
         onInteractableEntered?.Invoke();
     }
@@ -275,6 +284,7 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         }
 
         IsActive = false;
+        player.SetMinigameActive(this, false);
 
         // Restore interaction colliders.
         SetInteractionTriggers(true);
