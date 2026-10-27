@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8597454022478939642}
   - component: {fileID: 3278729522254078605}
   - component: {fileID: 395465866277220707}
-  - component: {fileID: 7117722219608217161}
   - component: {fileID: 1467961660312992913}
   - component: {fileID: 6994155631049469000}
   - component: {fileID: 704859991370543729}
@@ -19,13 +18,18 @@ GameObject:
   - component: {fileID: 8100000000000000201}
   - component: {fileID: 6537765158779672507}
   - component: {fileID: 393340680133742923}
+  - component: {fileID: 4825679246833557419}
+  - component: {fileID: 900624321760557857}
+  - component: {fileID: 5339712009850973072}
+  - component: {fileID: 98330516170111917}
+  - component: {fileID: 5845764158377419544}
   m_Layer: 0
   m_Name: TestEnemyObject3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8597454022478939642
 Transform:
   m_ObjectHideFlags: 0
@@ -55,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffe4a65939b4f25458571b2d2885e52d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 12
+  maxHealth: 20
   destroyOnDeath: 1
   onDamaged:
     m_PersistentCalls:
@@ -93,26 +97,6 @@ MonoBehaviour:
   directionIndex: 0
   targetPosition: {x: 0, y: 0, z: 0}
   directionToPlayer: {x: 0, y: 0, z: 0}
---- !u!114 &7117722219608217161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 636542431000081747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41552667901d33a46ad4ea1f92a40116, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDetection
-  hearingRadius: 30
-  visionRange: 25
-  fieldOfView: 120
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 64
-  eyeHeight: 1
-  drawGizmos: 0
 --- !u!54 &1467961660312992913
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -122,7 +106,7 @@ Rigidbody:
   m_GameObject: {fileID: 636542431000081747}
   serializedVersion: 5
   m_Mass: 2
-  m_LinearDamping: 0
+  m_LinearDamping: 0.02
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -152,20 +136,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 848557671876af84f93c077359aa373f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  investigateSpeed: 3
-  chaseSpeed: 7
+  investigateSpeed: 6
+  chaseSpeed: 9
   stopDistance: 0.2
-  acceleration: 15
-  turnSpeed: 250
-  patrolPoints: []
-  patrolSpeed: 1.5
-  patrolWaitTime: 2
-  agentTypeID: 0
+  acceleration: 12
+  turnSpeed: 540
+  patrolSpeed: 2.5
+  patrolRadius: 30
+  maxPatrolDistance: 50
+  patrolArrivalDistance: 1
+  alertSearchRadius: 10
+  agentTypeID: -1372625422
   areaMask: -1
   repathInterval: 0.25
   sampleDistance: 3
   destinationProjectionLimit: 1
-  cornerTolerance: 0.1
+  cornerTolerance: 0.3
   debugWaypoint: {x: 0, y: 0, z: 0}
   debugHasWaypoint: 0
   debugState: 0
@@ -173,6 +159,8 @@ MonoBehaviour:
   debugTurnAngle: 0
   navigationStatus: Idle
   patrolIndex: 0
+  patrolTarget: {x: 0, y: 0, z: 0}
+  hasPatrolTarget: 0
 --- !u!114 &704859991370543729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +168,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636542431000081747}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f96cf6f91751b644a8b1ac32fb831525, type: 3}
   m_Name: 
@@ -219,8 +207,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.7
-  m_Height: 2.6
+  m_Radius: 0.35
+  m_Height: 2.2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8100000000000000201
@@ -236,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAwareness
   player: {fileID: 0}
-  hearingRadius: 12
+  hearingRadius: 25
   alertHearingMultiplier: 1.5
   noisePriorityWindow: 0.15
   targetPriorityDecayPerSecond: 10
@@ -244,20 +232,21 @@ MonoBehaviour:
   unawareDecayDelay: 2
   alertDecayDelay: 5
   suspicionDecayPerSecond: 5
-  visionRange: 12
-  fieldOfView: 90
-  shortVisionRange: 2.5
+  visionRange: 30
+  fieldOfView: 120
+  shortVisionRange: 4
   shortFieldOfView: 240
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4083
-  eyeHeight: 1.2
+  eyeHeight: 1
   targetHeight: 1
-  unawareRecognitionTime: 1
-  alertRecognitionTime: 0.4
+  unawareRecognitionTime: 1.5
+  alertRecognitionTime: 1
+  crouchingRecognitionMultiplier: 0.5
   glimpseThreshold: 0.2
-  farRecognitionMultiplier: 0.4
-  edgeRecognitionMultiplier: 0.5
+  farRecognitionMultiplier: 0.2
+  edgeRecognitionMultiplier: 0.4
   recognitionDecayPerSecond: 1
   lostSightTime: 3
   proximityRadius: 2.5
@@ -398,6 +387,104 @@ MonoBehaviour:
   spatialBlend: 1
   minDistance: 1
   maxDistance: 20
+--- !u!114 &4825679246833557419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636542431000081747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &900624321760557857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636542431000081747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeac4361742d6ae488ac68bf8fdc2f34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyKnockback
+  thrust: 12
+--- !u!114 &5339712009850973072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636542431000081747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &98330516170111917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636542431000081747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeac4361742d6ae488ac68bf8fdc2f34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyKnockback
+  thrust: 12
+--- !u!114 &5845764158377419544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636542431000081747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecab43ac5bbb4caf8bfce4568ebbf691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  animator: {fileID: 3853882972178548672}
+  attackTrigger: Attack
+  attackState: Attack
+  animatorLayer: 0
+  animationStartTimeout: 2
+  attackCollider: {fileID: 1931240740015165659}
+  colliderEnableThreshold: 0.35
+  colliderDisableThreshold: 0.75
+  stopMovingDuringAttack: 1
+  lunge: 1
+  lungeImpulse: 10
+  attackAutomatically: 1
+  attackRange: 2
+  attackAngle: 90
+  attackCooldown: 1
+  attackAudioSource: {fileID: 6537765158779672507}
+  attackSounds:
+  - {fileID: 8300000, guid: 36005d064d454c04fba1e3a8f28c5da9, type: 3}
+  - {fileID: 8300000, guid: b44f6fe90cdcca94b98b0feb684f84af, type: 3}
+  - {fileID: 8300000, guid: c27a77a1452078c4ca68685352639dc8, type: 3}
 --- !u!1 &961452922116546634
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,7 +496,7 @@ GameObject:
   - component: {fileID: 6622159042150867243}
   - component: {fileID: 1931240740015165659}
   - component: {fileID: 7079959751877191416}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -496,7 +583,7 @@ Transform:
   m_GameObject: {fileID: 2200295589236478584}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.04, y: 0.2, z: 0}
   m_LocalScale: {x: 2.75, y: 2.75, z: 2.75}
   m_ConstrainProportionsScale: 1
   m_Children: []
