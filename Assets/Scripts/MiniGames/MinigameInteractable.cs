@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class MinigameInteractable : MonoBehaviour, IInteractable
 {
@@ -27,10 +28,13 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
     [SerializeField] private bool unlockCursorWhileActive = true;
 
     [Header("Hover Highlight")]
-    [SerializeField] private Renderer highlightRenderer;
-    [SerializeField]
-    private Color highlightColor =
-        new(0.15f, 0.8f, 1f, 1f);
+    [SerializeField] private Renderer[] highlightRenderers;
+    [SerializeField] private Color highlightColor = new(0.15f, 0.8f, 1f, 1f);
+
+    [Tooltip("Append the Hover Material while hovered instead of tinting the original materials.")]
+    [SerializeField] private bool useHoverMaterial = false;
+
+    [SerializeField] private Material hoverMaterial;
 
     [Header("Interaction Prompt")]
     [SerializeField] private string interactionPrompt;
@@ -61,19 +65,18 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
     private static readonly int ColorId =
         Shader.PropertyToID("_Color");
 
-    private MaterialPropertyBlock propertyBlock;
-    private Color normalColor = Color.white;
-    private int colorPropertyId;
+    private readonly Dictionary<Renderer, Material[]> originalMaterials =
+    new Dictionary<Renderer, Material[]>();
+
+    private Material hoverMaterialInstance;
 
     private bool[] originalTriggerStates;
     private bool exitSubscribed;
 
     private void Awake()
     {
-        if (highlightRenderer == null)
-            highlightRenderer = GetComponentInChildren<Renderer>();
-
-        CacheMaterialColor();
+        if (highlightRenderers == null || highlightRenderers.Length == 0)
+            highlightRenderers = GetComponentsInChildren<Renderer>();
     }
 
     private void Start()
@@ -338,43 +341,125 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
     public void SetHighlighted(bool highlighted)
     {
-        if (highlightRenderer == null || colorPropertyId == 0)
+        if (highlightRenderers == null)
             return;
 
-        propertyBlock ??= new MaterialPropertyBlock();
-
-        highlightRenderer.GetPropertyBlock(propertyBlock);
-
-        propertyBlock.SetColor(
-            colorPropertyId,
-            highlighted ? highlightColor : normalColor
-        );
-
-        highlightRenderer.SetPropertyBlock(propertyBlock);
-    }
-
-    private void CacheMaterialColor()
-    {
-        if (highlightRenderer == null ||
-            highlightRenderer.sharedMaterial == null)
-            return;
-
-        Material material = highlightRenderer.sharedMaterial;
-
-        if (material.HasProperty(BaseColorId))
-            colorPropertyId = BaseColorId;
-        else if (material.HasProperty(ColorId))
-            colorPropertyId = ColorId;
-        else
+        if (useHoverMaterial && hoverMaterial != null)
         {
-            Debug.LogWarning(
-                "The interactable material has no _BaseColor or _Color property.",
-                this
-            );
+            if (highlighted)
+                ApplyHoverMaterial();
+            else
+                RestoreOriginalMaterials();
+
             return;
         }
 
-        normalColor = material.GetColor(colorPropertyId);
+        // Also remove overlays if the optional mode was changed during play.
+        RestoreOriginalMaterials();
+
+        var block = new MaterialPropertyBlock();
+
+        foreach (Renderer renderer in highlightRenderers)
+        {
+            if (renderer == null)
+                continue;
+
+            Material[] materials = renderer.sharedMaterials;
+
+            for (int i = 0; i < materials.Length; i++)
+            {
+                Material material = materials[i];
+
+                if (material == null)
+                    continue;
+
+                int colorId = material.HasProperty(BaseColorId)
+                    ? BaseColorId
+                    : material.HasProperty(ColorId) ? ColorId : 0;
+
+                if (colorId == 0)
+                    continue;
+
+                renderer.GetPropertyBlock(block, i);
+
+                block.SetColor(
+                    colorId,
+                    highlighted ? highlightColor : material.GetColor(colorId)
+                );
+
+                if (material.HasProperty("_EmissionColor"))
+                {
+                    block.SetColor(
+                        "_EmissionColor",
+                        highlighted
+                            ? highlightColor * 3f
+                            : material.GetColor("_EmissionColor")
+                    );
+                }
+
+                renderer.SetPropertyBlock(block, i);
+            }
+        }
+    }
+
+    private void ApplyHoverMaterial()
+    {
+        // Use a private copy so changing the highlight never edits the material asset.
+        if (hoverMaterialInstance == null)
+            hoverMaterialInstance = new Material(hoverMaterial);
+
+        if (hoverMaterialInstance.HasProperty(BaseColorId))
+            hoverMaterialInstance.SetColor(BaseColorId, highlightColor);
+        else if (hoverMaterialInstance.HasProperty(ColorId))
+            hoverMaterialInstance.SetColor(ColorId, highlightColor);
+
+        if (hoverMaterialInstance.HasProperty("_EmissionColor"))
+        {
+            hoverMaterialInstance.SetColor(
+                "_EmissionColor",
+                highlightColor * 3f
+            );
+        }
+
+        foreach (Renderer renderer in highlightRenderers)
+        {
+            if (renderer == null || originalMaterials.ContainsKey(renderer))
+                continue;
+
+            Material[] materials = renderer.sharedMaterials;
+            originalMaterials.Add(renderer, materials);
+
+            Material[] highlightedMaterials =
+                new Material[materials.Length + 1];
+
+            System.Array.Copy(
+                materials,
+                highlightedMaterials,
+                materials.Length
+            );
+
+            highlightedMaterials[materials.Length] = hoverMaterialInstance;
+            renderer.sharedMaterials = highlightedMaterials;
+        }
+    }
+
+    private void RestoreOriginalMaterials()
+    {
+        foreach (KeyValuePair<Renderer, Material[]> entry in originalMaterials)
+        {
+            if (entry.Key != null)
+                entry.Key.sharedMaterials = entry.Value;
+        }
+
+        originalMaterials.Clear();
+    }
+
+    private void OnDestroy()
+    {
+        RestoreOriginalMaterials();
+
+        if (hoverMaterialInstance != null)
+            Destroy(hoverMaterialInstance);
     }
 }
 

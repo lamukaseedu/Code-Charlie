@@ -21,6 +21,13 @@ public class KeypadController : MonoBehaviour
     [SerializeField] private string deniedText = "ERROR";
     [SerializeField, Min(0f)] private float resultDisplayTime = 1f;
 
+    [Header("Interaction Prompt")]
+    [SerializeField, Min(0f)] private float promptRevealDelay = 1f;
+
+    private InteractionPromptUI interactionPrompt;
+    private TMP_Text interactionPromptText;
+    private Coroutine promptRevealRoutine;
+
     [Header("Audio (Optional)")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip digitSound;
@@ -39,6 +46,17 @@ public class KeypadController : MonoBehaviour
 
     private void Awake()
     {
+        interactionPrompt =
+            FindFirstObjectByType<InteractionPromptUI>(
+                FindObjectsInactive.Include
+            );
+
+        if (interactionPrompt != null)
+        {
+            interactionPromptText =
+                interactionPrompt.GetComponentInChildren<TMP_Text>(true);
+        }
+
         RefreshDisplay();
     }
 
@@ -109,6 +127,17 @@ public class KeypadController : MonoBehaviour
         if (granted)
         {
             IsUnlocked = true;
+
+            // Hide before the unlock event opens the safe.
+            if (interactionPrompt != null)
+            {
+                if (promptRevealRoutine != null)
+                    StopCoroutine(promptRevealRoutine);
+
+                promptRevealRoutine =
+                    StartCoroutine(RestorePromptAfterDelay());
+            }
+
             PlaySound(grantedSound);
             onAccessGranted?.Invoke();
         }
@@ -147,5 +176,24 @@ public class KeypadController : MonoBehaviour
     private void OnValidate()
     {
         maximumDigits = Mathf.Max(1, maximumDigits);
+    }
+
+    private IEnumerator RestorePromptAfterDelay()
+    {
+        float revealTime = Time.time + promptRevealDelay;
+
+        interactionPrompt.Hide();
+
+        while (Time.time < revealTime)
+        {
+            // Keep the whole container hidden during the delay.
+            interactionPrompt.Hide();
+            yield return null;
+        }
+
+        if (interactionPromptText != null)
+            interactionPrompt.Show(interactionPromptText.text);
+
+        promptRevealRoutine = null;
     }
 }
