@@ -209,6 +209,6 @@ public class DialogueSystem : MonoBehaviour
     }
     public void SetPlayerMovement(bool state)
     {
-        player.GetComponent<PlayerMovement>().SetMovementEnabled(state);
+        //player.GetComponent<PlayerMovement>().SetMovementEnabled(state);
     }
 }

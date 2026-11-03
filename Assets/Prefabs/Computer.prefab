@@ -5086,7 +5086,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1856584517121662044}
   m_HandleRect: {fileID: 7451704856838190296}
   m_Direction: 1
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -6246,7 +6246,8 @@ MonoBehaviour:
   useHoverMaterial: 1
   hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   interactionPrompt: PRESS E TO ACCESS TERMINAL
-  interactionTriggers: []
+  interactionTriggers:
+  - {fileID: 8481378250471320064}
   onHover:
     m_PersistentCalls:
       m_Calls: []
