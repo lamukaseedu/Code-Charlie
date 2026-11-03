@@ -18,8 +18,11 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private Transform equipmentHolder;
     [SerializeField] private InventoryUI inventoryUI;
     [SerializeField] private Transform dropSpawnPoint;
+    [SerializeField] private Transform throwSpawnPoint;
     [SerializeField] private PlayerInteraction playerInteraction;
     [SerializeField] private InputActionReference dropAction;
+
+    [SerializeField] private InputActionReference throwAction;
 
     private readonly GameObject[] instances = new GameObject[SlotCount];
     private IUsable equippedUse;
@@ -27,6 +30,8 @@ public class PlayerInventory : MonoBehaviour
     private InputAction useAction;
     private InputAction equipAction;
     private InputAction scrollAction;
+
+    private Camera playerCamera;
     public event Action Changed;
     public int SelectedSlot { get; private set; }
     public bool IsOpen { get; private set; }
@@ -40,6 +45,7 @@ public class PlayerInventory : MonoBehaviour
 
     private void Awake()
     {
+        playerCamera = Camera.main;
         Array.Resize(ref slots, SlotCount);
         Array.Resize(ref quantities, SlotCount);
         PlayerInput playerInput = GetComponent<PlayerInput>();
@@ -87,6 +93,9 @@ public class PlayerInventory : MonoBehaviour
 
         if (dropAction != null && dropAction.action.WasPressedThisFrame())
             DropEquippedItem();
+
+        if (throwAction != null && throwAction.action.WasPerformedThisFrame())
+            ThrowEquippedItem();
     }
 
     public Item GetItem(int index) => IsValidSlot(index) ? slots[index] : null;
@@ -251,11 +260,20 @@ public class PlayerInventory : MonoBehaviour
             Cursor.lockState != CursorLockMode.Locked || EquippedObject == null)
             return false;
 
-        return DropSlot(SelectedSlot);
+        return DropSlot(SelectedSlot, false);
+    }
+
+    public bool ThrowEquippedItem()
+    {
+        if (!isActiveAndEnabled || IsOpen || Time.timeScale == 0f ||
+            Cursor.lockState != CursorLockMode.Locked || EquippedObject == null)
+            return false;
+
+        return DropSlot(SelectedSlot, true);
     }
 
     // Connect each inventory slot's Drop button to this method with that slot's index.
-    public bool DropSlot(int index)
+    public bool DropSlot(int index, bool isThrown)
     {
         if (!isActiveAndEnabled || Time.timeScale == 0f || !IsValidSlot(index))
             return false;
@@ -265,10 +283,22 @@ public class PlayerInventory : MonoBehaviour
         if (item == null || amount <= 0 || item.WorldPickupPrefab == null || dropSpawnPoint == null)
             return false;
 
-        GameObject pickup = Instantiate(item.WorldPickupPrefab,
-            dropSpawnPoint.position, dropSpawnPoint.rotation);
-        if (pickup == null)
-            return false;
+        GameObject pickup;
+
+        if (!isThrown)
+        {
+            pickup = Instantiate(item.WorldPickupPrefab,
+                dropSpawnPoint.position, dropSpawnPoint.rotation);
+            if (pickup == null)
+                return false;
+        } else
+        {
+            pickup = Instantiate(item.WorldPickupPrefab, throwSpawnPoint.position, throwSpawnPoint.rotation);
+            Rigidbody itemBody = pickup.GetComponent<Rigidbody>();
+            itemBody.AddForce(playerCamera.transform.forward * 10, ForceMode.Impulse);
+            if (pickup == null)
+                return false;
+        }
 
         ItemHover itemHover = pickup.GetComponentInChildren<ItemHover>();
         if (itemHover == null)

@@ -40,6 +40,10 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     [SerializeField] private AudioClip fireClip;
 
     private AudioSource audioSource;
+
+    [Header("Impact Effects")]
+    [SerializeField] private ParticleSystem sparkEffectPrefab;
+    [SerializeField] private ParticleSystem bloodEffectPrefab;
     private float nextFireTime = 0f;
 
     private InputAction reloadGun;
@@ -174,6 +178,22 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
             {
                 Nail.transform.SetParent(hit.collider.transform, true);
             }
+            if (hit.collider.gameObject.tag == "Enemy")
+            {
+                SpawnImpactEffect(
+                bloodEffectPrefab,
+                hit.point,
+                hit.normal
+            );
+            }
+            else
+            {
+                SpawnImpactEffect(
+                sparkEffectPrefab,
+                hit.point,
+                hit.normal
+                );
+            }
 
             Destroy(Nail, 5.0f);
 
@@ -222,6 +242,25 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
         Vector2 offset = Random.insideUnitCircle * Mathf.Tan(spread * Mathf.Deg2Rad);
         return (forward + playerCamera.transform.right * offset.x + playerCamera.transform.up * offset.y).normalized;
+    }
+
+    private void SpawnImpactEffect(
+    ParticleSystem effectPrefab,
+    Vector3 position,
+    Vector3 surfaceNormal)
+    {
+        if (effectPrefab == null)
+            return;
+
+        Quaternion rotation = Quaternion.LookRotation(surfaceNormal);
+
+        ParticleSystem effect = Instantiate(
+            effectPrefab,
+            position,
+            rotation
+        );
+
+        effect.Play();
     }
 
     private void OnDisable()
