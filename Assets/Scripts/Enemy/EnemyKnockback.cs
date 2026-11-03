@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyKnockback : MonoBehaviour, IKnockable
 {
     [SerializeField] float thrust = 12f;
-    private Rigidbody rb; 
+    private Rigidbody rb;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,6 +18,7 @@ public class EnemyKnockback : MonoBehaviour, IKnockable
     public void KnockbackObject(Transform ExecutionSource)
     {
         Vector3 dir = ((transform.position - ExecutionSource.transform.position).normalized);
+        rb.linearVelocity = new Vector3(0, 0, 0);
         rb.AddForce(dir * thrust, ForceMode.Impulse);
     }
 }

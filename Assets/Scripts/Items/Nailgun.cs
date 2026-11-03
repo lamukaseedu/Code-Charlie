@@ -1,10 +1,14 @@
 /*
  * Author: Shelton Joseph
  * Created: 8/30/2026
+ * Edited By: Savio Xavier
+ * Edited: 10/20/2026
  */
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(AudioSource))]
 public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 {
     [SerializeField] private float damage = 25f;
@@ -17,7 +21,7 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     [Min(1)]
     [SerializeField] private int magSize = 10;
 
-    private int nailsInMag = 0;
+    static private int nailsInMag = 0;
     [SerializeField] private float spreadAngle = 4f;
     [SerializeField] private float upgradedSpreadAngle = 0f;
 
@@ -32,6 +36,10 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
     [SerializeField] private Animator recoilAnimator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip fireClip;
+
+    private AudioSource audioSource;
     private float nextFireTime = 0f;
 
     private InputAction reloadGun;
@@ -42,17 +50,24 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     {
         playerInventory = inventory;
     }
-
     private void Awake()
     {
         playerCamera = Camera.main;
         PlayerInput playerInput = GetComponentInParent<PlayerInput>();
         if (playerInput != null)
             reloadGun = playerInput.actions["Reload"];
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
+        }
     }
 
     private void OnEnable()
     {
+        Debug.Log("enabled", this);
         ammo = GetComponentInParent<PlayerAmmo>();
         upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
     }
@@ -91,8 +106,10 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         // Transfer only the nails needed to top up the magazine.
         if (playerInventory.TryConsumeItem(nailAmmo, nailsToLoad))
         {
-            nailsInMag += nailsToLoad;
-            Debug.Log($"Reloaded! Magazine: {nailsInMag}/{magSize}");
+            nailsToLoad += nailsInMag;
+            nailsInMag = 0;
+            recoilAnimator.SetTrigger("reload");
+            StartCoroutine(ReloadGun(nailsToLoad));
         }
     }
     //Creates a ray facing forward from the first person camera. Any object that the ray hits that is damagable will take damage.
@@ -116,6 +133,12 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
         nextFireTime = Time.time + fireRate;
         nailsInMag--;
+
+        GameAudio.PlayOneShot(audioSource, fireClip);
+
+        GameObject noiseSource = playerInventory != null ? playerInventory.gameObject : gameObject;
+        NoiseEmitter.EmitAt(Muzzle != null ? Muzzle.position : transform.position,
+            NoiseEmitter.NoiseLevel.Strong, noiseSource);
 
         Debug.Log("Bang");
 
@@ -143,11 +166,20 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
             hitPoint = hit.point;
 
             GameObject Nail = Instantiate(NailPrefab, hit.point, Quaternion.LookRotation(playerCamera.transform.up));
-            Nail.transform.SetParent(hit.collider.transform, true);
+            if (hit.transform.parent != null)
+            {
+                Nail.transform.SetParent(hit.collider.transform.parent, true);
+            }
+            else
+            {
+                Nail.transform.SetParent(hit.collider.transform, true);
+            }
 
             Destroy(Nail, 5.0f);
 
             Debug.Log("Hit: " + hit.collider.name);
+
+            IImpactable impactable = hit.collider.GetComponentInParent<IImpactable>();
 
             IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
 
@@ -155,6 +187,9 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
             {
                 damageable.TakeDamage(damage);
             }
+            // Capture the receiver before damage, then notify after existing damage handling.
+            if (impactable != null && (!(impactable is Object receiver) || receiver != null))
+                impactable.OnImpact(new ImpactInfo(hit.point, hit.normal, ray.direction, noiseSource, hit.collider));
         }
         else
         {
@@ -185,4 +220,29 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         Vector2 offset = Random.insideUnitCircle * Mathf.Tan(spread * Mathf.Deg2Rad);
         return (forward + playerCamera.transform.right * offset.x + playerCamera.transform.up * offset.y).normalized;
     }
+
+    private void OnDisable()
+    {
+        Debug.Log(
+            $"Nailgun DISABLED | enabled={enabled} | " +
+            $"activeSelf={gameObject.activeSelf} | " +
+            $"activeInHierarchy={gameObject.activeInHierarchy}",
+            this
+        );
+
+        Transform parent = transform.parent;
+        while (parent != null)
+        {
+            Debug.Log($"Parent: {parent.name} | activeSelf={parent.gameObject.activeSelf}");
+            parent = parent.parent;
+        }
+    }
+
+    IEnumerator ReloadGun(int NailsToLoad)
+    {
+        yield return new WaitForSeconds(1f);
+        nailsInMag += NailsToLoad;
+        Debug.Log($"Reloaded! Magazine: {nailsInMag}/{magSize}");
+    }
+
 }
