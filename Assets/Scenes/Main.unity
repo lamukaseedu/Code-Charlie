@@ -6422,6 +6422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSystem
   playerName: Charli
   textBox: {fileID: 1083705765}
+  player: {fileID: 0}
 --- !u!4 &622350862
 Transform:
   m_ObjectHideFlags: 0
@@ -14248,6 +14249,15 @@ MonoBehaviour:
   losColor: {r: 1, g: 0, b: 0, a: 1}
   lineWidth: 0.05
   showRuntime: 1
+  shortFovColor: {r: 1, g: 0.5, b: 0, a: 1}
+  proximityColor: {r: 1, g: 0, b: 1, a: 1}
+  showOverlay: 1
+  showWorldGeometry: 1
+  showInReleaseBuild: 0
+  overlayOffset: {x: 16, y: 16}
+  overlayScale: 1
+  pathColor: {r: 0.3, g: 1, b: 0.45, a: 1}
+  destinationColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1452182722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14265,11 +14275,22 @@ MonoBehaviour:
   stopDistance: 0.2
   acceleration: 10
   turnSpeed: 180
+  patrolPoints: []
+  patrolSpeed: 1.5
+  patrolWaitTime: 2
+  agentTypeID: 0
+  areaMask: -1
+  repathInterval: 0.25
+  sampleDistance: 3
+  destinationProjectionLimit: 1
+  cornerTolerance: 0.1
   debugWaypoint: {x: 0, y: 0, z: 0}
   debugHasWaypoint: 0
   debugState: 0
   debugDistance: 0
   debugTurnAngle: 0
+  navigationStatus: Idle
+  patrolIndex: 0
 --- !u!114 &1452182723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15040,6 +15061,7 @@ MonoBehaviour:
   dialogueSystem: {fileID: 622350861}
   triggerTag: Player
   eventTriggered: 0
+  movementEnabled: 1
 --- !u!135 &1582151765
 SphereCollider:
   m_ObjectHideFlags: 0
