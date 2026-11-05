@@ -9,9 +9,10 @@ using UnityEngine;
 public class SlidingDoor : MonoBehaviour
 {
     [SerializeField] private Transform door;
-    [SerializeField] private bool open = false;
+    [SerializeField] private bool locked = false;
     [SerializeField] private float speed = 200f;
     [SerializeField] private float openHeight = 300f;
+    private bool open = false;
     private Vector3 closedPosition;
     private Vector3 openPosition;
 
@@ -38,10 +39,15 @@ public class SlidingDoor : MonoBehaviour
         }
     }
 
+    void Unlock()
+    {
+        locked = false;
+    }
+    
     // Update is called once per frame
     void Update()
     {
-        Vector3 doorPosition = open ? openPosition : closedPosition;
+        Vector3 doorPosition = open && !locked ? openPosition : closedPosition;
         door.localPosition = Vector3.MoveTowards(door.localPosition, doorPosition, speed * Time.deltaTime);
     }
 }
