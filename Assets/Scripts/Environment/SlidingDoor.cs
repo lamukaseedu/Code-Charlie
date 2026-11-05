@@ -8,15 +8,16 @@ using UnityEngine;
 
 public class SlidingDoor : MonoBehaviour
 {
+    [SerializeField] private Transform door;
     [SerializeField] private bool open = false;
-    private float speed = 1f;
-    private float openHeight = 4.2f;
+    [SerializeField] private float speed = 200f;
+    [SerializeField] private float openHeight = 300f;
     private Vector3 closedPosition;
     private Vector3 openPosition;
 
     void Start()
     {
-        closedPosition = transform.localPosition;
+        closedPosition = door.localPosition;
         openPosition = closedPosition + new Vector3(0, openHeight, 0);
     }
 
@@ -41,6 +42,6 @@ public class SlidingDoor : MonoBehaviour
     void Update()
     {
         Vector3 doorPosition = open ? openPosition : closedPosition;
-        transform.localPosition = Vector3.MoveTowards(transform.localPosition, doorPosition, speed * Time.deltaTime);
+        door.localPosition = Vector3.MoveTowards(door.localPosition, doorPosition, speed * Time.deltaTime);
     }
 }
