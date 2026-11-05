@@ -341,6 +341,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "NavigateLogin",
+                    "type": "Button",
+                    "id": "1dbe2576-11b0-4a12-b9af-7e1e404d1b67",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "SubmitLogin",
+                    "type": "Button",
+                    "id": "c3a2dde5-2ced-4da3-b31d-71984381e5f0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -363,6 +383,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Left-Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "519d7f31-47ab-4b27-aaec-4abff4900d1c",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NavigateLogin",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "87aa984a-bc65-410b-8b0c-cc4cf254c1e6",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SubmitLogin",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

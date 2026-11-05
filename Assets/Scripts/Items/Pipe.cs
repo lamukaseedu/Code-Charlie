@@ -14,9 +14,8 @@ public class Pipe : MonoBehaviour, IUsable
 {
     [SerializeField] float damage = 10f;
     [SerializeField] float upgradedDamage = 20f;
-    [SerializeField] float range = 2f;
-    [SerializeField] float radius = 0.6f;
-    [SerializeField] LayerMask hitMask = ~0;
+    [Tooltip("Child collider defining the damage volume at the swing's hit time. Use an enabled trigger Box, Sphere, Capsule, or convex MeshCollider. If unassigned, a supported child collider is found automatically.")]
+    [SerializeField] private Collider damageCollider;
     [SerializeField] private Animator swingAnimator;
 
     [Header("Audio")]
@@ -33,6 +32,7 @@ public class Pipe : MonoBehaviour, IUsable
 
     private void Awake()
     {
+        FindDamageCollider();
         audioSource = GetComponent<AudioSource>();
         if (audioSource != null)
         {
@@ -46,10 +46,17 @@ public class Pipe : MonoBehaviour, IUsable
         upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
     }
 
-    // Damages IDamageable targets in a sphere in front of the camera on click
-    // Overlaps a sphere in look direction and applies damage, skipping the player
+    // The child collider defines the hit volume; the swing delay defines when it deals damage.
     public void Use()
     {
+        if (!isActiveAndEnabled) return;
+        FindDamageCollider();
+        if (damageCollider == null || !SupportsDamageVolume(damageCollider) ||
+            !damageCollider.transform.IsChildOf(transform) || damageCollider.transform == transform)
+        {
+            Debug.LogWarning("Pipe needs a child Box, Sphere, Capsule, or convex MeshCollider assigned as its damage collider.", this);
+            return;
+        }
         if (Time.time > nextAttackTime)
         {
             if (swingAnimator != null)
@@ -67,13 +74,17 @@ public class Pipe : MonoBehaviour, IUsable
     IEnumerator Startup()
     {
         yield return new WaitForSeconds(0.3f);
+        if (damageCollider == null || !damageCollider.enabled || !damageCollider.gameObject.activeInHierarchy)
+            yield break;
         Debug.Log("Swing!");
         float hitDamage = upgrades != null && upgrades.IsUpgraded(WeaponUpgradeId.PipeDamage)
             ? upgradedDamage
             : damage;
-        Transform origin = Camera.main.transform;
-        Vector3 center = origin.position + origin.forward * range;
-        Collider[] hits = Physics.OverlapSphere(center, radius, hitMask);
+        // Synchronize animated child transforms before looking for overlapping world colliders.
+        Physics.SyncTransforms();
+        Bounds bounds = damageCollider.bounds;
+        Collider[] hits = Physics.OverlapBox(bounds.center, bounds.extents, Quaternion.identity,
+            Physics.AllLayers, QueryTriggerInteraction.Ignore);
         var damagedTargets = new HashSet<IDamageable>();
         var knockedTargets = new HashSet<IKnockable>();
         bool hitWorld = false;
@@ -82,11 +93,16 @@ public class Pipe : MonoBehaviour, IUsable
         {
             Collider hit = hits[i];
 
-            if (hit == null ||
+            if (hit == null || hit == damageCollider || hit.transform.IsChildOf(transform) ||
                 hit.GetComponentInParent<PlayerMovement>() != null)
             {
                 continue;
             }
+
+            // The bounds query is only a broad phase. Damage requires overlap with the collider's actual shape.
+            if (!Physics.ComputePenetration(damageCollider, damageCollider.transform.position,
+                damageCollider.transform.rotation, hit, hit.transform.position, hit.transform.rotation,
+                out _, out _)) continue;
 
             hitWorld = true;
 
@@ -99,7 +115,10 @@ public class Pipe : MonoBehaviour, IUsable
 
             if (damageable != null && damagedTargets.Add(damageable))
             {
-                damageable.TakeDamage(hitDamage);
+                if (damageable is Health health)
+                    health.TakeDamage(hitDamage, gameObject);
+                else
+                    damageable.TakeDamage(hitDamage);
             }
 
             if (knockable != null && knockedTargets.Add(knockable))
@@ -113,21 +132,28 @@ public class Pipe : MonoBehaviour, IUsable
         else if (hitWorld)
             GameAudio.PlayOneShot(audioSource, hitMetalClip);
 
-        yield return new WaitForSeconds(5f);
     }
 
-    // Draws the melee hit sphere in the Scene view when this object is selected
-    private void OnDrawGizmosSelected()
+    private void OnDisable()
     {
-        Camera camera = Camera.main;
-        if (camera == null)
-        {
-            return;
-        }
+        // Unequipping the pipe cancels a swing that has not reached its hit time.
+        StopAllCoroutines();
+    }
 
-        Transform origin = camera.transform;
-        Vector3 center = origin.position + origin.forward * range;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(center, radius);
+    private void FindDamageCollider()
+    {
+        if (damageCollider != null) return;
+        foreach (Collider candidate in GetComponentsInChildren<Collider>(true))
+        {
+            if (candidate.transform == transform || !SupportsDamageVolume(candidate)) continue;
+            damageCollider = candidate;
+            break;
+        }
+    }
+
+    private static bool SupportsDamageVolume(Collider volume)
+    {
+        return volume is BoxCollider || volume is SphereCollider || volume is CapsuleCollider ||
+            (volume is MeshCollider mesh && mesh.convex);
     }
 }

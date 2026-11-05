@@ -34,6 +34,7 @@ public class Health : MonoBehaviour, IDamageable
     public bool IsDead => isDead;
     public UnityEvent OnDamaged => onDamaged;
     public UnityEvent<float> OnHealthChanged => onHealthChanged;
+    public event System.Action<GameObject> DamagedBy;
 
     private void Awake()
     {
@@ -42,6 +43,12 @@ public class Health : MonoBehaviour, IDamageable
 
     // Subtracts damage and destroys the object at 0 health
     public void TakeDamage(float amount)
+    {
+        TakeDamage(amount, null);
+    }
+
+    // Weapon hits supply their owner; environmental damage can continue using the original overload.
+    public void TakeDamage(float amount, GameObject source)
     {
         if (isDead || amount <= 0f)
         {
@@ -55,6 +62,10 @@ public class Health : MonoBehaviour, IDamageable
         if (currentHealth <= 0f)
         {
             Die();
+        }
+        else if (!isDead)
+        {
+            DamagedBy?.Invoke(source);
         }
     }
 

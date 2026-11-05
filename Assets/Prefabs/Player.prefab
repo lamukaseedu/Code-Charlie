@@ -2199,14 +2199,14 @@ GameObject:
   - component: {fileID: 7143390117399302350}
   - component: {fileID: 3077178942325623481}
   - component: {fileID: 2326529068542717487}
-  - component: {fileID: 1524755800005068521}
   - component: {fileID: 308127766873646117}
   - component: {fileID: 6700286673247354925}
-  - component: {fileID: 3982302211803669302}
   - component: {fileID: 8100000000000000101}
   - component: {fileID: 8100000000000000102}
   - component: {fileID: 1706140492910689525}
   - component: {fileID: 5046642806766613564}
+  - component: {fileID: 6948410032190588168}
+  - component: {fileID: 1206356388441947793}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2322,31 +2322,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 823f49bf638ffcc4c928db9422d0eebe, type: 2}
   - {fileID: 11400000, guid: 722346347b5731f4393df24a8599a00f, type: 2}
   - {fileID: 0}
+  - {fileID: 11400000, guid: f49b2e5a071d6514cb5b65296730fbf0, type: 2}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  quantities: 0000000000000000000000000000000000000000000000000000000000000000
+  quantities: 0100000001000000000000000000000000000000000000000000000000000000
   equipmentHolder: {fileID: 8242157089031747343}
   inventoryUI: {fileID: 3107513707820941102}
-  dropSpawnPoint: {fileID: 0}
-  playerInteraction: {fileID: 0}
+  dropSpawnPoint: {fileID: 7250056430915509149}
+  playerInteraction: {fileID: 6948410032190588168}
   dropAction: {fileID: 9086466234451035067, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
---- !u!114 &1524755800005068521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4543756621194945030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a117c5d02188814393e3f6f614d559a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAmmo
-  maxAmmo: 48
-  startingAmmo: 0
 --- !u!114 &308127766873646117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2382,30 +2368,6 @@ MonoBehaviour:
   onHealthChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3982302211803669302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4543756621194945030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d910391ac8fe7145abab93e0c664c30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  playerCamera: {fileID: 0}
-  interactionDistance: 3
-  interactionLayer:
-    serializedVersion: 2
-    m_Bits: 1792
-  blockRaycastLayers:
-    serializedVersion: 2
-    m_Bits: 1
-  interactActions:
-  - {fileID: 5680287017942265168, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
-  - {fileID: 7071939386602526578, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
-  interactionPromptUI: {fileID: 0}
 --- !u!114 &8100000000000000101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2548,6 +2510,50 @@ MonoBehaviour:
   damageClip: {fileID: 8300000, guid: f4869b2ac9355a64187e789815f06cc0, type: 3}
   walkPitch: 1
   sprintPitch: 1.2
+--- !u!114 &6948410032190588168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d910391ac8fe7145abab93e0c664c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+  interactionDistance: 3
+  interactionLayer:
+    serializedVersion: 2
+    m_Bits: 1280
+  blockRaycastLayers:
+    serializedVersion: 2
+    m_Bits: 65
+  interactActions:
+  - {fileID: 5680287017942265168, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+  - {fileID: 7071939386602526578, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+--- !u!114 &1206356388441947793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d534c45ee55add4baab674372e6ab16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMinigameContext
+  playerCamera: {fileID: 68588210569305835}
+  playerCameraController: {fileID: 8856822823882141347}
+  playerInteraction: {fileID: 6948410032190588168}
+  playerInput: {fileID: 25235935112057516}
+  exitInteractableAction: {fileID: 3096587151458098151, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+  defaultActionMap: Player
+  interactableActionMap: Minigame
+  playerItemHolder: {fileID: 1845692414772917617}
+  playerRenderers:
+  - {fileID: 812677828713384181}
 --- !u!1 &4845993798990113028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3617,6 +3623,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7550981213266866748
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7250056430915509149}
+  m_Layer: 0
+  m_Name: PlayerItemDropLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7250056430915509149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7550981213266866748}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.45, y: -0.45, z: 1.166}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6768979416999183104}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7722468963279191738
 GameObject:
   m_ObjectHideFlags: 0
@@ -3759,6 +3796,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7250056430915509149}
   - {fileID: 8242157089031747343}
   - {fileID: 6442451249280288139}
   - {fileID: 3932829504259715838}

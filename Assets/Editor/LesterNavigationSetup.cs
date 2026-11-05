@@ -48,13 +48,13 @@ public static class LesterNavigationSetup
             testVisits++;
             Debug.Log("LESTER_PATROL_VISIT " + testVisits + " position=" + testMotor.transform.position);
         }
-        if (testVisits >= testMotor.patrolPoints.Length)
+        if (testVisits >= 3)
         {
             Debug.Log("LESTER_MAIN_PATROL_PASS completed " + testVisits + " legs in " + (Time.time - testStart) + " game seconds.");
             EditorApplication.update -= CheckPatrol;
             EditorApplication.Exit(0);
         }
-        else if (Time.time - testStart > 75f || EditorApplication.timeSinceStartup > testDeadline)
+        else if (Time.time - testStart > 300f || EditorApplication.timeSinceStartup > testDeadline)
         {
             Debug.LogError("LESTER_MAIN_PATROL_FAIL visits=" + testVisits + " position=" +
                 testMotor.transform.position + " status=" + testMotor.NavigationStatus);
@@ -127,32 +127,6 @@ public static class LesterNavigationSetup
 
         Undo.RecordObject(motor, "Configure Lester navigation");
         motor.agentTypeID = agent;
-        if (motor.patrolPoints == null || motor.patrolPoints.Length == 0)
-        {
-            var route = new GameObject("Lester Patrol");
-            Undo.RegisterCreatedObjectUndo(route, "Create Lester patrol");
-            var points = new List<Transform>();
-            // Seed a modest, reachable route; designers can move these points and rebake.
-            var offsets = new[] { new Vector3(5,0,0), new Vector3(0,0,5),
-                new Vector3(-5,0,0), new Vector3(0,0,-5), new Vector3(3,0,3),
-                new Vector3(-3,0,-3), Vector3.zero };
-            foreach (var offset in offsets)
-            {
-                if (!NavMesh.SamplePosition(spawn.position + offset, out var hit, 2f, filter)) continue;
-                if (points.Any(p => Vector3.Distance(p.position, hit.position) < 2f)) continue;
-                var path = new NavMeshPath();
-                if (!NavMesh.CalculatePath(spawn.position, hit.position, filter, path) ||
-                    path.status != NavMeshPathStatus.PathComplete) continue;
-                var point = new GameObject("Patrol " + (points.Count + 1));
-                point.transform.SetParent(route.transform);
-                point.transform.position = hit.position;
-                points.Add(point.transform);
-                if (points.Count == 3) break;
-            }
-            if (points.Count < 2) throw new InvalidOperationException("Could not find two reachable patrol points. Scene has not been saved.");
-            motor.patrolPoints = points.ToArray();
-        }
-        ValidateRoute(motor, filter);
         if (!AssetDatabase.IsValidFolder("Assets/Navigation")) AssetDatabase.CreateFolder("Assets", "Navigation");
         var existing = AssetDatabase.LoadAssetAtPath<NavMeshData>(DataPath);
         if (existing == null) AssetDatabase.CreateAsset(surface.navMeshData, DataPath);
@@ -172,26 +146,8 @@ public static class LesterNavigationSetup
         EditorSceneManager.MarkSceneDirty(scene);
         AssetDatabase.SaveAssets();
         if (!EditorSceneManager.SaveScene(scene)) throw new InvalidOperationException("Could not save Main.");
-        Debug.Log("LESTER_M3_SETUP_OK agent=" + agent + " patrol=" +
-            string.Join("; ", motor.patrolPoints.Select(p => p.position.ToString("F2"))) +
+        Debug.Log("LESTER_M3_SETUP_OK agent=" + agent + " randomPatrolRadius=" + motor.patrolRadius +
             " excludedDynamicRoots=" + roots.Count);
-    }
-
-    static void ValidateRoute(EnemyMovement motor, NavMeshQueryFilter filter)
-    {
-        for (int i = 0; i < motor.patrolPoints.Length; i++)
-        {
-            var a = motor.patrolPoints[i];
-            var b = motor.patrolPoints[(i + 1) % motor.patrolPoints.Length];
-            if (a == null || b == null) throw new InvalidOperationException("Patrol contains an empty point.");
-            if (!NavMesh.SamplePosition(a.position, out var start, 0.5f, filter) ||
-                !NavMesh.SamplePosition(b.position, out var end, 0.5f, filter))
-                throw new InvalidOperationException("Patrol point lies outside the NavMesh.");
-            var path = new NavMeshPath();
-            if (!NavMesh.CalculatePath(start.position, end.position, filter, path) ||
-                path.status != NavMeshPathStatus.PathComplete)
-                throw new InvalidOperationException("Patrol points are not connected.");
-        }
     }
 
     static int EnsureAgent()

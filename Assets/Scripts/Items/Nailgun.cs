@@ -31,7 +31,6 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
     [SerializeField] private LineRenderer bulletTrailPrefab;
     private Camera playerCamera;
-    private PlayerAmmo ammo;
     private PlayerWeaponUpgrades upgrades;
 
     [SerializeField] private Animator recoilAnimator;
@@ -45,6 +44,12 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     private InputAction reloadGun;
 
     private PlayerInventory playerInventory;
+
+    public int NailsInMagazine => nailsInMag;
+    public int MagazineSize => magSize;
+    public int ReserveNails => playerInventory != null && nailAmmo != null
+        ? playerInventory.GetItemCount(nailAmmo)
+        : 0;
 
     public void Initialize(PlayerInventory inventory)
     {
@@ -68,7 +73,6 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     private void OnEnable()
     {
         Debug.Log("enabled", this);
-        ammo = GetComponentInParent<PlayerAmmo>();
         upgrades = GetComponentInParent<PlayerWeaponUpgrades>();
     }
 
@@ -185,7 +189,10 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
             if (damageable != null)
             {
-                damageable.TakeDamage(damage);
+                if (damageable is Health health)
+                    health.TakeDamage(damage, noiseSource);
+                else
+                    damageable.TakeDamage(damage);
             }
             // Capture the receiver before damage, then notify after existing damage handling.
             if (impactable != null && (!(impactable is Object receiver) || receiver != null))

@@ -24,7 +24,10 @@ public class PlayerMovement : MonoBehaviour
     private InputAction crouchAction;
 
     public bool IsSprinting => isActiveAndEnabled && isMoving && sprintAction != null && sprintAction.IsPressed();
-    public bool IsWalking => isActiveAndEnabled && isMoving && !IsSprinting;
+    // Sprint takes priority over crouch, matching the movement speed and height selection.
+    public bool IsCrouching => isActiveAndEnabled && crouchAction != null && crouchAction.IsPressed() &&
+        sprintAction != null && !sprintAction.IsPressed();
+    public bool IsWalking => isActiveAndEnabled && isMoving && !IsSprinting && !IsCrouching;
 
     // Assign variables
     private void Awake()
