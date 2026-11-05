@@ -937,8 +937,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5518280825499552401}
   - component: {fileID: 698295802417078771}
-  - component: {fileID: 2667036338484983363}
   - component: {fileID: 5144631064594205181}
+  - component: {fileID: 6722445856964758451}
   m_Layer: 0
   m_Name: Nailgun Prefab PICKUP
   m_TagString: Untagged
@@ -989,32 +989,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2667036338484983363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8410629846513635114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 965d8bcfc020751488afe78137b82d5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerGun
-  damage: 4
-  range: 100
-  layersToIgnore:
-    serializedVersion: 2
-    m_Bits: 1024
-  fireRate: 0.5
-  nailAmmo: {fileID: 11400000, guid: 8956422968aaa0d4ca969c40c0e32a81, type: 2}
-  magSize: 10
-  spreadAngle: 4
-  upgradedSpreadAngle: 0
-  NailPrefab: {fileID: 2034603179677174668, guid: 2dd50cc2c2416f84587f06e64dbbcfc5, type: 3}
-  Muzzle: {fileID: 4937842418255792760, guid: 5d6d82f93b4af364a9f2211300fcfcdc, type: 3}
-  bulletTrailPrefab: {fileID: 4744646803173004771, guid: bd69c8c48c9996946ac1772a121228cf, type: 3}
-  recoilAnimator: {fileID: -7411376943870167884, guid: 5d6d82f93b4af364a9f2211300fcfcdc, type: 3}
 --- !u!114 &5144631064594205181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1029,10 +1003,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemHover
   item: {fileID: 11400000, guid: 823f49bf638ffcc4c928db9422d0eebe, type: 2}
   quantity: 1
-  playerInventory: {fileID: 0}
-  playerInteraction: {fileID: 0}
   highlightRenderers: []
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  useHoverMaterial: 1
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   interactionPrompt: PRESS E TO PICK UP NAILGUN
   onHover:
     m_PersistentCalls:
@@ -1042,7 +1016,117 @@ MonoBehaviour:
       m_Calls: []
   onItemPickedUp:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: DialogueSystem, Assembly-CSharp
+        m_MethodName: StartPlayerDialogue
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: I can use this against those monsters, there's no nails
+            inside it yet though.
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!82 &6722445856964758451
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410629846513635114}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8522112053187270854
 GameObject:
   m_ObjectHideFlags: 0

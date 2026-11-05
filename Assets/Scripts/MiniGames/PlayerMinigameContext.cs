@@ -1,4 +1,5 @@
 using Unity.Cinemachine;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +24,11 @@ public class PlayerMinigameContext : MonoBehaviour
     [SerializeField] private string defaultActionMap = "Player";
     [SerializeField] private string interactableActionMap = "Minigame";
 
+    [Header("Minigame UI")]
+    [Tooltip("Shown while the player is inside any minigame interactable.")]
+    [SerializeField] private GameObject exitText;
+    private readonly HashSet<MinigameInteractable> activeMinigames = new HashSet<MinigameInteractable>();
+
     [Header("Player Visuals")]
     [SerializeField] private GameObject playerItemHolder;
     [SerializeField] private Renderer[] playerRenderers;
@@ -43,6 +49,34 @@ public class PlayerMinigameContext : MonoBehaviour
             return;
         }
         Instance = this;
+        RefreshExitText();
+    }
+
+    private void OnEnable()
+    {
+        RefreshExitText();
+    }
+
+    private void OnDisable()
+    {
+        if (exitText != null)
+            exitText.SetActive(false);
+    }
+
+    public void SetMinigameActive(MinigameInteractable minigame, bool active)
+    {
+        if (active)
+            activeMinigames.Add(minigame);
+        else
+            activeMinigames.Remove(minigame);
+
+        RefreshExitText();
+    }
+
+    private void RefreshExitText()
+    {
+        if (exitText != null)
+            exitText.SetActive(isActiveAndEnabled && activeMinigames.Count > 0);
     }
     private void OnDestroy()
     {
