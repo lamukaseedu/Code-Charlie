@@ -7,6 +7,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -137,7 +138,15 @@ public class Pipe : MonoBehaviour, IUsable
         }
 
         if (damagedTargets.Count > 0)
+        {
             GameAudio.PlayOneShot(audioSource, hitEnemyClip);
+            if (hits[0].gameObject.tag == "Enemy")
+            SpawnImpactEffect(
+             bloodEffectPrefab,
+             effectEmitter.transform.position,
+             -playerCamera.transform.forward
+             );
+        }
         else if (hitWorld)
         {
             GameAudio.PlayOneShot(audioSource, hitMetalClip);
