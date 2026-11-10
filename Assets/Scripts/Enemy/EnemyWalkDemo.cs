@@ -4,11 +4,16 @@
  */
 
 using UnityEngine;
+using UnityEngine.Events;
 
 // Attach to the enemy or one of its children for the demo scene.
 public class EnemyWalkDemo : MonoBehaviour
 {
     [Min(0.01f)] public float duration = 3f;
+
+    [Header("Events")]
+    [Tooltip("Invoked after each Duration interval, once the enemy returns to its starting position.")]
+    [SerializeField] private UnityEvent onWalkCycleCompleted = new UnityEvent();
 
     private EnemyMovement movement;
     private Rigidbody rb;
@@ -30,7 +35,8 @@ public class EnemyWalkDemo : MonoBehaviour
     {
         timer += Time.fixedDeltaTime;
 
-        if (timer >= duration)
+        bool cycleCompleted = timer >= duration;
+        if (cycleCompleted)
         {
             rb.position = startPosition;
             timer = 0f;
@@ -44,6 +50,9 @@ public class EnemyWalkDemo : MonoBehaviour
         }
 
         movement.UpdateWalkAnimation(Mathf.Abs(currentSpeed));
+
+        if (cycleCompleted)
+            onWalkCycleCompleted?.Invoke();
     }
 
     private void OnDisable()
