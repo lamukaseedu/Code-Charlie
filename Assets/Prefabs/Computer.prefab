@@ -143,6 +143,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5fd0f567267da53459be06f1ec59353d, type: 2}
   - {fileID: 11400000, guid: 8c0b4543fcfc12d4889c15b376669e43, type: 2}
   - {fileID: 11400000, guid: 22b5c08d56284d9438d74ba6d9933335, type: 2}
+  - {fileID: 11400000, guid: dc0f8aaa128008a44aa4607d98746e60, type: 2}
   logButtonPrefab: {fileID: -1781607977685734461, guid: 4670051cac8e1af46b192f761d62d588, type: 3}
   logListParent: {fileID: 6656030043725612937}
   subjectText: {fileID: 7133370978480627968}
@@ -4783,7 +4784,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1856584517121662044}
   m_HandleRect: {fileID: 7451704856838190296}
   m_Direction: 1
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5992,6 +5993,30 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: TMPro.TMP_InputField, Unity.TextMeshPro
         m_MethodName: DeactivateInputField
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7471365809656083550}
+        m_TargetAssemblyTypeName: TMPro.TMP_InputField, Unity.TextMeshPro
+        m_MethodName: ReleaseSelection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4670798750114659040}
+        m_TargetAssemblyTypeName: TMPro.TMP_InputField, Unity.TextMeshPro
+        m_MethodName: ReleaseSelection
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

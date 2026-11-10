@@ -33,6 +33,7 @@ public class PlayerInventory : MonoBehaviour
 
     private Camera playerCamera;
     public event Action Changed;
+    public event Action OpenStateChanged;
     public int SelectedSlot { get; private set; }
     public bool IsOpen { get; private set; }
     public GameObject EquippedObject => instances[SelectedSlot];
@@ -444,6 +445,7 @@ public class PlayerInventory : MonoBehaviour
 
         IsOpen = open;
         if (inventoryUI != null) inventoryUI.SetOpen(open);
+        OpenStateChanged?.Invoke();
     }
     private void OnDisable()
     {
