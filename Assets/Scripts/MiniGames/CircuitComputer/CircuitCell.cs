@@ -1,7 +1,8 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
-using TMPro;
 
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(Image))]
@@ -17,15 +18,12 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
     [SerializeField] private CircuitCellKind cellKind = CircuitCellKind.Empty;
     [SerializeField] private CircuitPieceType fixedPiece;
     [SerializeField] private bool requiredReceiver;
-    [SerializeField] private CircuitDirection startDirection = CircuitDirection.Right;
+
+    [FormerlySerializedAs("startDirection")]
+    [SerializeField] private CircuitDirection connectionDirection = CircuitDirection.Right;
 
     [Header("Visuals")]
     [SerializeField] private Image cellImage;
-
-    [Header("Special Cell Sprites")]
-    [SerializeField] private Sprite obstacleSprite;
-    [SerializeField] private Sprite startSprite;
-    [SerializeField] private Sprite endSprite;
 
     [Header("Cell Colors")]
     [SerializeField] private Color normalPieceColor = Color.white;
@@ -49,7 +47,14 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
     private bool powered;
 
     public CircuitCellKind Kind => cellKind;
-    public CircuitDirection StartDirection => startDirection;
+
+    // START uses this as its outgoing direction.
+    // END uses this as the side its connector faces.
+    public CircuitDirection ConnectionDirection => connectionDirection;
+
+    // Preserve compatibility with the existing ray controller.
+    public CircuitDirection StartDirection => connectionDirection;
+
     public bool RequiredReceiver =>
         cellKind == CircuitCellKind.FixedPiece && requiredReceiver;
 
@@ -125,15 +130,15 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
         switch (cellKind)
         {
             case CircuitCellKind.Obstacle:
-                sprite = obstacleSprite;
-                break;
-
             case CircuitCellKind.Start:
-                sprite = startSprite;
-                break;
-
             case CircuitCellKind.End:
-                sprite = endSprite;
+                if (puzzle != null)
+                {
+                    sprite = puzzle.GetSpecialSprite(
+                        cellKind,
+                        connectionDirection
+                    );
+                }
                 break;
 
             case CircuitCellKind.FixedPiece:

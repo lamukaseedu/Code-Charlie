@@ -32,6 +32,21 @@ public class CircuitPuzzleManager : MonoBehaviour
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private UnityEvent onPuzzleCompleted;
 
+    [Header("Special Cell Sprites")]
+    [SerializeField] private Sprite obstacleSprite;
+
+    [Header("Start Sprites")]
+    [SerializeField] private Sprite startUpSprite;
+    [SerializeField] private Sprite startDownSprite;
+    [SerializeField] private Sprite startLeftSprite;
+    [SerializeField] private Sprite startRightSprite;
+
+    [Header("End Sprites")]
+    [SerializeField] private Sprite endUpSprite;
+    [SerializeField] private Sprite endDownSprite;
+    [SerializeField] private Sprite endLeftSprite;
+    [SerializeField] private Sprite endRightSprite;
+
     private CircuitCell[] cells;
 
     public RectTransform DragLayer => dragLayer;
@@ -100,6 +115,55 @@ public class CircuitPuzzleManager : MonoBehaviour
 
         return null;
     }
+
+
+    public Sprite GetSpecialSprite(
+        CircuitCellKind kind,
+        CircuitDirection direction)
+    {
+        switch (kind)
+        {
+            case CircuitCellKind.Obstacle:
+                return obstacleSprite;
+
+            case CircuitCellKind.Start:
+                switch (direction)
+                {
+                    case CircuitDirection.Up:
+                        return startUpSprite;
+
+                    case CircuitDirection.Down:
+                        return startDownSprite;
+
+                    case CircuitDirection.Left:
+                        return startLeftSprite;
+
+                    case CircuitDirection.Right:
+                        return startRightSprite;
+                }
+                break;
+
+            case CircuitCellKind.End:
+                switch (direction)
+                {
+                    case CircuitDirection.Up:
+                        return endUpSprite;
+
+                    case CircuitDirection.Down:
+                        return endDownSprite;
+
+                    case CircuitDirection.Left:
+                        return endLeftSprite;
+
+                    case CircuitDirection.Right:
+                        return endRightSprite;
+                }
+                break;
+        }
+
+        return null;
+    }
+
 
     public bool CanDropOnCell(CircuitDragHandler source, CircuitCell target) =>
         !IsBusy && !IsSolved && source != null && target != null &&

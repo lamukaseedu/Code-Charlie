@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -518,7 +518,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1849345609717697632
 RectTransform:
   m_ObjectHideFlags: 0
@@ -771,7 +771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -885,11 +885,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 829853477635889187}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -1107,7 +1104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -1308,7 +1305,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8214220175124851340
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1463,11 +1460,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 2033200945952927324}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -1659,14 +1653,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8a420bd864f7d24bbd4ce1c070ebb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CircuitCell
-  cellKind: 0
-  fixedPiece: 0
-  requiredReceiver: 0
-  startDirection: 1
+  cellKind: 4
+  fixedPiece: 4
+  requiredReceiver: 1
+  connectionDirection: 1
   cellImage: {fileID: 1700520556310913409}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -1674,7 +1665,7 @@ MonoBehaviour:
   validDropColor: {r: 0.25, g: 1, b: 0.35, a: 0.3}
   invalidDropColor: {r: 1, g: 0.2, b: 0.2, a: 0.3}
   debugText: {fileID: 5623624489767142311}
-  showDebugText: 1
+  showDebugText: 0
 --- !u!114 &8984394781649244026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1706,7 +1697,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3853578230108259570
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1861,11 +1852,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 7609371420738449934}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -2021,11 +2009,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 931969674500449972}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -2243,7 +2228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -2318,14 +2303,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2504,14 +2489,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2681,7 +2666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -2932,11 +2917,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 7333645526200498827}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -2976,7 +2958,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2594343611408884735
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3204,7 +3186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -3375,7 +3357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8919128690756545957
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3530,11 +3512,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 2547348759332510234}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -3574,7 +3553,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3805819347399496421
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3729,11 +3708,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 5256839399259701206}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -3853,11 +3829,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 8515979663322914945}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -4127,14 +4100,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4236,7 +4209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8292669067697497866
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4524,11 +4497,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 2115048768994624462}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -4648,11 +4618,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 808347698189114939}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -4692,7 +4659,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8748606270775880021
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5491,7 +5458,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6556032488702986959
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5782,7 +5749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -5857,23 +5824,32 @@ MonoBehaviour:
   rayController: {fileID: 5274484511255894527}
   pieceSprites:
   - type: 0
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 6be68e4b1425315498c68d48810207a6, type: 3}
   - type: 3
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 9870fe9e71f73e14f92978d7207bd7a0, type: 3}
   - type: 1
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: db49866b1810a204bb09d62b5df27c47, type: 3}
   - type: 2
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 791cbe46a37aa8b40b52c9f86c9e5131, type: 3}
   - type: 4
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 5794d66dabcf0f041be8b4a10f9eec57, type: 3}
   - type: 5
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 3d1ed1c90952c804caea601a53ea5693, type: 3}
   startButton: {fileID: 4514967731969340529}
   resetButton: {fileID: 5794159257287605892}
   statusText: {fileID: 0}
   onPuzzleCompleted:
     m_PersistentCalls:
       m_Calls: []
+  obstacleSprite: {fileID: 0}
+  startUpSprite: {fileID: 21300000, guid: bafa71892727b0541bfd538d68e99234, type: 3}
+  startDownSprite: {fileID: 21300000, guid: 34b41ef99fe21924e86e6399b97fdeb1, type: 3}
+  startLeftSprite: {fileID: 21300000, guid: d3b0a58c4a0ca414aab601a36782d664, type: 3}
+  startRightSprite: {fileID: 21300000, guid: f652483c3d664e846989e71195eed041, type: 3}
+  endUpSprite: {fileID: 21300000, guid: 35f51525e0fe94e49b06cd7c85cd534d, type: 3}
+  endDownSprite: {fileID: 21300000, guid: 9b22e6c52e4a7dc4092930d6e594109c, type: 3}
+  endLeftSprite: {fileID: 21300000, guid: ed00646de9cbcc3489f7b352b3bcb0cf, type: 3}
+  endRightSprite: {fileID: 21300000, guid: 20f5624fc8dd44b45ae822d672c875ff, type: 3}
 --- !u!1 &1866969530106553664
 GameObject:
   m_ObjectHideFlags: 0
@@ -5932,14 +5908,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6007,7 +5983,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -6203,14 +6179,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6278,7 +6254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -6353,7 +6329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -6467,11 +6443,8 @@ MonoBehaviour:
   cellKind: 4
   fixedPiece: 2
   requiredReceiver: 1
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 323290536901096808}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -6731,7 +6704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -6896,7 +6869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2734801187213995955
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7420,11 +7393,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 461879162084043689}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -7816,7 +7786,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1476507584009253371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8058,7 +8028,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &854208375582237283
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8249,14 +8219,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8474,7 +8444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -8593,7 +8563,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: -0.000028658807}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 520567414866689063}
   m_Father: {fileID: 802682598211765795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -8613,11 +8584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c40bdd4f6333f458e83d76a270daa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CircuitRayController
-  rayOverlay: {fileID: 518240777502240484}
-  beamSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  beamColor: {r: 0.5, g: 1, b: 0.6, a: 1}
-  beamThickness: 4
-  stepDelay: 0.12
+  beamGraphic: {fileID: 1494002235442440573}
 --- !u!1 &2998919566463107109
 GameObject:
   m_ObjectHideFlags: 0
@@ -9620,14 +9587,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10059,14 +10026,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10134,7 +10101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -10246,7 +10213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -10755,14 +10722,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10830,14 +10797,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10971,14 +10938,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11085,11 +11052,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 5289673491251670340}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -11307,14 +11271,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12004,7 +11968,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6827556983009319914
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12120,14 +12084,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12391,7 +12355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -12500,7 +12464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1843037844160394545
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12655,11 +12619,8 @@ MonoBehaviour:
   cellKind: 2
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 5095620611513397716}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -12667,7 +12628,7 @@ MonoBehaviour:
   validDropColor: {r: 0.25, g: 1, b: 0.35, a: 0.3}
   invalidDropColor: {r: 1, g: 0.2, b: 0.2, a: 0.3}
   debugText: {fileID: 3202678595674880259}
-  showDebugText: 1
+  showDebugText: 0
 --- !u!114 &3733220271068496376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12792,7 +12753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -13214,7 +13175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -13578,11 +13539,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 370148160619909520}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -14025,7 +13983,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -14042,6 +14000,76 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &5090580189185992755
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 520567414866689063}
+  - component: {fileID: 1494002235442440573}
+  - component: {fileID: 608144426480585964}
+  m_Layer: 0
+  m_Name: BeamGraphic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &520567414866689063
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5090580189185992755}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 518240777502240484}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1494002235442440573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5090580189185992755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 149937edc9aba27448d897de6cbc8429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CircuitBeamGraphic
+  m_Material: {fileID: 2100000, guid: 33d26ad95fe91a043a5b69c49d6623f1, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  coreWidth: 2.5
+  glowWidth: 8
+  coreColor: {r: 0.8, g: 1, b: 0.85, a: 1}
+  glowColor: {r: 0.25, g: 1, b: 0.5, a: 0.25}
+  speed: 160
+--- !u!222 &608144426480585964
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5090580189185992755}
+  m_CullTransparentMesh: 1
 --- !u!1 &5093261366450472740
 GameObject:
   m_ObjectHideFlags: 0
@@ -14139,11 +14167,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 8808296238332496841}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -14338,11 +14363,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 5122864769179071024}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -14552,11 +14574,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 7071504586588104561}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -14676,11 +14695,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 6006941809900581385}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -14973,7 +14989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -15082,7 +15098,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7565713887582992662
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15234,14 +15250,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -15498,7 +15514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.68348, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -16036,11 +16052,8 @@ MonoBehaviour:
   cellKind: 3
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 0
   cellImage: {fileID: 5119952539890708174}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -16048,7 +16061,7 @@ MonoBehaviour:
   validDropColor: {r: 0.25, g: 1, b: 0.35, a: 0.3}
   invalidDropColor: {r: 1, g: 0.2, b: 0.2, a: 0.3}
   debugText: {fileID: 2055415427949403775}
-  showDebugText: 1
+  showDebugText: 0
 --- !u!114 &3527222802943715824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16470,11 +16483,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 3381078201172254657}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -16893,7 +16903,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7678800397976446221
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17180,7 +17190,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1896110570306882113
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17529,14 +17539,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -17741,14 +17751,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -17775,7 +17785,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8208245308705733495
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18211,6 +18221,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 802682598211765795}
+  - component: {fileID: 7916696755521514855}
+  - component: {fileID: 5397293177694283051}
   m_Layer: 0
   m_Name: BoardPanel
   m_TagString: Untagged
@@ -18239,6 +18251,44 @@ RectTransform:
   m_AnchoredPosition: {x: 67.513, y: 0.0017471}
   m_SizeDelta: {x: 288.27, y: 292.51}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7916696755521514855
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845141075460656441}
+  m_CullTransparentMesh: 1
+--- !u!114 &5397293177694283051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845141075460656441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &6866090452051889848
 GameObject:
   m_ObjectHideFlags: 0
@@ -18331,7 +18381,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7385580228198240658
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18714,7 +18764,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2581595821125456338
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18869,11 +18919,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 6825533203752860496}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -19050,7 +19097,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2941199784259897805
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19354,7 +19401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6654301852553398285
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19566,7 +19613,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3107526273337080920
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19819,7 +19866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -20048,7 +20095,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2203586218623244845
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20448,14 +20495,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -20523,14 +20570,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -20730,7 +20777,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1068216892196614756
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20941,14 +20988,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -21468,7 +21515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -21582,11 +21629,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 8975317764427305127}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -21843,11 +21887,8 @@ MonoBehaviour:
   cellKind: 0
   fixedPiece: 0
   requiredReceiver: 0
-  startDirection: 1
+  connectionDirection: 1
   cellImage: {fileID: 837504600314296424}
-  obstacleSprite: {fileID: 0}
-  startSprite: {fileID: 0}
-  endSprite: {fileID: 0}
   normalPieceColor: {r: 1, g: 1, b: 1, a: 1}
   poweredPieceColor: {r: 0.5, g: 1, b: 0.7, a: 1}
   idleReceiverColor: {r: 1, g: 0.75, b: 0.25, a: 1}
@@ -22507,14 +22548,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -23222,14 +23263,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -23297,14 +23338,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -23447,7 +23488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -23746,7 +23787,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -24229,14 +24270,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -24304,7 +24345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
@@ -24516,14 +24557,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e2a30ba4b95edb4408a82b3fdfb82a51, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -24816,7 +24857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2679245, g: 0.2679245, b: 0.2679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 4, y: 4, z: 4, w: 4}
   m_Maskable: 1
