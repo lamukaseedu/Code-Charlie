@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class OpeningCutscene : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class OpeningCutscene : MonoBehaviour
     [SerializeField] private GameObject eyelids;
 
     [SerializeField] private Volume volume;
+
+    [SerializeField] private Animator healthBarAnimator;
 
     private PlayerMinigameContext player;
 
@@ -84,7 +87,16 @@ public class OpeningCutscene : MonoBehaviour
     private void SetGameplayEnabled(bool enabled)
     {
         player.Input.currentActionMap?.Enable();
+        Destroy(eyelids);
         playerBody.enabled = true;
+        healthBarAnimator.SetTrigger("StartHealth");
+        StartCoroutine(DisableHealthAnimator());
+    }
+
+    private IEnumerator DisableHealthAnimator()
+    {
+        yield return new WaitForSeconds(2.0f);
+        healthBarAnimator.enabled = false;
     }
 }
 

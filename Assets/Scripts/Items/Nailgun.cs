@@ -229,10 +229,14 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
     {
         LineRenderer trail = Instantiate(bulletTrailPrefab);
 
+        trail.transform.SetParent(null);
+        trail.useWorldSpace = true;
+        trail.positionCount = 2;
+
         trail.SetPosition(0, Muzzle.position);
         trail.SetPosition(1, hitPoint);
 
-        Destroy(trail.gameObject, 0.05f);
+        Destroy(trail.gameObject, 0.1f);
     }
 
     private Vector3 GetShotDirection()
