@@ -22,7 +22,9 @@ public class CircuitRayController : MonoBehaviour
         puzzle = manager;
     }
 
-    public void RunCircuit()
+    // Automatically updates the beam whenever the circuit changes.
+
+    public void RefreshBeam()
     {
         if (puzzle == null || beamGraphic == null)
         {
@@ -30,10 +32,6 @@ public class CircuitRayController : MonoBehaviour
                 "CircuitRayController needs PuzzleManager and CircuitBeamGraphic.",
                 this
             );
-
-            if (puzzle != null)
-                puzzle.SimulationFinished(false);
-
             return;
         }
 
@@ -41,7 +39,7 @@ public class CircuitRayController : MonoBehaviour
 
         bool success = TraceCircuit();
 
-        // Animate the path before reporting the result.
+        // Always start with a red beam.
         beamGraphic.PlayBeam(path, () =>
         {
             foreach (CircuitCell cell in poweredCells)
@@ -50,9 +48,17 @@ public class CircuitRayController : MonoBehaviour
                     cell.SetPowered(true);
             }
 
-            puzzle.SimulationFinished(success);
+            if (success)
+            {
+                // Turn the completed beam green.
+                beamGraphic.SetComplete(true);
+
+                // Unlock the door.
+                puzzle.SimulationFinished(true);
+            }
         });
     }
+
 
     private bool TraceCircuit()
     {
@@ -62,6 +68,7 @@ public class CircuitRayController : MonoBehaviour
         int source = -1;
         int requiredCount = 0;
 
+        // Find START and count required receivers.
         for (int i = 0; i < puzzle.CellCount; i++)
         {
             CircuitCell cell = puzzle.GetCell(i);
@@ -89,13 +96,14 @@ public class CircuitRayController : MonoBehaviour
 
         HashSet<int> receiversReached = new HashSet<int>();
 
-        // Track both position and direction to detect loops.
+        // Prevent infinite loops.
         HashSet<(int, CircuitDirection)> visited =
             new HashSet<(int, CircuitDirection)>();
 
         poweredCells.Add(startCell);
 
-        // Begin at the center of START's outgoing edge.
+        // Start at the center of the START cell.
+        path.Add(GetCellCenter(startCell));
         path.Add(GetCellEdge(startCell, direction));
 
         while (true)
@@ -106,7 +114,15 @@ public class CircuitRayController : MonoBehaviour
             int next = NextIndex(current, direction);
 
             if (next < 0)
+            {
+                // Extend the beam to the board boundary.
+                path.Add(GetCellEdge(
+                    puzzle.GetCell(current),
+                    direction
+                ));
+
                 return false;
+            }
 
             CircuitCell nextCell = puzzle.GetCell(next);
 
@@ -116,7 +132,7 @@ public class CircuitRayController : MonoBehaviour
             CircuitDirection enteringSide =
                 CircuitPiece.Opposite(direction);
 
-            // Do not allow the beam to travel through obstacles.
+            // Obstacles and START cells block the beam.
             if (nextCell.Kind == CircuitCellKind.Obstacle ||
                 nextCell.Kind == CircuitCellKind.Start)
             {
@@ -124,13 +140,10 @@ public class CircuitRayController : MonoBehaviour
                 return false;
             }
 
-            // END must be entered through its actual connector.
+            // Check END's incoming connector.
             if (nextCell.Kind == CircuitCellKind.End)
             {
-                path.Add(GetCellEdge(
-                    nextCell,
-                    enteringSide
-                ));
+                path.Add(GetCellEdge(nextCell, enteringSide));
 
                 bool validEnd =
                     enteringSide == nextCell.ConnectionDirection;
@@ -144,7 +157,7 @@ public class CircuitRayController : MonoBehaviour
                 return validEnd && allReceiversReached;
             }
 
-            // A circuit piece must have a compatible connection.
+            // Circuit pieces must accept the incoming beam.
             if (nextCell.TryGetPiece(out CircuitPieceType piece))
             {
                 if (!CircuitPiece.TryGetExit(
@@ -152,7 +165,6 @@ public class CircuitRayController : MonoBehaviour
                     enteringSide,
                     out CircuitDirection exit))
                 {
-                    // Stop at the incorrect piece's entry edge.
                     path.Add(GetCellEdge(nextCell, enteringSide));
                     return false;
                 }
@@ -160,7 +172,7 @@ public class CircuitRayController : MonoBehaviour
                 direction = exit;
             }
 
-            // Empty cells allow the beam to continue straight.
+            // Empty cells continue straight.
             path.Add(GetCellCenter(nextCell));
 
             poweredCells.Add(nextCell);
@@ -220,10 +232,10 @@ public class CircuitRayController : MonoBehaviour
 
     private Vector2 GetCellCenter(CircuitCell cell)
     {
-        RectTransform cellRect = cell.RectTransform;
+        RectTransform rect = cell.RectTransform;
 
         Vector3 worldCenter =
-            cellRect.TransformPoint(cellRect.rect.center);
+            rect.TransformPoint(rect.rect.center);
 
         RectTransform beamRect =
             (RectTransform)beamGraphic.transform;

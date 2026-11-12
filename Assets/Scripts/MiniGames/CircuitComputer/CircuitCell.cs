@@ -60,7 +60,8 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
 
     public bool HasPlacedPiece => hasPlacedPiece;
     public bool IsEmpty => cellKind == CircuitCellKind.Empty && !hasPlacedPiece;
-    public bool CanReceivePiece => IsEmpty;
+    public bool CanReceivePiece =>
+        cellKind == CircuitCellKind.Empty;
     public CircuitPieceType PlacedPiece => placedPiece;
     public RectTransform RectTransform => (RectTransform)transform;
 
@@ -105,7 +106,7 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
 
     public void PlacePlayerPiece(CircuitPieceType piece)
     {
-        if (!CanReceivePiece)
+        if (cellKind != CircuitCellKind.Empty)
             return;
 
         placedPiece = piece;

@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 using UnityEngine.UI;
 
 public class CircuitPuzzleManager : MonoBehaviour
@@ -24,13 +25,9 @@ public class CircuitPuzzleManager : MonoBehaviour
     [SerializeField] private RectTransform circuitGrid;
     [SerializeField, Min(1)] private int columns = 5;
     [SerializeField] private CircuitRayController rayController;
-    [SerializeField] private PieceSprite[] pieceSprites;
 
-    [Header("Controls")]
-    [SerializeField] private Button startButton;
-    [SerializeField] private Button resetButton;
-    [SerializeField] private TMP_Text statusText;
-    [SerializeField] private UnityEvent onPuzzleCompleted;
+    [Header("Piece Sprites")]
+    [SerializeField] private PieceSprite[] pieceSprites;
 
     [Header("Special Cell Sprites")]
     [SerializeField] private Sprite obstacleSprite;
@@ -47,28 +44,40 @@ public class CircuitPuzzleManager : MonoBehaviour
     [SerializeField] private Sprite endLeftSprite;
     [SerializeField] private Sprite endRightSprite;
 
+    [Header("Puzzle Completion")]
+    [SerializeField] private TMP_Text statusText;
+    [SerializeField] private UnityEvent onPuzzleCompleted;
+
     private CircuitCell[] cells;
 
     public RectTransform DragLayer => dragLayer;
     public CircuitInventoryUI Inventory => inventory;
+
     public bool IsSolved { get; private set; }
     public bool IsBusy { get; private set; }
+
     public int Columns => columns;
     public int CellCount => cells == null ? 0 : cells.Length;
 
     private void Start()
     {
-        // Automatically find all circuit cells under the grid.
+        Debug.Log("CircuitPuzzleManager: Start called!", this);
+        // Automatically find every circuit cell under the grid.
         if (circuitGrid != null)
-            cells = circuitGrid.GetComponentsInChildren<CircuitCell>(true);
+        {
+            cells = circuitGrid.GetComponentsInChildren<CircuitCell>(
+                true
+            );
+        }
 
         if (inventory == null || rayController == null ||
             dragLayer == null || circuitGrid == null ||
             cells == null || cells.Length == 0)
         {
             Debug.LogError(
-                "CircuitPuzzleManager: assign Inventory, Ray Controller, DragLayer and CircuitGrid.",
-                this);
+                "CircuitPuzzleManager: Missing required references.",
+                this
+            );
 
             enabled = false;
             return;
@@ -78,9 +87,11 @@ public class CircuitPuzzleManager : MonoBehaviour
         {
             Debug.LogWarning(
                 "Circuit grid cell count is not divisible by Columns.",
-                this);
+                this
+            );
         }
 
+        // Initialize all cells.
         foreach (CircuitCell cell in cells)
         {
             if (cell != null)
@@ -90,23 +101,37 @@ public class CircuitPuzzleManager : MonoBehaviour
         inventory.Initialize(this);
         rayController.Initialize(this);
 
-        if (startButton != null)
-            startButton.onClick.AddListener(StartCircuit);
+        Debug.Log(
+        $"CircuitPuzzleManager: Initialized {cells.Length} cells.",
+        this
+        );
 
-        if (resetButton != null)
-            resetButton.onClick.AddListener(ResetPuzzle);
+        IsSolved = false;
+        IsBusy = false;
 
-        SetStatus("DRAG PIECES TO ROUTE POWER");
+        SetStatus("ROUTE POWER THROUGH ALL RECEIVERS");
+
+        // Start the beam automatically.
+        StartCoroutine(InitializeBeam());
     }
 
-    public CircuitCell GetCell(int index) =>
-        index >= 0 && index < CellCount ? cells[index] : null;
+    public CircuitCell GetCell(int index)
+    {
+        return index >= 0 && index < CellCount
+            ? cells[index]
+            : null;
+    }
 
-    public int IndexOf(CircuitCell cell) =>
-        Array.IndexOf(cells, cell);
+    public int IndexOf(CircuitCell cell)
+    {
+        return Array.IndexOf(cells, cell);
+    }
 
     public Sprite GetSprite(CircuitPieceType type)
     {
+        if (pieceSprites == null)
+            return null;
+
         foreach (PieceSprite item in pieceSprites)
         {
             if (item.type == type)
@@ -115,7 +140,6 @@ public class CircuitPuzzleManager : MonoBehaviour
 
         return null;
     }
-
 
     public Sprite GetSpecialSprite(
         CircuitCellKind kind,
@@ -164,90 +188,116 @@ public class CircuitPuzzleManager : MonoBehaviour
         return null;
     }
 
+    public bool CanDropOnCell(
+        CircuitDragHandler source,
+        CircuitCell target)
+    {
+        if (IsBusy || IsSolved ||
+            source == null || target == null ||
+            !target.CanReceivePiece ||
+            source.SourceCell == target)
+        {
+            return false;
+        }
 
-    public bool CanDropOnCell(CircuitDragHandler source, CircuitCell target) =>
-        !IsBusy && !IsSolved && source != null && target != null &&
-        target.CanReceivePiece && source.SourceCell != target &&
-        (source.SourceCell != null && source.SourceCell.HasPlacedPiece ||
-         source.SourceCell == null && inventory.HasAvailable(source.PieceType));
+        if (source.SourceCell != null)
+            return source.SourceCell.HasPlacedPiece;
 
-    public void TryDropOnCell(CircuitDragHandler source, CircuitCell target)
+        return inventory.HasAvailable(source.PieceType);
+    }
+
+
+    public void TryDropOnCell(
+        CircuitDragHandler source,
+        CircuitCell target)
     {
         if (!CanDropOnCell(source, target))
             return;
 
+        CircuitPieceType newPiece = source.PieceType;
+
+        // Determine whether the target already has a piece.
+        bool targetOccupied = target.HasPlacedPiece;
+
+        CircuitPieceType oldPiece = targetOccupied
+            ? target.PlacedPiece
+            : default;
+
         if (source.SourceCell != null)
         {
-            source.SourceCell.ClearPlayerPiece();
+            // Dragging from another board cell.
+            CircuitCell originalCell = source.SourceCell;
+
+            if (targetOccupied)
+            {
+                // Swap the pieces between the two cells.
+                originalCell.PlacePlayerPiece(oldPiece);
+                target.PlacePlayerPiece(newPiece);
+            }
+            else
+            {
+                // Move the piece into an empty cell.
+                originalCell.ClearPlayerPiece();
+                target.PlacePlayerPiece(newPiece);
+            }
         }
-        else if (!inventory.Take(source.PieceType))
+        else
         {
-            return;
+            // Dragging from the inventory.
+            if (!inventory.Take(newPiece))
+                return;
+
+            if (targetOccupied)
+            {
+                // Return the replaced piece to inventory.
+                inventory.Return(oldPiece);
+            }
+
+            target.PlacePlayerPiece(newPiece);
         }
 
-        target.PlacePlayerPiece(source.PieceType);
+        SetStatus("CIRCUIT UPDATED");
 
-        rayController.ClearVisuals();
-        SetStatus("READY TO TEST");
+        // Automatically recalculate the beam.
+        rayController.RefreshBeam();
     }
+
 
     public void TryReturnToInventory(CircuitCell source)
     {
-        if (IsBusy || IsSolved || source == null || !source.HasPlacedPiece)
+        if (IsBusy || IsSolved ||
+            source == null || !source.HasPlacedPiece)
+        {
             return;
+        }
 
         inventory.Return(source.PlacedPiece);
         source.ClearPlayerPiece();
 
-        rayController.ClearVisuals();
         SetStatus("PIECE RETURNED");
-    }
 
-    public void StartCircuit()
-    {
-        if (IsBusy || IsSolved)
-            return;
-
-        IsBusy = true;
-
-        if (startButton != null)
-            startButton.interactable = false;
-
-        if (resetButton != null)
-            resetButton.interactable = false;
-
-        SetStatus("POWER FLOW IN PROGRESS...");
-        rayController.RunCircuit();
+        // Automatically recalculate the laser.
+        rayController.RefreshBeam();
     }
 
     public void SimulationFinished(bool success)
     {
-        IsBusy = false;
+        if (!success || IsSolved)
+            return;
 
-        if (resetButton != null)
-            resetButton.interactable = true;
+        IsSolved = true;
 
-        if (success)
-        {
-            IsSolved = true;
-            SetStatus("POWER RESTORED - DOOR UNLOCKED");
-            onPuzzleCompleted?.Invoke();
-        }
-        else
-        {
-            SetStatus("CIRCUIT INCOMPLETE - TRY AGAIN");
+        SetStatus("POWER RESTORED - DOOR UNLOCKED");
 
-            if (startButton != null)
-                startButton.interactable = true;
-        }
+        onPuzzleCompleted?.Invoke();
     }
 
+    // Optional reset method for debugging.
+    // It is no longer connected to a button.
     public void ResetPuzzle()
     {
         if (IsBusy || IsSolved)
             return;
-
-        rayController.ClearVisuals();
 
         foreach (CircuitCell cell in cells)
         {
@@ -256,10 +306,10 @@ public class CircuitPuzzleManager : MonoBehaviour
         }
 
         inventory.ResetQuantities();
-        SetStatus("CIRCUIT RESET");
 
-        if (startButton != null)
-            startButton.interactable = true;
+        SetStatus("ROUTE POWER THROUGH ALL RECEIVERS");
+
+        rayController.RefreshBeam();
     }
 
     public void SetStatus(string message)
@@ -268,12 +318,15 @@ public class CircuitPuzzleManager : MonoBehaviour
             statusText.text = message;
     }
 
-    private void OnDestroy()
+    private IEnumerator InitializeBeam()
     {
-        if (startButton != null)
-            startButton.onClick.RemoveListener(StartCircuit);
+        yield return null;
 
-        if (resetButton != null)
-            resetButton.onClick.RemoveListener(ResetPuzzle);
+        Canvas.ForceUpdateCanvases();
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(circuitGrid);
+
+        rayController.RefreshBeam();
     }
+
 }

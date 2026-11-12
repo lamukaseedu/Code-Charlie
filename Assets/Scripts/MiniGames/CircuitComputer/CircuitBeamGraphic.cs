@@ -8,12 +8,21 @@ public class CircuitBeamGraphic : MaskableGraphic
     [Header("Beam Appearance")]
     [SerializeField, Min(0.1f)] private float coreWidth = 2.5f;
     [SerializeField, Min(0.1f)] private float glowWidth = 8f;
+    [Header("Beam Colors")]
+    [SerializeField] private Color incompleteCoreColor = Color.red;
     [SerializeField]
-    private Color coreColor =
-        new Color(0.8f, 1f, 0.85f, 1f);
+    private Color incompleteGlowColor =
+        new Color(1f, 0.1f, 0.1f, 0.25f);
+
     [SerializeField]
-    private Color glowColor =
-        new Color(0.25f, 1f, 0.5f, 0.25f);
+    private Color completeCoreColor =
+        new Color(0.6f, 1f, 0.6f, 1f);
+
+    [SerializeField]
+    private Color completeGlowColor =
+        new Color(0.2f, 1f, 0.3f, 0.25f);
+
+    private bool isComplete;
 
     [Header("Animation")]
     [SerializeField, Min(1f)] private float speed = 160f;
@@ -38,12 +47,14 @@ public class CircuitBeamGraphic : MaskableGraphic
 
         path.Clear();
         visibleLength = 0f;
+        isComplete = false;
+
         SetVerticesDirty();
     }
 
     public void PlayBeam(
-        IList<Vector2> points,
-        System.Action onFinished = null)
+    IList<Vector2> points,
+    System.Action onFinished = null)
     {
         ClearBeam();
 
@@ -54,6 +65,10 @@ public class CircuitBeamGraphic : MaskableGraphic
         }
 
         path.AddRange(points);
+
+        visibleLength = 0f;
+        SetVerticesDirty();
+
         animation = StartCoroutine(
             AnimateBeam(onFinished)
         );
@@ -81,6 +96,7 @@ public class CircuitBeamGraphic : MaskableGraphic
         onFinished?.Invoke();
     }
 
+
     protected override void OnPopulateMesh(VertexHelper vh)
     {
         vh.Clear();
@@ -93,12 +109,21 @@ public class CircuitBeamGraphic : MaskableGraphic
         if (visiblePoints.Count < 2)
             return;
 
-        // Draw the wider glow first.
-        DrawPath(vh, visiblePoints, glowWidth, glowColor);
+        Color currentGlow = isComplete
+            ? completeGlowColor
+            : incompleteGlowColor;
 
-        // Then the bright central core.
-        DrawPath(vh, visiblePoints, coreWidth, coreColor);
+        Color currentCore = isComplete
+            ? completeCoreColor
+            : incompleteCoreColor;
+
+        // Draw the glow underneath.
+        DrawPath(vh, visiblePoints, glowWidth, currentGlow);
+
+        // Draw the bright center of the laser.
+        DrawPath(vh, visiblePoints, coreWidth, currentCore);
     }
+
 
     private List<Vector2> GetVisiblePath()
     {
@@ -198,6 +223,12 @@ public class CircuitBeamGraphic : MaskableGraphic
             vh.AddTriangle(index, index + i + 1, index + i + 2);
     }
 
+    public void SetComplete(bool complete)
+    {
+        isComplete = complete;
+        SetVerticesDirty();
+    }
+
     private void AddVertex(
         VertexHelper vh,
         Vector2 position,
@@ -207,5 +238,24 @@ public class CircuitBeamGraphic : MaskableGraphic
         vertex.position = position;
         vertex.color = color;
         vh.AddVert(vertex);
+    }
+
+    [ContextMenu("Test Beam")]
+    public void TestBeam()
+    {
+        RectTransform rect = (RectTransform)transform;
+
+        List<Vector2> testPath = new List<Vector2>
+    {
+        new Vector2(-rect.rect.width * 0.4f, 0f),
+        Vector2.zero,
+        new Vector2(0f, rect.rect.height * 0.3f),
+        new Vector2(rect.rect.width * 0.3f,
+                    rect.rect.height * 0.3f)
+    };
+
+        Debug.Log("Test beam started!", this);
+
+        PlayBeam(testPath);
     }
 }
