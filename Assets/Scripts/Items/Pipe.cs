@@ -7,6 +7,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -23,8 +24,16 @@ public class Pipe : MonoBehaviour, IUsable
     [SerializeField] private AudioClip hitEnemyClip;
     [SerializeField] private AudioClip hitMetalClip;
 
+    [Header("Impact Effects")]
+    [SerializeField] private ParticleSystem sparkEffectPrefab;
+    [SerializeField] private ParticleSystem bloodEffectPrefab;
+
+    [SerializeField] private GameObject effectEmitter;
+
     private PlayerWeaponUpgrades upgrades;
     private AudioSource audioSource;
+
+    private Camera playerCamera;
     private bool swingType = true;
 
     private float nextAttackTime = 0f;
@@ -32,6 +41,7 @@ public class Pipe : MonoBehaviour, IUsable
 
     private void Awake()
     {
+        playerCamera = Camera.main;
         FindDamageCollider();
         audioSource = GetComponent<AudioSource>();
         if (audioSource != null)
@@ -128,10 +138,43 @@ public class Pipe : MonoBehaviour, IUsable
         }
 
         if (damagedTargets.Count > 0)
+        {
             GameAudio.PlayOneShot(audioSource, hitEnemyClip);
+            if (hits[0].gameObject.tag == "Enemy")
+            SpawnImpactEffect(
+             bloodEffectPrefab,
+             effectEmitter.transform.position,
+             -playerCamera.transform.forward
+             );
+        }
         else if (hitWorld)
+        {
             GameAudio.PlayOneShot(audioSource, hitMetalClip);
+            SpawnImpactEffect(
+            sparkEffectPrefab,
+            effectEmitter.transform.position,
+            -playerCamera.transform.forward
+            );
+        }
+    }
 
+    private void SpawnImpactEffect(
+    ParticleSystem effectPrefab,
+    Vector3 position,
+    Vector3 surfaceNormal)
+    {
+        if (effectPrefab == null)
+            return;
+
+        Quaternion rotation = Quaternion.LookRotation(surfaceNormal);
+
+        ParticleSystem effect = Instantiate(
+            effectPrefab,
+            position,
+            rotation
+        );
+
+        effect.Play();
     }
 
     private void OnDisable()

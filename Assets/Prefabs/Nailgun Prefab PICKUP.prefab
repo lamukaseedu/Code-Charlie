@@ -939,6 +939,7 @@ GameObject:
   - component: {fileID: 698295802417078771}
   - component: {fileID: 5144631064594205181}
   - component: {fileID: 6722445856964758451}
+  - component: {fileID: -3470554751007603307}
   m_Layer: 0
   m_Name: Nailgun Prefab PICKUP
   m_TagString: Untagged
@@ -1127,6 +1128,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3470554751007603307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410629846513635114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf798ca50f247ac4aa0501b39949e22c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::throwItemAudio
+  impactClips:
+  - {fileID: 8300000, guid: e4b34f2b46dbf5745bb32f18d0ec810c, type: 3}
+  spatialBlend: 1
+  minDistance: 1
+  maxDistance: 20
+  objectCollider: {fileID: 3669368573853118566}
 --- !u!1 &8522112053187270854
 GameObject:
   m_ObjectHideFlags: 0
