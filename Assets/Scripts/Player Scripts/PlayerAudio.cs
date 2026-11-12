@@ -1,6 +1,8 @@
 /*
  * Author: Savio Xavier
  * Created: 10/20/2026
+ * Edited By: Savio Xavier
+ * Edited: 11/12/2026
  */
 
 using UnityEngine;
@@ -38,16 +40,22 @@ public class PlayerAudio : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
         controller = GetComponent<CharacterController>();
         health = GetComponent<Health>();
+        ApplySoundVolume();
     }
 
     private void OnEnable()
     {
+        GameSettings.VolumesChanged += ApplySoundVolume;
+        ApplySoundVolume();
+
         if (health != null)
             health.OnDamaged.AddListener(PlayDamage);
     }
 
     private void OnDisable()
     {
+        GameSettings.VolumesChanged -= ApplySoundVolume;
+
         if (health != null)
             health.OnDamaged.RemoveListener(PlayDamage);
 
@@ -80,5 +88,14 @@ public class PlayerAudio : MonoBehaviour
     private void PlayDamage()
     {
         GameAudio.PlayOneShot(oneShotSource, damageClip);
+    }
+
+    private void ApplySoundVolume()
+    {
+        float soundVolume = GameSettings.GetSoundVolume();
+        if (footstepSource != null)
+            footstepSource.volume = soundVolume;
+        if (oneShotSource != null)
+            oneShotSource.volume = soundVolume;
     }
 }
