@@ -110,6 +110,8 @@ MonoBehaviour:
   highlightRenderers:
   - {fileID: 5547017546813653742}
   highlightColor: {r: 0.15, g: 0.8, b: 1, a: 1}
+  useHoverMaterial: 0
+  hoverMaterial: {fileID: 0}
   interactionPrompt: PICKUP KEYCARD
   onHover:
     m_PersistentCalls:
@@ -153,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79df0193aec74c48ac53b6fff4d3173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Keycard
-  id: 0
+  id: 1
   useDistance: 3
   useLayers:
     serializedVersion: 2

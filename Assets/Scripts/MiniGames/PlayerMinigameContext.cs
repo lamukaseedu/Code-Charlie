@@ -27,7 +27,12 @@ public class PlayerMinigameContext : MonoBehaviour
     [Header("Minigame UI")]
     [Tooltip("Shown while the player is inside any minigame interactable.")]
     [SerializeField] private GameObject exitText;
+    [Tooltip("Hidden while the inventory or any minigame interactable is open.")]
+    [SerializeField] private GameObject reticle;
     private readonly HashSet<MinigameInteractable> activeMinigames = new HashSet<MinigameInteractable>();
+    private bool reticleHidden;
+    private bool reticleWasActive;
+    private PlayerInventory inventory;
 
     [Header("Player Visuals")]
     [SerializeField] private GameObject playerItemHolder;
@@ -49,18 +54,25 @@ public class PlayerMinigameContext : MonoBehaviour
             return;
         }
         Instance = this;
+        inventory = GetComponent<PlayerInventory>();
         RefreshExitText();
     }
 
     private void OnEnable()
     {
+        if (inventory != null)
+            inventory.OpenStateChanged += RefreshReticle;
         RefreshExitText();
+        RefreshReticle();
     }
 
     private void OnDisable()
     {
+        if (inventory != null)
+            inventory.OpenStateChanged -= RefreshReticle;
         if (exitText != null)
             exitText.SetActive(false);
+        RefreshReticle();
     }
 
     public void SetMinigameActive(MinigameInteractable minigame, bool active)
@@ -71,6 +83,27 @@ public class PlayerMinigameContext : MonoBehaviour
             activeMinigames.Remove(minigame);
 
         RefreshExitText();
+        RefreshReticle();
+    }
+
+    private void RefreshReticle()
+    {
+        if (reticle == null)
+            return;
+
+        bool shouldHide = isActiveAndEnabled &&
+            (activeMinigames.Count > 0 || (inventory != null && inventory.IsOpen));
+        if (shouldHide && !reticleHidden)
+        {
+            reticleWasActive = reticle.activeSelf;
+            reticleHidden = true;
+            reticle.SetActive(false);
+        }
+        else if (!shouldHide && reticleHidden)
+        {
+            reticleHidden = false;
+            reticle.SetActive(reticleWasActive);
+        }
     }
 
     private void RefreshExitText()

@@ -34,6 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7889337853586066869}
+  - {fileID: 8620161551219721422}
   m_Father: {fileID: 6768979416999183104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &68588210569305835
@@ -2331,8 +2332,10 @@ MonoBehaviour:
   equipmentHolder: {fileID: 8242157089031747343}
   inventoryUI: {fileID: 3107513707820941102}
   dropSpawnPoint: {fileID: 7250056430915509149}
+  throwSpawnPoint: {fileID: 8620161551219721422}
   playerInteraction: {fileID: 6948410032190588168}
   dropAction: {fileID: 9086466234451035067, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+  throwAction: {fileID: -6993314157913498196, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
 --- !u!114 &308127766873646117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2554,6 +2557,37 @@ MonoBehaviour:
   playerItemHolder: {fileID: 1845692414772917617}
   playerRenderers:
   - {fileID: 812677828713384181}
+--- !u!1 &4831883408657452011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8620161551219721422}
+  m_Layer: 0
+  m_Name: PlayerItemThrowLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8620161551219721422
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4831883408657452011}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6442451249280288139}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4845993798990113028
 GameObject:
   m_ObjectHideFlags: 0
