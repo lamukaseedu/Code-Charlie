@@ -8,6 +8,8 @@ public class KeypadController : MonoBehaviour
     /*
      * Author: Andres Rondon-Villarmosa
      * Created: 9/12/2026
+     * Edited By: Savio Xavier
+     * Edited: 11/12/2026
      */
 
     [Header("Code")]
@@ -169,8 +171,7 @@ public class KeypadController : MonoBehaviour
 
     private void PlaySound(AudioClip clip)
     {
-        if (audioSource != null && clip != null)
-            audioSource.PlayOneShot(clip);
+        GameAudio.PlayOneShot(audioSource, clip);
     }
 
     private void OnValidate()

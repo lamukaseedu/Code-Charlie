@@ -1,6 +1,8 @@
 /*
  * Author: Savio Xavier
  * Created: 10/20/2026
+ * Edited By: Savio Xavier
+ * Edited: 11/12/2026
  */
 
 using UnityEngine;
@@ -12,7 +14,7 @@ public static class GameAudio
         if (source == null || clip == null)
             return;
 
-        source.PlayOneShot(clip);
+        source.PlayOneShot(clip, GameSettings.GetSoundVolume());
     }
 
     public static void PlayRandomOneShot(AudioSource source, AudioClip[] clips)
