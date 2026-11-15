@@ -24,6 +24,7 @@ public class CircuitRayController : MonoBehaviour
 
 
 
+
     public void RefreshBeam()
     {
         if (puzzle == null || beamGraphic == null)
@@ -35,18 +36,40 @@ public class CircuitRayController : MonoBehaviour
             return;
         }
 
-        ClearVisuals(false);
-
-        // Calculate the new path.
+        
         bool success = TraceCircuit();
 
+        
+        HashSet<CircuitCell> connectedCells =
+            new HashSet<CircuitCell>(poweredCells);
+
+        
+        for (int i = 0; i < puzzle.CellCount; i++)
+        {
+            CircuitCell cell = puzzle.GetCell(i);
+
+            if (cell == null)
+                continue;
+
+            if (cell.IsPowered && !connectedCells.Contains(cell))
+                cell.SetPowered(false);
+        }
+
+        
+        puzzle.UpdateRelayProgress();
+
+        
         beamGraphic.UpdateBeam(path, () =>
         {
+            
             foreach (CircuitCell cell in poweredCells)
             {
-                if (cell != null)
+                if (cell != null && !cell.IsPowered)
                     cell.SetPowered(true);
             }
+
+            
+            puzzle.UpdateRelayProgress();
 
             if (success)
             {
@@ -55,6 +78,7 @@ public class CircuitRayController : MonoBehaviour
             }
         });
     }
+
 
 
 
@@ -296,6 +320,8 @@ public class CircuitRayController : MonoBehaviour
             if (cell != null)
                 cell.SetPowered(false);
         }
+
+        puzzle.UpdateRelayProgress();
     }
 
 }

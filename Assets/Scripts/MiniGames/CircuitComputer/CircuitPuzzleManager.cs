@@ -1,8 +1,8 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections;
 using UnityEngine.UI;
 
 public class CircuitPuzzleManager : MonoBehaviour
@@ -50,6 +50,10 @@ public class CircuitPuzzleManager : MonoBehaviour
     [Header("Puzzle Completion")]
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private UnityEvent onPuzzleCompleted;
+
+    [Header("Relay Progress")]
+    [SerializeField] private Image relayProgressFill;
+    [SerializeField] private TMP_Text relayProgressText;
 
     private CircuitCell[] cells;
 
@@ -113,7 +117,7 @@ public class CircuitPuzzleManager : MonoBehaviour
         IsBusy = false;
 
         SetStatus("ROUTE POWER THROUGH ALL RECEIVERS");
-
+        UpdateRelayProgress();
         // Start the beam automatically.
         StartCoroutine(InitializeBeam());
     }
@@ -320,6 +324,35 @@ public class CircuitPuzzleManager : MonoBehaviour
         if (statusText != null)
             statusText.text = message;
     }
+
+
+    public void UpdateRelayProgress()
+    {
+        int total = 0;
+        int poweredCount = 0;
+
+        foreach (CircuitCell cell in cells)
+        {
+            if (cell == null || !cell.RequiredReceiver)
+                continue;
+
+            total++;
+
+            if (cell.IsPowered)
+                poweredCount++;
+        }
+
+        float progress = total > 0
+            ? (float)poweredCount / total
+            : 0f;
+
+        if (relayProgressFill != null)
+            relayProgressFill.fillAmount = progress;
+
+        if (relayProgressText != null)
+            relayProgressText.text = $"{poweredCount} / {total}";
+    }
+
 
     private IEnumerator InitializeBeam()
     {

@@ -52,6 +52,7 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
     private bool hasPlacedPiece;
     private CircuitPieceType placedPiece;
     private bool powered;
+    public bool IsPowered => powered;
 
     public CircuitCellKind Kind => cellKind;
 
