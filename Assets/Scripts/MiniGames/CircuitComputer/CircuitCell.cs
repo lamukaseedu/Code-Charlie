@@ -24,6 +24,7 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
 
     [Header("Visuals")]
     [SerializeField] private Image cellImage;
+    [SerializeField] private Image receiverIndicator;
 
     [Header("Cell Colors")]
     [SerializeField] private Color normalPieceColor = Color.white;
@@ -32,10 +33,16 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
     [SerializeField] private Color poweredReceiverColor = Color.cyan;
     [SerializeField] private Color validDropColor = new Color(0.25f, 1f, 0.35f, 0.3f);
     [SerializeField] private Color invalidDropColor = new Color(1f, 0.2f, 0.2f, 0.3f);
+    [SerializeField] private Color idleEndColor = Color.red;
+    [SerializeField] private Color poweredEndColor = Color.green;
 
     [Header("Debug Visuals")]
     [SerializeField] private TMP_Text debugText;
     [SerializeField] private bool showDebugText = true;
+
+    [Header("Receiver Pulse")]
+    [SerializeField] private Color pulseReceiverColor = Color.red;
+    [SerializeField, Min(0.1f)] private float pulseSpeed = 3f;
 
     private CircuitPuzzleManager puzzle;
     private CircuitDragHandler dragHandler;
@@ -76,7 +83,16 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
     public void Initialize(CircuitPuzzleManager manager)
     {
         puzzle = manager;
+        if (receiverIndicator != null)
+        {
+            receiverIndicator.sprite = puzzle.ReceiverIndicatorSprite;
+            receiverIndicator.raycastTarget = false;
 
+            receiverIndicator.gameObject.SetActive(
+                RequiredReceiver &&
+                receiverIndicator.sprite != null
+            );
+        }
         dragHandler = GetComponent<CircuitDragHandler>();
 
         if (dragHandler != null)
@@ -86,6 +102,21 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
         powered = false;
 
         RefreshVisuals();
+    }
+
+    private void Update()
+    {
+        // Only pulse required receivers that haven't been powered.
+        if (!RequiredReceiver || powered || cellImage == null)
+            return;
+
+        float pulse = (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f;
+
+        cellImage.color = Color.Lerp(
+            idleReceiverColor,
+            pulseReceiverColor,
+            pulse
+        );
     }
 
     public bool TryGetPiece(out CircuitPieceType piece)
@@ -165,6 +196,7 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
         }
 
         UpdateDebugText();
+        UpdateReceiverIndicator();
     }
 
     public void SetPowered(bool value)
@@ -177,7 +209,13 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
     {
         Color color;
 
-        if (RequiredReceiver)
+        if (cellKind == CircuitCellKind.End)
+        {
+            color = powered
+                ? poweredEndColor
+                : idleEndColor;
+        }
+        else if (RequiredReceiver)
         {
             color = powered
                 ? poweredReceiverColor
@@ -283,6 +321,25 @@ public class CircuitCell : MonoBehaviour, IDropHandler,
         }
 
         ShowDropHighlight(false, false);
+    }
+
+    private void UpdateReceiverIndicator()
+    {
+        if (receiverIndicator == null)
+            return;
+
+        bool showIndicator = RequiredReceiver &&
+                             puzzle != null &&
+                             puzzle.ReceiverIndicatorSprite != null;
+
+        receiverIndicator.gameObject.SetActive(showIndicator);
+
+        if (!showIndicator)
+            return;
+
+        receiverIndicator.sprite = puzzle.ReceiverIndicatorSprite;
+        receiverIndicator.color = Color.white;
+        receiverIndicator.raycastTarget = false;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

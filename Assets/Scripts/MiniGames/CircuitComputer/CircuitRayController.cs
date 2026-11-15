@@ -22,7 +22,7 @@ public class CircuitRayController : MonoBehaviour
         puzzle = manager;
     }
 
-    // Automatically updates the beam whenever the circuit changes.
+
 
     public void RefreshBeam()
     {
@@ -35,12 +35,12 @@ public class CircuitRayController : MonoBehaviour
             return;
         }
 
-        ClearVisuals();
+        ClearVisuals(false);
 
+        // Calculate the new path.
         bool success = TraceCircuit();
 
-        // Always start with a red beam.
-        beamGraphic.PlayBeam(path, () =>
+        beamGraphic.UpdateBeam(path, () =>
         {
             foreach (CircuitCell cell in poweredCells)
             {
@@ -50,14 +50,12 @@ public class CircuitRayController : MonoBehaviour
 
             if (success)
             {
-                // Turn the completed beam green.
                 beamGraphic.SetComplete(true);
-
-                // Unlock the door.
                 puzzle.SimulationFinished(true);
             }
         });
     }
+
 
 
     private bool TraceCircuit()
@@ -278,9 +276,11 @@ public class CircuitRayController : MonoBehaviour
         return beamRect.InverseTransformPoint(worldPosition);
     }
 
-    public void ClearVisuals()
+
+    public void ClearVisuals(bool clearBeam = true)
     {
-        if (beamGraphic != null)
+        // Only erase the graphic when explicitly requested.
+        if (clearBeam && beamGraphic != null)
             beamGraphic.ClearBeam();
 
         path.Clear();
@@ -297,4 +297,5 @@ public class CircuitRayController : MonoBehaviour
                 cell.SetPowered(false);
         }
     }
+
 }

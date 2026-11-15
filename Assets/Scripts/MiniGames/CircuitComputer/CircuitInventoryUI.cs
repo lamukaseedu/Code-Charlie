@@ -80,7 +80,7 @@ public class CircuitInventoryUI : MonoBehaviour, IDropHandler
             int value = remaining.TryGetValue(slot.pieceType, out int q) ? q : 0;
             if (slot.quantityText != null) slot.quantityText.text = "x" + value;
             if (slot.pieceImage != null)
-                slot.pieceImage.color = value > 0 ? Color.white : new Color(1f, 1f, 1f, 0.35f);
+                slot.pieceImage.color = value > 0 ? Color.white : new Color(0.25f, 0.25f, 0.25f, 0.65f);
         }
     }
 

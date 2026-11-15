@@ -31,6 +31,9 @@ public class CircuitPuzzleManager : MonoBehaviour
 
     [Header("Special Cell Sprites")]
     [SerializeField] private Sprite obstacleSprite;
+    [SerializeField] private Sprite receiverIndicatorSprite;
+
+    public Sprite ReceiverIndicatorSprite => receiverIndicatorSprite;
 
     [Header("Start Sprites")]
     [SerializeField] private Sprite startUpSprite;

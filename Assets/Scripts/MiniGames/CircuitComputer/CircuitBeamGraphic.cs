@@ -74,6 +74,116 @@ public class CircuitBeamGraphic : MaskableGraphic
         );
     }
 
+
+    public void UpdateBeam(
+        IList<Vector2> newPoints,
+        System.Action onFinished = null)
+    {
+        if (animation != null)
+        {
+            StopCoroutine(animation);
+            animation = null;
+        }
+
+        float sharedLength = GetSharedPathLength(newPoints);
+
+        visibleLength = Mathf.Min(visibleLength, sharedLength);
+
+        path.Clear();
+
+        if (newPoints == null || newPoints.Count < 2)
+        {
+            visibleLength = 0f;
+            isComplete = false;
+            SetVerticesDirty();
+            onFinished?.Invoke();
+            return;
+        }
+
+        path.AddRange(newPoints);
+
+        isComplete = false;
+        SetVerticesDirty();
+
+        float totalLength = 0f;
+
+        for (int i = 1; i < path.Count; i++)
+        {
+            totalLength += Vector2.Distance(
+                path[i - 1],
+                path[i]
+            );
+        }
+
+        if (visibleLength >= totalLength - 0.001f)
+        {
+            visibleLength = totalLength;
+            SetVerticesDirty();
+            onFinished?.Invoke();
+            return;
+        }
+
+        animation = StartCoroutine(AnimateBeam(onFinished));
+    }
+
+    private float GetSharedPathLength(IList<Vector2> newPoints)
+    {
+        if (newPoints == null || newPoints.Count < 2 ||
+            path.Count < 2)
+            return 0f;
+
+        int matchingPoints = 0;
+        int limit = Mathf.Min(path.Count, newPoints.Count);
+
+        for (int i = 0; i < limit; i++)
+        {
+            if (Vector2.Distance(path[i], newPoints[i]) > 0.01f)
+                break;
+
+            matchingPoints++;
+        }
+
+        float sharedLength = 0f;
+
+        for (int i = 1; i < matchingPoints; i++)
+        {
+            sharedLength += Vector2.Distance(
+                path[i - 1],
+                path[i]
+            );
+        }
+
+        if (matchingPoints > 0 &&
+            matchingPoints < newPoints.Count &&
+            matchingPoints == path.Count - 1)
+        {
+            Vector2 a = path[matchingPoints - 1];
+            Vector2 oldEnd = path[matchingPoints];
+            Vector2 newEnd = newPoints[matchingPoints];
+
+            Vector2 segment = newEnd - a;
+            float segmentLengthSquared = segment.sqrMagnitude;
+
+            if (segmentLengthSquared > 0.000001f)
+            {
+                float t = Vector2.Dot(oldEnd - a, segment)
+                    / segmentLengthSquared;
+
+                Vector2 projectedPoint =
+                    a + segment * Mathf.Clamp01(t);
+
+                if (t >= 0f && t <= 1f &&
+                    Vector2.Distance(projectedPoint, oldEnd) < 0.01f)
+                {
+                    sharedLength += Vector2.Distance(a, oldEnd);
+                }
+            }
+        }
+
+        return sharedLength;
+    }
+
+
     private IEnumerator AnimateBeam(System.Action onFinished)
     {
         float totalLength = 0f;
