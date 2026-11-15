@@ -6235,6 +6235,7 @@ GameObject:
   - component: {fileID: 1756294582991397228}
   - component: {fileID: 4023460409356404024}
   - component: {fileID: 2717692674482767534}
+  - component: {fileID: 7777191264505733149}
   m_Layer: 0
   m_Name: CircuitsPanel
   m_TagString: Untagged
@@ -6311,6 +6312,11 @@ MonoBehaviour:
       m_Calls: []
   relayProgressFill: {fileID: 3973459962057284600}
   relayProgressText: {fileID: 0}
+  soundEffectsSource: {fileID: 7777191264505733149}
+  piecePlacementSound: {fileID: 8300000, guid: b744d562b4e424e43b064aa50468bac3, type: 3}
+  placementVolume: 0.5
+  puzzleSuccessSound: {fileID: 8300000, guid: ea171fedc94631748a01895250d34bf3, type: 3}
+  successVolume: 0.7
 --- !u!225 &2717692674482767534
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6323,6 +6329,103 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!82 &7777191264505733149
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863739599754822750}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1866969530106553664
 GameObject:
   m_ObjectHideFlags: 0
@@ -6820,6 +6923,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
         m_MethodName: set_blocksRaycasts
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1494002235442440573}
+        m_TargetAssemblyTypeName: CircuitBeamGraphic, Assembly-CSharp
+        m_MethodName: ResumeHum
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -13212,6 +13327,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1494002235442440573}
+        m_TargetAssemblyTypeName: CircuitBeamGraphic, Assembly-CSharp
+        m_MethodName: StopHum
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &4343351346496753750
 GameObject:
   m_ObjectHideFlags: 0
@@ -14991,6 +15118,7 @@ GameObject:
   - component: {fileID: 1494002235442440573}
   - component: {fileID: 608144426480585964}
   - component: {fileID: 4084462615444706302}
+  - component: {fileID: 7060018885615017487}
   m_Layer: 0
   m_Name: BeamGraphic
   m_TagString: Untagged
@@ -15044,6 +15172,9 @@ MonoBehaviour:
   completeCoreColor: {r: 0.6, g: 1, b: 0.6, a: 1}
   completeGlowColor: {r: 0.2, g: 1, b: 0.3, a: 0.25}
   speed: 500
+  beamAudio: {fileID: 7060018885615017487}
+  normalPitch: 1
+  completedPitch: 1.2
 --- !u!222 &608144426480585964
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15075,6 +15206,103 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
+--- !u!82 &7060018885615017487
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5090580189185992755}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 70437879ae43f3948814ecb13bb7689c, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1.5
+  MaxDistance: 8
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5093261366450472740
 GameObject:
   m_ObjectHideFlags: 0
@@ -21264,9 +21492,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdcaafec20bbfe64f8e60aa9d276b1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerminalFeatures
-  hasCircuitMinigame: 1
+  hasCircuitMinigame: 0
   circuitButton: {fileID: 2030129017611527724}
   circuitsPanel: {fileID: 1863739599754822750}
+  circuitPuzzleManager: {fileID: 4023460409356404024}
 --- !u!1 &7627599404954135503
 GameObject:
   m_ObjectHideFlags: 0
@@ -21429,7 +21658,7 @@ GameObject:
   - component: {fileID: 2773657190222885100}
   - component: {fileID: 6703032436358426175}
   m_Layer: 0
-  m_Name: TitleText
+  m_Name: StatusText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

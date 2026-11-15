@@ -27,6 +27,11 @@ public class CircuitBeamGraphic : MaskableGraphic
     [Header("Animation")]
     [SerializeField, Min(1f)] private float speed = 160f;
 
+    [Header("Beam Audio")]
+    [SerializeField] private AudioSource beamAudio;
+    [SerializeField, Range(0.5f, 2f)] private float normalPitch = 1f;
+    [SerializeField, Range(0.5f, 2f)] private float completedPitch = 1.2f;
+
     private readonly List<Vector2> path = new List<Vector2>();
     private float visibleLength;
     private Coroutine animation;
@@ -35,6 +40,16 @@ public class CircuitBeamGraphic : MaskableGraphic
     {
         base.Awake();
         raycastTarget = false;
+
+        if (beamAudio == null)
+            beamAudio = GetComponent<AudioSource>();
+
+        if (beamAudio != null)
+        {
+            beamAudio.loop = true;
+            beamAudio.playOnAwake = false;
+            beamAudio.pitch = normalPitch;
+        }
     }
 
     public void ClearBeam()
@@ -50,6 +65,9 @@ public class CircuitBeamGraphic : MaskableGraphic
         isComplete = false;
 
         SetVerticesDirty();
+        if (beamAudio != null)
+            beamAudio.pitch = normalPitch;
+        StopBeamHum();
     }
 
     public void PlayBeam(
@@ -95,12 +113,19 @@ public class CircuitBeamGraphic : MaskableGraphic
         {
             visibleLength = 0f;
             isComplete = false;
+
+            if (beamAudio != null)
+                beamAudio.pitch = normalPitch;
+
+            StopBeamHum();
+
             SetVerticesDirty();
             onFinished?.Invoke();
             return;
         }
 
         path.AddRange(newPoints);
+        StartBeamHum();
 
         isComplete = false;
         SetVerticesDirty();
@@ -336,6 +361,14 @@ public class CircuitBeamGraphic : MaskableGraphic
     public void SetComplete(bool complete)
     {
         isComplete = complete;
+
+        if (beamAudio != null)
+        {
+            beamAudio.pitch = complete
+                ? completedPitch
+                : normalPitch;
+        }
+
         SetVerticesDirty();
     }
 
@@ -348,6 +381,50 @@ public class CircuitBeamGraphic : MaskableGraphic
         vertex.position = position;
         vertex.color = color;
         vh.AddVert(vertex);
+    }
+
+    private void StartBeamHum()
+    {
+        if (beamAudio == null ||
+            beamAudio.clip == null ||
+            !isActiveAndEnabled)
+            return;
+
+        // Only start playing if the hum isn't already playing.
+        if (!beamAudio.isPlaying)
+            beamAudio.Play();
+    }
+
+    private void StopBeamHum()
+    {
+        if (beamAudio != null && beamAudio.isPlaying)
+            beamAudio.Stop();
+    }
+
+    public void StopHum()
+    {
+        StopBeamHum();
+    }
+
+    public void ResumeHum()
+    {
+        if (path.Count >= 2)
+            StartBeamHum();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        if (path.Count >= 2)
+            StartBeamHum();
+    }
+
+    protected override void OnDisable()
+    {
+        StopBeamHum();
+
+        base.OnDisable();
     }
 
     [ContextMenu("Test Beam")]

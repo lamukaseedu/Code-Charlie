@@ -55,6 +55,16 @@ public class CircuitPuzzleManager : MonoBehaviour
     [SerializeField] private Image relayProgressFill;
     [SerializeField] private TMP_Text relayProgressText;
 
+    [Header("Circuit Audio")]
+    [SerializeField] private AudioSource soundEffectsSource;
+    [SerializeField] private AudioClip piecePlacementSound;
+    [SerializeField, Range(0f, 1f)] private float placementVolume = 0.5f;
+    [SerializeField] private AudioClip puzzleSuccessSound;
+    [SerializeField, Range(0f, 1f)] private float successVolume = 0.7f;
+
+    private Coroutine beamInitializationCoroutine;
+    private bool isInitialized;
+
     private CircuitCell[] cells;
 
     public RectTransform DragLayer => dragLayer;
@@ -119,9 +129,44 @@ public class CircuitPuzzleManager : MonoBehaviour
         SetStatus("ROUTE POWER THROUGH ALL RECEIVERS");
         UpdateRelayProgress();
         // Start the beam automatically.
-        StartCoroutine(InitializeBeam());
+        isInitialized = true;
+        RefreshBeamOnOpen();
     }
 
+
+    public void RefreshBeamOnOpen()
+    {
+        if (!isInitialized || !isActiveAndEnabled)
+            return;
+
+        if (beamInitializationCoroutine != null)
+            StopCoroutine(beamInitializationCoroutine);
+
+        beamInitializationCoroutine = StartCoroutine(
+            InitializeBeam()
+        );
+    }
+
+    private void PlayPlacementSound()
+    {
+        if (soundEffectsSource == null || piecePlacementSound == null)
+            return;
+
+        soundEffectsSource.PlayOneShot(
+            piecePlacementSound,
+            placementVolume
+        );
+    }
+    private void PlaySuccessSound()
+    {
+        if (soundEffectsSource == null || puzzleSuccessSound == null)
+            return;
+
+        soundEffectsSource.PlayOneShot(
+            puzzleSuccessSound,
+            successVolume
+        );
+    }
     public CircuitCell GetCell(int index)
     {
         return index >= 0 && index < CellCount
@@ -223,7 +268,6 @@ public class CircuitPuzzleManager : MonoBehaviour
 
         CircuitPieceType newPiece = source.PieceType;
 
-        // Determine whether the target already has a piece.
         bool targetOccupied = target.HasPlacedPiece;
 
         CircuitPieceType oldPiece = targetOccupied
@@ -232,31 +276,26 @@ public class CircuitPuzzleManager : MonoBehaviour
 
         if (source.SourceCell != null)
         {
-            // Dragging from another board cell.
             CircuitCell originalCell = source.SourceCell;
 
             if (targetOccupied)
             {
-                // Swap the pieces between the two cells.
                 originalCell.PlacePlayerPiece(oldPiece);
                 target.PlacePlayerPiece(newPiece);
             }
             else
             {
-                // Move the piece into an empty cell.
                 originalCell.ClearPlayerPiece();
                 target.PlacePlayerPiece(newPiece);
             }
         }
         else
         {
-            // Dragging from the inventory.
             if (!inventory.Take(newPiece))
                 return;
 
             if (targetOccupied)
             {
-                // Return the replaced piece to inventory.
                 inventory.Return(oldPiece);
             }
 
@@ -265,7 +304,8 @@ public class CircuitPuzzleManager : MonoBehaviour
 
         SetStatus("CIRCUIT UPDATED");
 
-        // Automatically recalculate the beam.
+        PlayPlacementSound();
+
         rayController.RefreshBeam();
     }
 
@@ -296,11 +336,11 @@ public class CircuitPuzzleManager : MonoBehaviour
 
         SetStatus("POWER RESTORED - DOOR UNLOCKED");
 
+        PlaySuccessSound();
+
         onPuzzleCompleted?.Invoke();
     }
 
-    // Optional reset method for debugging.
-    // It is no longer connected to a button.
     public void ResetPuzzle()
     {
         if (IsBusy || IsSolved)
@@ -359,10 +399,11 @@ public class CircuitPuzzleManager : MonoBehaviour
         yield return null;
 
         Canvas.ForceUpdateCanvases();
-
         LayoutRebuilder.ForceRebuildLayoutImmediate(circuitGrid);
 
         rayController.RefreshBeam();
+
+        beamInitializationCoroutine = null;
     }
 
 }
