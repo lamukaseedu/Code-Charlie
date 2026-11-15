@@ -1278,7 +1278,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsMenu
   mouseSensitivitySlider: {fileID: 1392033639}
-  volumeSlider: {fileID: 2048724984}
+  musicSlider: {fileID: 0}
+  soundSlider: {fileID: 0}
   brightnessSlider: {fileID: 1477372963}
   playerCamera: {fileID: 8856822822659762866}
   globalVolume: {fileID: 732323180}
@@ -8636,6 +8637,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 647331309260659324, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.0016174316
+      objectReference: {fileID: 0}
     - target: {fileID: 703381992647421344, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -9590,6 +9595,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6148748287264633439, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148748287264633439, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6190803076328685816, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
