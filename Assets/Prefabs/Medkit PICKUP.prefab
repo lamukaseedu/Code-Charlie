@@ -16,7 +16,8 @@ GameObject:
   - component: {fileID: 4852679429217899053}
   - component: {fileID: 6990207164373180682}
   - component: {fileID: 6373013027372215564}
-  m_Layer: 0
+  - component: {fileID: 589565046137318583}
+  m_Layer: 10
   m_Name: Medkit PICKUP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7806775692022079246}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.532929, y: 1.78, z: 7.332156}
   m_LocalScale: {x: 48.15796, y: 26.920162, z: 71.12698}
   m_ConstrainProportionsScale: 0
@@ -114,7 +115,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5302568919011541938, guid: 813ebffbaf175f545bc4f82b0dc8a25b, type: 3}
 --- !u!114 &1779282667317162545
@@ -285,7 +286,29 @@ MonoBehaviour:
   impactClips:
   - {fileID: 8300000, guid: e4b34f2b46dbf5745bb32f18d0ec810c, type: 3}
   - {fileID: 8300000, guid: ef4d16366d68c2248867c2a3be772091, type: 3}
+  minimumImpactSpeed: 3
+  impactCooldown: 0.25
   spatialBlend: 1
   minDistance: 1
   maxDistance: 20
   objectCollider: {fileID: 7341224226875538432}
+--- !u!114 &589565046137318583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7806775692022079246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

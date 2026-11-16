@@ -339,6 +339,19 @@ public class PlayerInventory : MonoBehaviour
     }
 
 
+    public bool TryConsumeEquippedItem()
+    {
+        if (slots[SelectedSlot] == null || quantities[SelectedSlot] <= 0)
+            return false;
+
+        if (quantities[SelectedSlot] == 1)
+            return RemoveItem(SelectedSlot) != null;
+
+        quantities[SelectedSlot]--;
+        Changed?.Invoke();
+        return true;
+    }
+
     public bool TryConsumeItem(Item item, int amount = 1)
     {
         if (item == null || amount <= 0)
