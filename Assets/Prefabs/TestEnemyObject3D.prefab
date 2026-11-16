@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffe4a65939b4f25458571b2d2885e52d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 20
+  maxHealth: 30
   destroyOnDeath: 1
   onDamaged:
     m_PersistentCalls:
@@ -144,6 +144,7 @@ MonoBehaviour:
   patrolRadius: 30
   maxPatrolDistance: 50
   patrolArrivalDistance: 1
+  patrolBlockedTimeout: 3
   alertSearchRadius: 10
   agentTypeID: -1372625422
   areaMask: -1
@@ -151,6 +152,13 @@ MonoBehaviour:
   sampleDistance: 3
   destinationProjectionLimit: 1
   cornerTolerance: 0.3
+  enableAvoidance: 1
+  separationDistance: 0.2
+  avoidanceLookAhead: 0.8
+  neighbourDistance: 3
+  separationStrength: 2
+  avoidancePriority: 50
+  chaseSpacingRadius: 1.2
   debugWaypoint: {x: 0, y: 0, z: 0}
   debugHasWaypoint: 0
   debugState: 0
@@ -418,7 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeac4361742d6ae488ac68bf8fdc2f34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyKnockback
-  thrust: 12
+  thrust: 10
 --- !u!114 &5339712009850973072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,11 +469,11 @@ MonoBehaviour:
   colliderDisableThreshold: 0.52
   stopMovingDuringAttack: 1
   lunge: 1
-  lungeImpulse: 8
+  lungeImpulse: 12
   attackAutomatically: 1
-  attackRange: 2
-  attackAngle: 90
-  attackCooldown: 1
+  attackRange: 2.5
+  attackAngle: 120
+  attackCooldown: 0.5
   attackAudioSource: {fileID: 6537765158779672507}
   attackSounds:
   - {fileID: 8300000, guid: 36005d064d454c04fba1e3a8f28c5da9, type: 3}
@@ -523,7 +531,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.6, y: 2, z: 1.6}
+  m_Size: {x: 2, y: 2, z: 1.6}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7079959751877191416
 MonoBehaviour:
@@ -538,7 +546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthZone
   mode: 0
-  amountPerTick: 20
+  amountPerTick: 25
   tickInterval: 2
   playerOnly: 1
 --- !u!1 &2200295589236478584

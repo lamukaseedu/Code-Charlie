@@ -45,6 +45,7 @@ public class PlayerMinigameContext : MonoBehaviour
     public InputActionReference ExitAction => exitInteractableAction;
     public string DefaultActionMap => defaultActionMap;
     public string InteractableActionMap => interactableActionMap;
+    public bool IsMinigameActive => isActiveAndEnabled && activeMinigames.Count > 0;
 
     private void Awake()
     {

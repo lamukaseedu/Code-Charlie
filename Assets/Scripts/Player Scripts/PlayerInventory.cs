@@ -225,6 +225,21 @@ public class PlayerInventory : MonoBehaviour
         return false;
     }
 
+    public bool HasKeycard(int requiredId)
+    {
+        for (int i = 0; i < SlotCount; i++)
+        {
+            Item item = slots[i];
+            if (item == null || quantities[i] <= 0 || item.Prefab == null)
+                continue;
+
+            Keycard keycard = item.Prefab.GetComponentInChildren<Keycard>(true);
+            if (keycard != null && keycard.Id >= requiredId)
+                return true;
+        }
+        return false;
+    }
+
     public bool TryRemoveItem(Item item)
     {
         if (item == null)
@@ -394,10 +409,15 @@ public class PlayerInventory : MonoBehaviour
 
     public void UseEquippedItem()
     {
-        if (!isActiveAndEnabled || IsOpen || Time.timeScale == 0f || Cursor.lockState != CursorLockMode.Locked ||
-            EquippedObject == null || IsEquipCooldownActive)
+        if (!isActiveAndEnabled || IsOpen || Time.timeScale == 0f || Cursor.lockState != CursorLockMode.Locked)
             return;
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+        if (playerInteraction == null)
+            playerInteraction = GetComponent<PlayerInteraction>();
+        if (playerInteraction != null && playerInteraction.TryInteractWithKeycardLock())
+            return;
+        if (EquippedObject == null || IsEquipCooldownActive)
             return;
         if (equippedUse is Behaviour behaviour && behaviour != null && behaviour.isActiveAndEnabled)
             equippedUse.Use();
