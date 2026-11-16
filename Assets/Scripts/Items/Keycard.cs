@@ -35,7 +35,7 @@ public class Keycard : MonoBehaviour, IUsable, IInventoryItem
 
     public void Use()
     {
-        if (!IsEquipped || inventory.IsOpen || Time.timeScale == 0f ||
+        if (!IsEquipped || inventory.IsOpen || inventory.IsEquipCooldownActive || Time.timeScale == 0f ||
             Cursor.lockState != CursorLockMode.Locked)
             return;
 
