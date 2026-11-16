@@ -47,6 +47,7 @@ public class TerminalLogin : MonoBehaviour
     [SerializeField] private InputActionReference navigateLoginAction;
     [SerializeField] private InputActionReference submitLoginAction;
 
+
     private bool isLoggingIn;
     private Coroutine failureCoroutine;
 
