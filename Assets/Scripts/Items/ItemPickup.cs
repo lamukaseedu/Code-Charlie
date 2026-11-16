@@ -187,6 +187,12 @@ public class ItemHover : MonoBehaviour, IInteractable
         }
     }
 
+    // Used by containers to configure the amount in a spawned pickup.
+    public void SetQuantity(int newQuantity)
+    {
+        quantity = Mathf.Max(1, newQuantity);
+    }
+
     private void ApplyHoverMaterial()
     {
         // Use a private copy so changing the highlight never edits the material asset.
