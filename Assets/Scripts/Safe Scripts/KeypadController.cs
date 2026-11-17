@@ -1,0 +1,200 @@
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class KeypadController : MonoBehaviour
+{
+    /*
+     * Author: Andres Rondon-Villarmosa
+     * Created: 9/12/2026
+     * Edited By: Savio Xavier
+     * Edited: 11/12/2026
+     */
+
+    [Header("Code")]
+    [SerializeField] private string correctCode = "0427";
+    [SerializeField, Min(1)] private int maximumDigits = 8;
+
+    [Header("Display")]
+    [SerializeField] private TMP_Text displayText;
+    [SerializeField] private string emptyDisplayText = "----";
+    [SerializeField] private string grantedText = "OPEN";
+    [SerializeField] private string deniedText = "ERROR";
+    [SerializeField, Min(0f)] private float resultDisplayTime = 1f;
+
+    [Header("Interaction Prompt")]
+    [SerializeField, Min(0f)] private float promptRevealDelay = 1f;
+
+    private InteractionPromptUI interactionPrompt;
+    private TMP_Text interactionPromptText;
+    private Coroutine promptRevealRoutine;
+
+    [Header("Audio (Optional)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip digitSound;
+    [SerializeField] private AudioClip grantedSound;
+    [SerializeField] private AudioClip deniedSound;
+
+    [Header("Events")]
+    [SerializeField] private UnityEvent onAccessGranted;
+    [SerializeField] private UnityEvent onAccessDenied;
+
+    public bool IsUnlocked { get; private set; }
+    public bool IsBusy { get; private set; }
+
+    private string currentInput = string.Empty;
+    private Coroutine resultRoutine;
+
+    private void Awake()
+    {
+        interactionPrompt =
+            FindFirstObjectByType<InteractionPromptUI>(
+                FindObjectsInactive.Include
+            );
+
+        if (interactionPrompt != null)
+        {
+            interactionPromptText =
+                interactionPrompt.GetComponentInChildren<TMP_Text>(true);
+        }
+
+        RefreshDisplay();
+    }
+
+    //Function for adding a digit to the input. 
+    public void EnterDigit(string digit)
+    {
+        if (IsBusy || IsUnlocked || string.IsNullOrEmpty(digit))
+            return;
+
+        // Each number button should contribute exactly one numeric character.
+        if (digit.Length != 1 || !char.IsDigit(digit[0]))
+        {
+            Debug.LogWarning($"'{digit}' is not a valid keypad digit.", this);
+            return;
+        }
+
+        if (currentInput.Length >= maximumDigits)
+            return;
+
+        currentInput += digit;
+        PlaySound(digitSound);
+        RefreshDisplay();
+    }
+    
+    //Function for removing a digit from the input. 
+    public void Backspace()
+    {
+        if (IsBusy || IsUnlocked || currentInput.Length == 0)
+            return;
+
+        currentInput = currentInput[..^1];
+        PlaySound(digitSound);
+        RefreshDisplay();
+    }
+
+    //Function for fully clearing the digits on the input. 
+    public void Clear()
+    {
+        if (IsBusy || IsUnlocked)
+            return;
+
+        currentInput = string.Empty;
+        PlaySound(digitSound);
+        RefreshDisplay();
+    }
+
+    //Function for checking whether the input entered matches the correct code.
+    public void Submit()
+    {
+        if (IsBusy || IsUnlocked)
+            return;
+
+        bool isCorrect = currentInput == correctCode;
+
+        if (resultRoutine != null)
+            StopCoroutine(resultRoutine);
+
+        resultRoutine = StartCoroutine(ShowResult(isCorrect));
+    }
+    
+    //If the input matches the code display the correct text/sound if it doesn't match display the incorrect text/sound.
+    private IEnumerator ShowResult(bool granted)
+    {
+        IsBusy = true;
+        if (displayText != null)
+            displayText.text = granted ? grantedText : deniedText;
+
+        if (granted)
+        {
+            IsUnlocked = true;
+
+            // Hide before the unlock event opens the safe.
+            if (interactionPrompt != null)
+            {
+                if (promptRevealRoutine != null)
+                    StopCoroutine(promptRevealRoutine);
+
+                promptRevealRoutine =
+                    StartCoroutine(RestorePromptAfterDelay());
+            }
+
+            PlaySound(grantedSound);
+            onAccessGranted?.Invoke();
+        }
+        else
+        {
+            PlaySound(deniedSound);
+            onAccessDenied?.Invoke();
+        }
+
+        yield return new WaitForSeconds(resultDisplayTime);
+
+        if (!granted)
+        {
+            currentInput = string.Empty;
+            RefreshDisplay();
+        }
+
+        IsBusy = false;
+        resultRoutine = null;
+    }
+
+
+    //Function for refreshing display when needed. 
+    private void RefreshDisplay()
+    {
+        if (displayText != null)
+            displayText.text = currentInput.Length == 0 ? emptyDisplayText : currentInput;
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        GameAudio.PlayOneShot(audioSource, clip);
+    }
+
+    private void OnValidate()
+    {
+        maximumDigits = Mathf.Max(1, maximumDigits);
+    }
+
+    private IEnumerator RestorePromptAfterDelay()
+    {
+        float revealTime = Time.time + promptRevealDelay;
+
+        interactionPrompt.Hide();
+
+        while (Time.time < revealTime)
+        {
+            // Keep the whole container hidden during the delay.
+            interactionPrompt.Hide();
+            yield return null;
+        }
+
+        if (interactionPromptText != null)
+            interactionPrompt.Show(interactionPromptText.text);
+
+        promptRevealRoutine = null;
+    }
+}

@@ -1,6 +1,8 @@
 /*
  * Author: Savio Xavier
  * Created: 10/20/2026
+ * Edited By: Savio Xavier
+ * Edited: 11/12/2026
  */
 
 using UnityEngine;
@@ -13,6 +15,7 @@ public class LoopingWorldAudio : MonoBehaviour
     [SerializeField] private float minDistance = 1f;
     [SerializeField] private float maxDistance = 12f;
     [SerializeField, Range(0f, 1f)] private float volume = 1f;
+    [SerializeField] private bool isMusic = true;
 
     private AudioSource audioSource;
 
@@ -24,13 +27,16 @@ public class LoopingWorldAudio : MonoBehaviour
         audioSource.spatialBlend = spatialBlend;
         audioSource.minDistance = minDistance;
         audioSource.maxDistance = maxDistance;
-        audioSource.volume = volume;
         audioSource.rolloffMode = AudioRolloffMode.Linear;
         audioSource.clip = clip;
+        ApplyVolume();
     }
 
     private void OnEnable()
     {
+        GameSettings.VolumesChanged += ApplyVolume;
+        ApplyVolume();
+
         if (audioSource.clip == null)
             audioSource.clip = clip;
 
@@ -40,7 +46,18 @@ public class LoopingWorldAudio : MonoBehaviour
 
     private void OnDisable()
     {
+        GameSettings.VolumesChanged -= ApplyVolume;
+
         if (audioSource != null && audioSource.isPlaying)
             audioSource.Stop();
+    }
+
+    private void ApplyVolume()
+    {
+        if (audioSource == null)
+            return;
+
+        float mix = isMusic ? GameSettings.GetMusicVolume() : GameSettings.GetSoundVolume();
+        audioSource.volume = volume * mix;
     }
 }

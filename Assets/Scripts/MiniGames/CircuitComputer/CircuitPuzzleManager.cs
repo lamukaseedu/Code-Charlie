@@ -1,0 +1,409 @@
+using System;
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+public class CircuitPuzzleManager : MonoBehaviour
+{
+    /*
+     * Author: Andres Rondon-Villarmosa
+     * Created: 11/7/2026
+     */
+
+    [Serializable]
+    public struct PieceSprite
+    {
+        public CircuitPieceType type;
+        public Sprite sprite;
+    }
+
+    [Header("Existing Canvas")]
+    [SerializeField] private RectTransform dragLayer;
+    [SerializeField] private CircuitInventoryUI inventory;
+    [SerializeField] private RectTransform circuitGrid;
+    [SerializeField, Min(1)] private int columns = 5;
+    [SerializeField] private CircuitRayController rayController;
+
+    [Header("Piece Sprites")]
+    [SerializeField] private PieceSprite[] pieceSprites;
+
+    [Header("Special Cell Sprites")]
+    [SerializeField] private Sprite obstacleSprite;
+    [SerializeField] private Sprite receiverIndicatorSprite;
+
+    public Sprite ReceiverIndicatorSprite => receiverIndicatorSprite;
+
+    [Header("Start Sprites")]
+    [SerializeField] private Sprite startUpSprite;
+    [SerializeField] private Sprite startDownSprite;
+    [SerializeField] private Sprite startLeftSprite;
+    [SerializeField] private Sprite startRightSprite;
+
+    [Header("End Sprites")]
+    [SerializeField] private Sprite endUpSprite;
+    [SerializeField] private Sprite endDownSprite;
+    [SerializeField] private Sprite endLeftSprite;
+    [SerializeField] private Sprite endRightSprite;
+
+    [Header("Puzzle Completion")]
+    [SerializeField] private TMP_Text statusText;
+    [SerializeField] private UnityEvent onPuzzleCompleted;
+
+    [Header("Relay Progress")]
+    [SerializeField] private Image relayProgressFill;
+    [SerializeField] private TMP_Text relayProgressText;
+
+    [Header("Circuit Audio")]
+    [SerializeField] private AudioSource soundEffectsSource;
+    [SerializeField] private AudioClip piecePlacementSound;
+    [SerializeField, Range(0f, 1f)] private float placementVolume = 0.5f;
+    [SerializeField] private AudioClip puzzleSuccessSound;
+    [SerializeField, Range(0f, 1f)] private float successVolume = 0.7f;
+
+    private Coroutine beamInitializationCoroutine;
+    private bool isInitialized;
+
+    private CircuitCell[] cells;
+
+    public RectTransform DragLayer => dragLayer;
+    public CircuitInventoryUI Inventory => inventory;
+
+    public bool IsSolved { get; private set; }
+    public bool IsBusy { get; private set; }
+
+    public int Columns => columns;
+    public int CellCount => cells == null ? 0 : cells.Length;
+
+    private void Start()
+    {
+        Debug.Log("CircuitPuzzleManager: Start called!", this);
+        // Automatically find every circuit cell under the grid.
+        if (circuitGrid != null)
+        {
+            cells = circuitGrid.GetComponentsInChildren<CircuitCell>(
+                true
+            );
+        }
+
+        if (inventory == null || rayController == null ||
+            dragLayer == null || circuitGrid == null ||
+            cells == null || cells.Length == 0)
+        {
+            Debug.LogError(
+                "CircuitPuzzleManager: Missing required references.",
+                this
+            );
+
+            enabled = false;
+            return;
+        }
+
+        if (cells.Length % columns != 0)
+        {
+            Debug.LogWarning(
+                "Circuit grid cell count is not divisible by Columns.",
+                this
+            );
+        }
+
+        // Initialize all cells.
+        foreach (CircuitCell cell in cells)
+        {
+            if (cell != null)
+                cell.Initialize(this);
+        }
+
+        inventory.Initialize(this);
+        rayController.Initialize(this);
+
+        Debug.Log(
+        $"CircuitPuzzleManager: Initialized {cells.Length} cells.",
+        this
+        );
+
+        IsSolved = false;
+        IsBusy = false;
+
+        SetStatus("ROUTE POWER THROUGH ALL RECEIVERS");
+        UpdateRelayProgress();
+        // Start the beam automatically.
+        isInitialized = true;
+        RefreshBeamOnOpen();
+    }
+
+
+    public void RefreshBeamOnOpen()
+    {
+        if (!isInitialized || !isActiveAndEnabled)
+            return;
+
+        if (beamInitializationCoroutine != null)
+            StopCoroutine(beamInitializationCoroutine);
+
+        beamInitializationCoroutine = StartCoroutine(
+            InitializeBeam()
+        );
+    }
+
+    private void PlayPlacementSound()
+    {
+        if (soundEffectsSource == null || piecePlacementSound == null)
+            return;
+
+        soundEffectsSource.PlayOneShot(
+            piecePlacementSound,
+            placementVolume
+        );
+    }
+    private void PlaySuccessSound()
+    {
+        if (soundEffectsSource == null || puzzleSuccessSound == null)
+            return;
+
+        soundEffectsSource.PlayOneShot(
+            puzzleSuccessSound,
+            successVolume
+        );
+    }
+    public CircuitCell GetCell(int index)
+    {
+        return index >= 0 && index < CellCount
+            ? cells[index]
+            : null;
+    }
+
+    public int IndexOf(CircuitCell cell)
+    {
+        return Array.IndexOf(cells, cell);
+    }
+
+    public Sprite GetSprite(CircuitPieceType type)
+    {
+        if (pieceSprites == null)
+            return null;
+
+        foreach (PieceSprite item in pieceSprites)
+        {
+            if (item.type == type)
+                return item.sprite;
+        }
+
+        return null;
+    }
+
+    public Sprite GetSpecialSprite(
+        CircuitCellKind kind,
+        CircuitDirection direction)
+    {
+        switch (kind)
+        {
+            case CircuitCellKind.Obstacle:
+                return obstacleSprite;
+
+            case CircuitCellKind.Start:
+                switch (direction)
+                {
+                    case CircuitDirection.Up:
+                        return startUpSprite;
+
+                    case CircuitDirection.Down:
+                        return startDownSprite;
+
+                    case CircuitDirection.Left:
+                        return startLeftSprite;
+
+                    case CircuitDirection.Right:
+                        return startRightSprite;
+                }
+                break;
+
+            case CircuitCellKind.End:
+                switch (direction)
+                {
+                    case CircuitDirection.Up:
+                        return endUpSprite;
+
+                    case CircuitDirection.Down:
+                        return endDownSprite;
+
+                    case CircuitDirection.Left:
+                        return endLeftSprite;
+
+                    case CircuitDirection.Right:
+                        return endRightSprite;
+                }
+                break;
+        }
+
+        return null;
+    }
+
+    public bool CanDropOnCell(
+        CircuitDragHandler source,
+        CircuitCell target)
+    {
+        if (IsBusy || IsSolved ||
+            source == null || target == null ||
+            !target.CanReceivePiece ||
+            source.SourceCell == target)
+        {
+            return false;
+        }
+
+        if (source.SourceCell != null)
+            return source.SourceCell.HasPlacedPiece;
+
+        return inventory.HasAvailable(source.PieceType);
+    }
+
+
+    public void TryDropOnCell(
+        CircuitDragHandler source,
+        CircuitCell target)
+    {
+        if (!CanDropOnCell(source, target))
+            return;
+
+        CircuitPieceType newPiece = source.PieceType;
+
+        bool targetOccupied = target.HasPlacedPiece;
+
+        CircuitPieceType oldPiece = targetOccupied
+            ? target.PlacedPiece
+            : default;
+
+        if (source.SourceCell != null)
+        {
+            CircuitCell originalCell = source.SourceCell;
+
+            if (targetOccupied)
+            {
+                originalCell.PlacePlayerPiece(oldPiece);
+                target.PlacePlayerPiece(newPiece);
+            }
+            else
+            {
+                originalCell.ClearPlayerPiece();
+                target.PlacePlayerPiece(newPiece);
+            }
+        }
+        else
+        {
+            if (!inventory.Take(newPiece))
+                return;
+
+            if (targetOccupied)
+            {
+                inventory.Return(oldPiece);
+            }
+
+            target.PlacePlayerPiece(newPiece);
+        }
+
+        SetStatus("CIRCUIT UPDATED");
+
+        PlayPlacementSound();
+
+        rayController.RefreshBeam();
+    }
+
+
+    public void TryReturnToInventory(CircuitCell source)
+    {
+        if (IsBusy || IsSolved ||
+            source == null || !source.HasPlacedPiece)
+        {
+            return;
+        }
+
+        inventory.Return(source.PlacedPiece);
+        source.ClearPlayerPiece();
+
+        SetStatus("PIECE RETURNED");
+
+        // Automatically recalculate the laser.
+        rayController.RefreshBeam();
+    }
+
+    public void SimulationFinished(bool success)
+    {
+        if (!success || IsSolved)
+            return;
+
+        IsSolved = true;
+
+        SetStatus("POWER RESTORED - DOOR UNLOCKED");
+
+        PlaySuccessSound();
+
+        onPuzzleCompleted?.Invoke();
+    }
+
+    public void ResetPuzzle()
+    {
+        if (IsBusy || IsSolved)
+            return;
+
+        foreach (CircuitCell cell in cells)
+        {
+            if (cell != null)
+                cell.ClearPlayerPiece();
+        }
+
+        inventory.ResetQuantities();
+
+        SetStatus("ROUTE POWER THROUGH ALL RECEIVERS");
+
+        rayController.RefreshBeam();
+    }
+
+    public void SetStatus(string message)
+    {
+        if (statusText != null)
+            statusText.text = message;
+    }
+
+
+    public void UpdateRelayProgress()
+    {
+        int total = 0;
+        int poweredCount = 0;
+
+        foreach (CircuitCell cell in cells)
+        {
+            if (cell == null || !cell.RequiredReceiver)
+                continue;
+
+            total++;
+
+            if (cell.IsPowered)
+                poweredCount++;
+        }
+
+        float progress = total > 0
+            ? (float)poweredCount / total
+            : 0f;
+
+        if (relayProgressFill != null)
+            relayProgressFill.fillAmount = progress;
+
+        if (relayProgressText != null)
+            relayProgressText.text = $"{poweredCount} / {total}";
+    }
+
+
+    private IEnumerator InitializeBeam()
+    {
+        yield return null;
+
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(circuitGrid);
+
+        rayController.RefreshBeam();
+
+        beamInitializationCoroutine = null;
+    }
+
+}
