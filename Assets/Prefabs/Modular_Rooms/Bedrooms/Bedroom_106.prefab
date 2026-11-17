@@ -2424,6 +2424,7 @@ GameObject:
   - component: {fileID: 1759399349226433386}
   - component: {fileID: 6225710991369895481}
   - component: {fileID: 4169216826094437532}
+  - component: {fileID: 8983603841521573518}
   m_Layer: 0
   m_Name: bathroom
   m_TagString: Untagged
@@ -2503,6 +2504,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &8983603841521573518
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887236306179960337}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7917541552199252220, guid: 90db8fff0d7d5d74f94408aba035d6aa, type: 3}
 --- !u!1 &2143905621805320183
 GameObject:
   m_ObjectHideFlags: 0
