@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 2383668890713401623}
   - component: {fileID: 8126529907599328120}
   - component: {fileID: 967298710546898470}
-  - component: {fileID: 2884091477116805009}
+  - component: {fileID: 4413103056844573830}
   m_Layer: 0
   m_Name: CircleTV
   m_TagString: Untagged
@@ -546,8 +546,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2884091477116805009
-MeshCollider:
+--- !u!65 &4413103056844573830
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -564,7 +564,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6527925038338256486, guid: b019418f667e1be4da32885ab54852c9, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.07274247, y: 0.12385176, z: 0.09019363}
+  m_Center: {x: 0.00000011920929, y: 1.1980678e-10, z: 0.0017864014}
