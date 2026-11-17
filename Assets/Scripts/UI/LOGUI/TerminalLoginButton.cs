@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class TerminalLoginButton : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler,
@@ -35,6 +36,9 @@ public class TerminalLoginButton : MonoBehaviour,
     [Header("Login Result Colors")]
     [SerializeField] private Color successTextColor = Color.green;
     [SerializeField] private Color failureTextColor = Color.red;
+
+    [Header("Login Events")]
+    [SerializeField] private UnityEvent onLoginSuccess;
 
     private bool isShowingResult;
     private Color resultTextColor;
@@ -185,6 +189,9 @@ public class TerminalLoginButton : MonoBehaviour,
 
     public void ShowLoginResult(bool success)
     {
+        if (isShowingResult)
+            return;
+
         isShowingResult = true;
         isPressed = false;
 
@@ -193,6 +200,11 @@ public class TerminalLoginButton : MonoBehaviour,
             : failureTextColor;
 
         UpdateVisuals();
+
+        if (success)
+        {
+            onLoginSuccess?.Invoke();
+        }
     }
 
     public void ClearLoginResult()

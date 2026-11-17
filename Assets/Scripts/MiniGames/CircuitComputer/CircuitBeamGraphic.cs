@@ -1,0 +1,448 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CircuitBeamGraphic : MaskableGraphic
+{
+    [Header("Beam Appearance")]
+    [SerializeField, Min(0.1f)] private float coreWidth = 2.5f;
+    [SerializeField, Min(0.1f)] private float glowWidth = 8f;
+    [Header("Beam Colors")]
+    [SerializeField] private Color incompleteCoreColor = Color.red;
+    [SerializeField]
+    private Color incompleteGlowColor =
+        new Color(1f, 0.1f, 0.1f, 0.25f);
+
+    [SerializeField]
+    private Color completeCoreColor =
+        new Color(0.6f, 1f, 0.6f, 1f);
+
+    [SerializeField]
+    private Color completeGlowColor =
+        new Color(0.2f, 1f, 0.3f, 0.25f);
+
+    private bool isComplete;
+
+    [Header("Animation")]
+    [SerializeField, Min(1f)] private float speed = 160f;
+
+    [Header("Beam Audio")]
+    [SerializeField] private AudioSource beamAudio;
+    [SerializeField, Range(0.5f, 2f)] private float normalPitch = 1f;
+    [SerializeField, Range(0.5f, 2f)] private float completedPitch = 1.2f;
+
+    private readonly List<Vector2> path = new List<Vector2>();
+    private float visibleLength;
+    private Coroutine animation;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        raycastTarget = false;
+
+        if (beamAudio == null)
+            beamAudio = GetComponent<AudioSource>();
+
+        if (beamAudio != null)
+        {
+            beamAudio.loop = true;
+            beamAudio.playOnAwake = false;
+            beamAudio.pitch = normalPitch;
+        }
+    }
+
+    public void ClearBeam()
+    {
+        if (animation != null)
+        {
+            StopCoroutine(animation);
+            animation = null;
+        }
+
+        path.Clear();
+        visibleLength = 0f;
+        isComplete = false;
+
+        SetVerticesDirty();
+        if (beamAudio != null)
+            beamAudio.pitch = normalPitch;
+        StopBeamHum();
+    }
+
+    public void PlayBeam(
+    IList<Vector2> points,
+    System.Action onFinished = null)
+    {
+        ClearBeam();
+
+        if (points == null || points.Count < 2)
+        {
+            onFinished?.Invoke();
+            return;
+        }
+
+        path.AddRange(points);
+
+        visibleLength = 0f;
+        SetVerticesDirty();
+
+        animation = StartCoroutine(
+            AnimateBeam(onFinished)
+        );
+    }
+
+
+    public void UpdateBeam(
+        IList<Vector2> newPoints,
+        System.Action onFinished = null)
+    {
+        if (animation != null)
+        {
+            StopCoroutine(animation);
+            animation = null;
+        }
+
+        float sharedLength = GetSharedPathLength(newPoints);
+
+        visibleLength = Mathf.Min(visibleLength, sharedLength);
+
+        path.Clear();
+
+        if (newPoints == null || newPoints.Count < 2)
+        {
+            visibleLength = 0f;
+            isComplete = false;
+
+            if (beamAudio != null)
+                beamAudio.pitch = normalPitch;
+
+            StopBeamHum();
+
+            SetVerticesDirty();
+            onFinished?.Invoke();
+            return;
+        }
+
+        path.AddRange(newPoints);
+        StartBeamHum();
+
+        isComplete = false;
+        SetVerticesDirty();
+
+        float totalLength = 0f;
+
+        for (int i = 1; i < path.Count; i++)
+        {
+            totalLength += Vector2.Distance(
+                path[i - 1],
+                path[i]
+            );
+        }
+
+        if (visibleLength >= totalLength - 0.001f)
+        {
+            visibleLength = totalLength;
+            SetVerticesDirty();
+            onFinished?.Invoke();
+            return;
+        }
+
+        animation = StartCoroutine(AnimateBeam(onFinished));
+    }
+
+    private float GetSharedPathLength(IList<Vector2> newPoints)
+    {
+        if (newPoints == null || newPoints.Count < 2 ||
+            path.Count < 2)
+            return 0f;
+
+        int matchingPoints = 0;
+        int limit = Mathf.Min(path.Count, newPoints.Count);
+
+        for (int i = 0; i < limit; i++)
+        {
+            if (Vector2.Distance(path[i], newPoints[i]) > 0.01f)
+                break;
+
+            matchingPoints++;
+        }
+
+        float sharedLength = 0f;
+
+        for (int i = 1; i < matchingPoints; i++)
+        {
+            sharedLength += Vector2.Distance(
+                path[i - 1],
+                path[i]
+            );
+        }
+
+        if (matchingPoints > 0 &&
+            matchingPoints < newPoints.Count &&
+            matchingPoints == path.Count - 1)
+        {
+            Vector2 a = path[matchingPoints - 1];
+            Vector2 oldEnd = path[matchingPoints];
+            Vector2 newEnd = newPoints[matchingPoints];
+
+            Vector2 segment = newEnd - a;
+            float segmentLengthSquared = segment.sqrMagnitude;
+
+            if (segmentLengthSquared > 0.000001f)
+            {
+                float t = Vector2.Dot(oldEnd - a, segment)
+                    / segmentLengthSquared;
+
+                Vector2 projectedPoint =
+                    a + segment * Mathf.Clamp01(t);
+
+                if (t >= 0f && t <= 1f &&
+                    Vector2.Distance(projectedPoint, oldEnd) < 0.01f)
+                {
+                    sharedLength += Vector2.Distance(a, oldEnd);
+                }
+            }
+        }
+
+        return sharedLength;
+    }
+
+
+    private IEnumerator AnimateBeam(System.Action onFinished)
+    {
+        float totalLength = 0f;
+
+        for (int i = 1; i < path.Count; i++)
+            totalLength += Vector2.Distance(path[i - 1], path[i]);
+
+        while (visibleLength < totalLength)
+        {
+            visibleLength = Mathf.Min(
+                visibleLength + speed * Time.deltaTime,
+                totalLength
+            );
+
+            SetVerticesDirty();
+            yield return null;
+        }
+
+        animation = null;
+        onFinished?.Invoke();
+    }
+
+
+    protected override void OnPopulateMesh(VertexHelper vh)
+    {
+        vh.Clear();
+
+        if (path.Count < 2)
+            return;
+
+        List<Vector2> visiblePoints = GetVisiblePath();
+
+        if (visiblePoints.Count < 2)
+            return;
+
+        Color currentGlow = isComplete
+            ? completeGlowColor
+            : incompleteGlowColor;
+
+        Color currentCore = isComplete
+            ? completeCoreColor
+            : incompleteCoreColor;
+
+        // Draw the glow underneath.
+        DrawPath(vh, visiblePoints, glowWidth, currentGlow);
+
+        // Draw the bright center of the laser.
+        DrawPath(vh, visiblePoints, coreWidth, currentCore);
+    }
+
+
+    private List<Vector2> GetVisiblePath()
+    {
+        List<Vector2> result = new List<Vector2>();
+
+        result.Add(path[0]);
+
+        float remaining = visibleLength;
+
+        for (int i = 1; i < path.Count; i++)
+        {
+            Vector2 a = path[i - 1];
+            Vector2 b = path[i];
+
+            float distance = Vector2.Distance(a, b);
+
+            if (distance <= 0.0001f)
+                continue;
+
+            if (remaining >= distance)
+            {
+                result.Add(b);
+                remaining -= distance;
+            }
+            else
+            {
+                result.Add(Vector2.Lerp(
+                    a, b, Mathf.Clamp01(remaining / distance)
+                ));
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private void DrawPath(
+        VertexHelper vh,
+        List<Vector2> points,
+        float width,
+        Color color)
+    {
+        for (int i = 1; i < points.Count; i++)
+        {
+            Vector2 a = points[i - 1];
+            Vector2 b = points[i];
+
+            Vector2 delta = b - a;
+
+            if (delta.sqrMagnitude <= 0.000001f)
+                continue;
+
+            Vector2 normal = new Vector2(
+                -delta.y, delta.x
+            ).normalized * width * 0.5f;
+
+            int index = vh.currentVertCount;
+
+            AddVertex(vh, a - normal, color);
+            AddVertex(vh, a + normal, color);
+            AddVertex(vh, b + normal, color);
+            AddVertex(vh, b - normal, color);
+
+            vh.AddTriangle(index, index + 1, index + 2);
+            vh.AddTriangle(index, index + 2, index + 3);
+        }
+
+        // Circular joins fill gaps at turns and round the ends.
+        foreach (Vector2 point in points)
+            DrawCircle(vh, point, width * 0.5f, color);
+    }
+
+    private void DrawCircle(
+        VertexHelper vh,
+        Vector2 center,
+        float radius,
+        Color color)
+    {
+        const int segments = 12;
+
+        int index = vh.currentVertCount;
+        AddVertex(vh, center, color);
+
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = i * Mathf.PI * 2f / segments;
+
+            Vector2 offset = new Vector2(
+                Mathf.Cos(angle),
+                Mathf.Sin(angle)
+            ) * radius;
+
+            AddVertex(vh, center + offset, color);
+        }
+
+        for (int i = 0; i < segments; i++)
+            vh.AddTriangle(index, index + i + 1, index + i + 2);
+    }
+
+    public void SetComplete(bool complete)
+    {
+        isComplete = complete;
+
+        if (beamAudio != null)
+        {
+            beamAudio.pitch = complete
+                ? completedPitch
+                : normalPitch;
+        }
+
+        SetVerticesDirty();
+    }
+
+    private void AddVertex(
+        VertexHelper vh,
+        Vector2 position,
+        Color color)
+    {
+        UIVertex vertex = UIVertex.simpleVert;
+        vertex.position = position;
+        vertex.color = color;
+        vh.AddVert(vertex);
+    }
+
+    private void StartBeamHum()
+    {
+        if (beamAudio == null ||
+            beamAudio.clip == null ||
+            !isActiveAndEnabled)
+            return;
+
+        // Only start playing if the hum isn't already playing.
+        if (!beamAudio.isPlaying)
+            beamAudio.Play();
+    }
+
+    private void StopBeamHum()
+    {
+        if (beamAudio != null && beamAudio.isPlaying)
+            beamAudio.Stop();
+    }
+
+    public void StopHum()
+    {
+        StopBeamHum();
+    }
+
+    public void ResumeHum()
+    {
+        if (path.Count >= 2)
+            StartBeamHum();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        if (path.Count >= 2)
+            StartBeamHum();
+    }
+
+    protected override void OnDisable()
+    {
+        StopBeamHum();
+
+        base.OnDisable();
+    }
+
+    [ContextMenu("Test Beam")]
+    public void TestBeam()
+    {
+        RectTransform rect = (RectTransform)transform;
+
+        List<Vector2> testPath = new List<Vector2>
+    {
+        new Vector2(-rect.rect.width * 0.4f, 0f),
+        Vector2.zero,
+        new Vector2(0f, rect.rect.height * 0.3f),
+        new Vector2(rect.rect.width * 0.3f,
+                    rect.rect.height * 0.3f)
+    };
+
+        Debug.Log("Test beam started!", this);
+
+        PlayBeam(testPath);
+    }
+}

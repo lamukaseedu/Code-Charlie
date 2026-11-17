@@ -47,7 +47,8 @@ public class DialogueSystem : MonoBehaviour
         if (isPlayingDialogue)
         {
             isPlayingDialogue = false;
-            textBox.text = "";
+            if (textBox != null)
+                textBox.text = "";
             SetPlayerMovement(true);
         }
 
@@ -209,6 +210,7 @@ public class DialogueSystem : MonoBehaviour
     }
     public void SetPlayerMovement(bool state)
     {
-        player.GetComponent<PlayerMovement>().SetMovementEnabled(state);
+        if (player != null && player.TryGetComponent(out PlayerMovement movement))
+            movement.SetMovementEnabled(state);
     }
 }

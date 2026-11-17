@@ -48,6 +48,13 @@ public class Keycard : MonoBehaviour, IUsable, IInventoryItem
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         if (Physics.Raycast(ray, out RaycastHit hit, useDistance, useLayers, QueryTriggerInteraction.Collide))
         {
+            SlidingDoor slidingDoor = hit.collider.GetComponentInParent<SlidingDoor>();
+            if (slidingDoor != null)
+            {
+                slidingDoor.TryUnlock(this);
+                return;
+            }
+
             DoorLock doorLock = hit.collider.GetComponentInParent<DoorLock>();
             if (doorLock != null)
                 doorLock.TryUnlock(this);
