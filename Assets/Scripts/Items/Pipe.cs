@@ -30,6 +30,10 @@ public class Pipe : MonoBehaviour, IUsable
 
     [SerializeField] private GameObject effectEmitter;
 
+    [Header("Stamina")]
+    [SerializeField] private float meleeStaminaCost = 0.2f;
+
+    private PlayerStamina playerStamina;
     private PlayerWeaponUpgrades upgrades;
     private AudioSource audioSource;
 
@@ -42,6 +46,7 @@ public class Pipe : MonoBehaviour, IUsable
     private void Awake()
     {
         playerCamera = Camera.main;
+        playerStamina = transform.root.gameObject.GetComponent<PlayerStamina>();
         FindDamageCollider();
         audioSource = GetComponent<AudioSource>();
         if (audioSource != null)
@@ -60,25 +65,26 @@ public class Pipe : MonoBehaviour, IUsable
     public void Use()
     {
         if (!isActiveAndEnabled) return;
-        FindDamageCollider();
-        if (damageCollider == null || !SupportsDamageVolume(damageCollider) ||
-            !damageCollider.transform.IsChildOf(transform) || damageCollider.transform == transform)
-        {
-            Debug.LogWarning("Pipe needs a child Box, Sphere, Capsule, or convex MeshCollider assigned as its damage collider.", this);
-            return;
-        }
-        if (Time.time > nextAttackTime)
-        {
-            if (swingAnimator != null)
+            FindDamageCollider();
+            if (damageCollider == null || !SupportsDamageVolume(damageCollider) ||
+                !damageCollider.transform.IsChildOf(transform) || damageCollider.transform == transform)
             {
-                swingAnimator.SetBool("swingAlternator", swingType);
-                swingAnimator.SetTrigger("swingTrigger");
-                swingType = !swingType;
+                Debug.LogWarning("Pipe needs a child Box, Sphere, Capsule, or convex MeshCollider assigned as its damage collider.", this);
+                return;
             }
-            GameAudio.PlayOneShot(audioSource, swingClip);
-            StartCoroutine(Startup());
-            nextAttackTime = Time.time + attackCooldown;
-        }
+            if (Time.time > nextAttackTime && playerStamina.HasEnoughStamina(meleeStaminaCost))
+            {
+                playerStamina.UseStamina(meleeStaminaCost);
+                if (swingAnimator != null)
+                {
+                    swingAnimator.SetBool("swingAlternator", swingType);
+                    swingAnimator.SetTrigger("swingTrigger");
+                    swingType = !swingType;
+                }
+                GameAudio.PlayOneShot(audioSource, swingClip);
+                StartCoroutine(Startup());
+                nextAttackTime = Time.time + attackCooldown;
+            }
     }
 
     IEnumerator Startup()
