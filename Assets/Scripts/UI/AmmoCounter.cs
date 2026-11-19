@@ -54,7 +54,7 @@ public class AmmoCounter : MonoBehaviour
         if (magazine == lastMagazine && capacity == lastCapacity && reserve == lastReserve)
             return;
 
-        ammoText.text = $"    {magazine}/{capacity} ({reserve})";
+        ammoText.text = $"      {magazine}/{capacity} ({reserve})";
         lastMagazine = magazine;
         lastCapacity = capacity;
         lastReserve = reserve;

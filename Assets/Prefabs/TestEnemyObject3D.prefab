@@ -135,8 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 848557671876af84f93c077359aa373f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  investigateSpeed: 6
-  chaseSpeed: 9
+  investigateSpeed: 5
+  chaseSpeed: 8
   stopDistance: 0.2
   acceleration: 12
   turnSpeed: 540
@@ -152,6 +152,9 @@ MonoBehaviour:
   sampleDistance: 3
   destinationProjectionLimit: 1
   cornerTolerance: 0.3
+  recoverySpeed: 1.5
+  recoveryTeleportDelay: 5
+  recoverySearchDistance: 100
   enableAvoidance: 1
   separationDistance: 0.2
   avoidanceLookAhead: 0.8
@@ -473,7 +476,7 @@ MonoBehaviour:
   attackAutomatically: 1
   attackRange: 2.5
   attackAngle: 120
-  attackCooldown: 0.5
+  attackCooldown: 0.75
   attackAudioSource: {fileID: 6537765158779672507}
   attackSounds:
   - {fileID: 8300000, guid: 36005d064d454c04fba1e3a8f28c5da9, type: 3}
@@ -531,8 +534,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 1.6}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.9, y: 2, z: 1.6}
+  m_Center: {x: -0, y: 0, z: -0.05}
 --- !u!114 &7079959751877191416
 MonoBehaviour:
   m_ObjectHideFlags: 0
