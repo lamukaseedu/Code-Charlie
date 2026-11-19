@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 1
+    m_Value: 0
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -123,6 +123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   dampingTime: 0.2
+  shakeDuration: 0.3
+  shakeAmplitude: 1
+  shakeFrequency: 12
 --- !u!1 &580710044983392316
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +263,68 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &853025342076014883
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5785759182155649770}
+  m_Layer: 0
+  m_Name: PlayerItemDropLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5785759182155649770
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853025342076014883}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.45, y: -0.45, z: 1.166}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6768979416999183104}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1358351173029874493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1214946677415306251}
+  m_Layer: 0
+  m_Name: PlayerItemDropLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1214946677415306251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1358351173029874493}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.45, y: -0.45, z: 1.166}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6768979416999183104}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1396326242558876015
 GameObject:
   m_ObjectHideFlags: 0
@@ -1397,6 +1462,7 @@ MonoBehaviour:
   minDistance: 1
   maxDistance: 12
   volume: 0.7
+  isMusic: 1
 --- !u!1 &3284297045408617971
 GameObject:
   m_ObjectHideFlags: 0
@@ -2103,8 +2169,8 @@ Light:
   m_Enabled: 0
   serializedVersion: 12
   m_Type: 0
-  m_Color: {r: 0.9607844, g: 0.8705883, b: 0.7019608, a: 1}
-  m_Intensity: 2
+  m_Color: {r: 0.9333334, g: 0.909804, b: 0.6666667, a: 1}
+  m_Intensity: 1
   m_Range: 100
   m_SpotAngle: 80
   m_InnerSpotAngle: 0
@@ -2208,6 +2274,10 @@ GameObject:
   - component: {fileID: 5046642806766613564}
   - component: {fileID: 6948410032190588168}
   - component: {fileID: 1206356388441947793}
+  - component: {fileID: 7373337877637413112}
+  - component: {fileID: 795099615577554345}
+  - component: {fileID: 4214510847209800167}
+  - component: {fileID: 8118375363638057256}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2278,10 +2348,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   walkSpeed: 5
-  sprintSpeed: 8
-  crouchSpeed: 0.75
+  sprintSpeed: 7.5
+  crouchSpeed: 2.5
   walkHeight: 2
   crouchHeight: 1.2
+  sidewaysSpeedMultiplier: 0.85
+  backwardSpeedMultiplier: 0.7
 --- !u!143 &3077178942325623481
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2304,7 +2376,7 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.005
+  m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2326529068542717487
@@ -2320,10 +2392,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   slots:
-  - {fileID: 11400000, guid: 823f49bf638ffcc4c928db9422d0eebe, type: 2}
-  - {fileID: 11400000, guid: 722346347b5731f4393df24a8599a00f, type: 2}
   - {fileID: 0}
-  - {fileID: 11400000, guid: f49b2e5a071d6514cb5b65296730fbf0, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -2331,11 +2403,12 @@ MonoBehaviour:
   quantities: 0100000001000000000000000000000000000000000000000000000000000000
   equipmentHolder: {fileID: 8242157089031747343}
   inventoryUI: {fileID: 3107513707820941102}
-  dropSpawnPoint: {fileID: 7250056430915509149}
+  dropSpawnPoint: {fileID: 5785759182155649770}
   throwSpawnPoint: {fileID: 8620161551219721422}
-  playerInteraction: {fileID: 6948410032190588168}
+  playerInteraction: {fileID: 0}
   dropAction: {fileID: 9086466234451035067, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
   throwAction: {fileID: -6993314157913498196, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+  equipCooldown: 0.25
 --- !u!114 &308127766873646117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2364,10 +2437,34 @@ MonoBehaviour:
   destroyOnDeath: 0
   onDamaged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7508158847261980418}
+        m_TargetAssemblyTypeName: PlayerViewBobbing, Assembly-CSharp
+        m_MethodName: ShakeScreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onDeath:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: SceneManager, Assembly-CSharp
+        m_MethodName: ResetScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onHealthChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2383,7 +2480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8720b2e158e418892ae7e9f00e3c5e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoiseEmitter
-  logEmissions: 0
+  logEmissions: 1
 --- !u!114 &8100000000000000102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2513,6 +2610,7 @@ MonoBehaviour:
   damageClip: {fileID: 8300000, guid: f4869b2ac9355a64187e789815f06cc0, type: 3}
   walkPitch: 1
   sprintPitch: 1.2
+  crouchVolumeMultiplier: 0.3
 --- !u!114 &6948410032190588168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2554,9 +2652,91 @@ MonoBehaviour:
   exitInteractableAction: {fileID: 3096587151458098151, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
   defaultActionMap: Player
   interactableActionMap: Minigame
+  exitText: {fileID: 0}
+  reticle: {fileID: 0}
   playerItemHolder: {fileID: 1845692414772917617}
   playerRenderers:
   - {fileID: 812677828713384181}
+--- !u!114 &7373337877637413112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &795099615577554345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d910391ac8fe7145abab93e0c664c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+  interactionDistance: 3
+  interactionLayer:
+    serializedVersion: 2
+    m_Bits: 1280
+  blockRaycastLayers:
+    serializedVersion: 2
+    m_Bits: 65
+  interactActions:
+  - {fileID: 5680287017942265168, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+  - {fileID: 7071939386602526578, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
+--- !u!114 &4214510847209800167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &8118375363638057256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543756621194945030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80f75a9cfb814b643bbd8229015788e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStamina
+  maxStamina: 1
+  drainRate: 0.25
+  regenRate: 0.6
+  regenDelay: 2
+  playerMovement: {fileID: 7143390117399302350}
+  stamina: {fileID: 0}
 --- !u!1 &4831883408657452011
 GameObject:
   m_ObjectHideFlags: 0
@@ -3657,37 +3837,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &7550981213266866748
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7250056430915509149}
-  m_Layer: 0
-  m_Name: PlayerItemDropLocation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7250056430915509149
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7550981213266866748}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.45, y: -0.45, z: 1.166}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6768979416999183104}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7722468963279191738
 GameObject:
   m_ObjectHideFlags: 0
@@ -3830,7 +3979,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7250056430915509149}
+  - {fileID: 5785759182155649770}
+  - {fileID: 1214946677415306251}
   - {fileID: 8242157089031747343}
   - {fileID: 6442451249280288139}
   - {fileID: 3932829504259715838}

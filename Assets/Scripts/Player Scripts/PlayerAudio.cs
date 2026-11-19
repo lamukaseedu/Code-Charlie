@@ -17,6 +17,8 @@ public class PlayerAudio : MonoBehaviour
     [Header("Footsteps")]
     [SerializeField] private float walkPitch = 1f;
     [SerializeField] private float sprintPitch = 1.2f;
+    [Tooltip("Crouching footstep volume relative to walking. 0.5 means 50%.")]
+    [SerializeField, Range(0f, 1f)] private float crouchVolumeMultiplier = 0.5f;
 
     private AudioSource oneShotSource;
     private AudioSource footstepSource;
@@ -65,6 +67,7 @@ public class PlayerAudio : MonoBehaviour
 
     private void Update()
     {
+        ApplyFootstepVolume();
         bool shouldPlay =
             Time.timeScale > 0f &&
             footstepLoop != null &&
@@ -93,9 +96,16 @@ public class PlayerAudio : MonoBehaviour
     private void ApplySoundVolume()
     {
         float soundVolume = GameSettings.GetSoundVolume();
-        if (footstepSource != null)
-            footstepSource.volume = soundVolume;
+        ApplyFootstepVolume();
         if (oneShotSource != null)
             oneShotSource.volume = soundVolume;
+    }
+
+    private void ApplyFootstepVolume()
+    {
+        if (footstepSource == null) return;
+        float multiplier = movement != null && movement.IsCrouching
+            ? Mathf.Clamp01(crouchVolumeMultiplier) : 1f;
+        footstepSource.volume = GameSettings.GetSoundVolume() * multiplier;
     }
 }

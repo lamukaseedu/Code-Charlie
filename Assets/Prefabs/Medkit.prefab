@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 1419743504956986304}
   - component: {fileID: 8954903500531100324}
   - component: {fileID: 8014346400732683426}
-  - component: {fileID: 4556397923070645580}
-  - component: {fileID: 110999792529123878}
+  - component: {fileID: 4696722453826193952}
   m_Layer: 0
   m_Name: Medkit
   m_TagString: Untagged
@@ -29,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1845932722827827042}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.346, y: 2.234, z: 7.254}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 48.15796, y: 26.920162, z: 71.12698}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -92,29 +91,7 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4556397923070645580
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1845932722827827042}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5302568919011541938, guid: 813ebffbaf175f545bc4f82b0dc8a25b, type: 3}
---- !u!114 &110999792529123878
+--- !u!114 &4696722453826193952
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,20 +100,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1845932722827827042}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbaba387f2f242d4098502fd7168721a, type: 3}
+  m_Script: {fileID: 11500000, guid: 97d645de26324de9adba963ee7b60cad, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemHover
-  item: {fileID: 0}
-  quantity: 1
-  highlightRenderers: []
-  highlightColor: {r: 0.15, g: 0.8, b: 1, a: 1}
-  interactionPrompt: 
-  onHover:
-    m_PersistentCalls:
-      m_Calls: []
-  onUnhover:
-    m_PersistentCalls:
-      m_Calls: []
-  onItemPickedUp:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: Assembly-CSharp::Medkit
+  healAmount: 100
