@@ -1533,6 +1533,7 @@ MonoBehaviour:
   sparkEffectPrefab: {fileID: 9143030449425629203, guid: 447c73bbb27eb83469a105a8c18702b6, type: 3}
   bloodEffectPrefab: {fileID: 5133453454851848158, guid: eb576617aaf96b04bbfb21520f33acfe, type: 3}
   effectEmitter: {fileID: 6292674128816765485}
+  meleeStaminaCost: 0.15
 --- !u!95 &9006693538659654936
 Animator:
   serializedVersion: 7
@@ -1571,6 +1572,8 @@ MonoBehaviour:
   quantity: 1
   highlightRenderers: []
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  useHoverMaterial: 0
+  hoverMaterial: {fileID: 0}
   interactionPrompt: PRESS E TO PICK UP PIPE
   onHover:
     m_PersistentCalls:

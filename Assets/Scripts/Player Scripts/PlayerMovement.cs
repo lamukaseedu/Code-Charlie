@@ -63,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
         // If sprint button is pressed, increase speed
         float speed;
         float height;
-        if (sprintAction.IsPressed())
+        if (sprintAction.IsPressed() && PlayerStamina.HasStamina)
         {
             speed = sprintSpeed;
             height = walkHeight;
