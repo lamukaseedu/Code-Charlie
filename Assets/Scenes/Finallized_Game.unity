@@ -5460,6 +5460,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2869325424360072342, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2869325424360072342, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8de79cfb0a60d4341b33ab0804962b86, type: 2}
+    - target: {fileID: 3726789199572323170, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
+      propertyPath: m_Name
+      value: Room_101
+      objectReference: {fileID: 0}
     - target: {fileID: 4574863292592250272, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
       propertyPath: m_LocalPosition.x
       value: 44.1445
@@ -5535,6 +5547,18 @@ PrefabInstance:
     - target: {fileID: 7046595555225427902, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8782882936195726081, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8782882936195726081, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8782882936195726081, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0095
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3998207848002900271, guid: e02d3c96ea5478a409d798f9abe0e285, type: 3}
