@@ -45,6 +45,21 @@ public class OpeningCutscene : MonoBehaviour
 
         playerBody.enabled = false;
 
+        float startVignetteIntensity = 0f;
+        float startDOFIntensity = 0f;
+
+        if (volume.profile.TryGet<Vignette>(out vignette))
+        {
+            vignette.intensity.value = 0.5f;
+            startVignetteIntensity = vignette.intensity.value;
+        }
+
+        if (volume.profile.TryGet<DepthOfField>(out DOF))
+        {
+            DOF.focalLength.value = 240;
+            startDOFIntensity = DOF.focalLength.value;
+        }
+
         // Set initial camera priorities
         wakeUpCamera.Priority = 20;
         gameplayCamera.Priority = 10;
@@ -62,17 +77,6 @@ public class OpeningCutscene : MonoBehaviour
         wakeUpCamera.Priority = 10;
 
         float elapsedTime = 0f;
-        float startVignetteIntensity = 0f;
-        float startDOFIntensity = 0f;
-
-        if (volume.profile.TryGet<Vignette>(out vignette)) {
-            startVignetteIntensity = vignette.intensity.value;
-        }
-
-        if (volume.profile.TryGet<DepthOfField>(out DOF))
-        {
-            startDOFIntensity = DOF.focalLength.value;
-        }
 
         while (elapsedTime < blendDuration)
         {

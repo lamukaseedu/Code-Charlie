@@ -5,12 +5,14 @@
 
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(TMP_Text))]
 public class AmmoCounter : MonoBehaviour
 {
     [SerializeField] private PlayerInventory inventory;
     [SerializeField] private TMP_Text ammoText;
+    [SerializeField] private Image nailIcon;
 
     private int lastMagazine = -1;
     private int lastCapacity = -1;
@@ -21,7 +23,11 @@ public class AmmoCounter : MonoBehaviour
         if (ammoText == null)
             ammoText = GetComponent<TMP_Text>();
 
+        if (nailIcon == null)
+            nailIcon = GetComponentInChildren<Image>();
+
         ammoText.enabled = false;
+        nailIcon.enabled = false;
     }
 
     private void LateUpdate()
@@ -38,6 +44,7 @@ public class AmmoCounter : MonoBehaviour
 
         bool holdingNailgun = nailgun != null && nailgun.isActiveAndEnabled;
         ammoText.enabled = holdingNailgun;
+        nailIcon.enabled = holdingNailgun;
         if (!holdingNailgun)
             return;
 
@@ -47,7 +54,7 @@ public class AmmoCounter : MonoBehaviour
         if (magazine == lastMagazine && capacity == lastCapacity && reserve == lastReserve)
             return;
 
-        ammoText.text = $"Nails: {magazine}/{capacity} ({reserve})";
+        ammoText.text = $"    {magazine}/{capacity} ({reserve})";
         lastMagazine = magazine;
         lastCapacity = capacity;
         lastReserve = reserve;
@@ -57,5 +64,7 @@ public class AmmoCounter : MonoBehaviour
     {
         if (ammoText != null)
             ammoText.enabled = false;
+        if (nailIcon != null)
+            nailIcon.enabled = false;
     }
 }
