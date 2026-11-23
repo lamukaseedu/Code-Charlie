@@ -461,7 +461,7 @@ PrefabInstance:
     - target: {fileID: 2326529068542717487, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: playerInteraction
       value: 
-      objectReference: {fileID: 25235936468653763}
+      objectReference: {fileID: 0}
     - target: {fileID: 2326529068542717487, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: 'slots.Array.data[0]'
       value: 
@@ -610,6 +610,10 @@ PrefabInstance:
       propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6948410032190588168, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
+      propertyPath: interactionDistance
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7032144274194714636, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       propertyPath: m_Range
       value: 100
@@ -731,9 +735,6 @@ PrefabInstance:
       insertIndex: 0
       addedObject: {fileID: 999208180}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4543756621194945030, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 25235936468653763}
     - targetCorrespondingSourceObject: {fileID: 4543756621194945030, guid: e1900e8c6ddb93d46b4383d7c83b3f60, type: 3}
       insertIndex: -1
       addedObject: {fileID: 25235936468653766}
@@ -6764,7 +6765,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73f69670e88d68a4086d47d27120da27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSystem
-  playerName: Charli
+  playerName: Charlie
   textBox: {fileID: 1083705765}
   player: {fileID: 422424749}
 --- !u!4 &622350862
@@ -10582,6 +10583,10 @@ PrefabInstance:
     - target: {fileID: 647331309260659324, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 647331309260659324, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.0014801025
       objectReference: {fileID: 0}
     - target: {fileID: 647728046246549341, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
       propertyPath: m_Layer
@@ -20346,7 +20351,7 @@ PrefabInstance:
     - target: {fileID: 6136370452395333678, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
       propertyPath: playerInteraction
       value: 
-      objectReference: {fileID: 25235936468653763}
+      objectReference: {fileID: 0}
     - target: {fileID: 6136370452395333678, guid: 9be41b14d0716e44b81b9d0f12e1dd17, type: 3}
       propertyPath: playerCameraController
       value: 
@@ -34957,7 +34962,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueEvent
   triggerMode: 1
-  speakerNames: []
+  speakerNames:
+  - P.A
   dialogueFile: {fileID: 4900000, guid: 805de86d193fb074ea592268ad78838d, type: 3}
   dialogueSystem: {fileID: 622350861}
   triggerTag: Player
@@ -41795,28 +41801,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffe4a65939b4f25458571b2d2885e52d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
---- !u!114 &25235936468653763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 422424749}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d910391ac8fe7145abab93e0c664c30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  interactionDistance: 5
-  interactionLayer:
-    serializedVersion: 2
-    m_Bits: 1280
-  blockRaycastLayers:
-    serializedVersion: 2
-    m_Bits: 65
-  interactActions:
-  - {fileID: 5680287017942265168, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
-  - {fileID: 7071939386602526578, guid: 8b20e7822541ae7429332ad69c5b4535, type: 3}
 --- !u!114 &25235936468653766
 MonoBehaviour:
   m_ObjectHideFlags: 0
