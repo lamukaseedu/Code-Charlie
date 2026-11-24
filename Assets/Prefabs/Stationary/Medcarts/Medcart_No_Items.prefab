@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7318495737259507725}
   - component: {fileID: 4495491707702674696}
   - component: {fileID: 4110919317402113106}
-  - component: {fileID: 666678264672927036}
+  - component: {fileID: 1021651153643000192}
   m_Layer: 0
   m_Name: medcart1_tabletop
   m_TagString: Untagged
@@ -91,8 +91,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &666678264672927036
-MeshCollider:
+--- !u!65 &1021651153643000192
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,10 +109,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6027470557204676032, guid: 587da9cb1c4cf144687537a4c0fe676b, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.084416136, y: 0.097800605, z: 0.060420733}
+  m_Center: {x: 0, y: 0.00000011920929, z: 0.000000014901161}
 --- !u!1 &7002132452836556803
 GameObject:
   m_ObjectHideFlags: 0
