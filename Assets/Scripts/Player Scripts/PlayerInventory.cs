@@ -24,8 +24,13 @@ public class PlayerInventory : MonoBehaviour
 
     [SerializeField] private InputActionReference throwAction;
 
+    [Tooltip("Seconds after equipping an item before it can be used, thrown, or dropped. Set to 0 to disable.")]
+    [Min(0f)]
+    [SerializeField] private float equipCooldown = 0.25f;
+
     private readonly GameObject[] instances = new GameObject[SlotCount];
     private IUsable equippedUse;
+    private float equipCooldownEndTime;
 
     private InputAction useAction;
     private InputAction equipAction;
@@ -37,6 +42,7 @@ public class PlayerInventory : MonoBehaviour
     public int SelectedSlot { get; private set; }
     public bool IsOpen { get; private set; }
     public GameObject EquippedObject => instances[SelectedSlot];
+    public bool IsEquipCooldownActive => Time.time < equipCooldownEndTime;
 
     private void OnValidate()
     {
@@ -219,6 +225,21 @@ public class PlayerInventory : MonoBehaviour
         return false;
     }
 
+    public bool HasKeycard(int requiredId)
+    {
+        for (int i = 0; i < SlotCount; i++)
+        {
+            Item item = slots[i];
+            if (item == null || quantities[i] <= 0 || item.Prefab == null)
+                continue;
+
+            Keycard keycard = item.Prefab.GetComponentInChildren<Keycard>(true);
+            if (keycard != null && keycard.Id >= requiredId)
+                return true;
+        }
+        return false;
+    }
+
     public bool TryRemoveItem(Item item)
     {
         if (item == null)
@@ -279,6 +300,9 @@ public class PlayerInventory : MonoBehaviour
         if (!isActiveAndEnabled || Time.timeScale == 0f || !IsValidSlot(index))
             return false;
 
+        if (index == SelectedSlot && IsEquipCooldownActive)
+            return false;
+
         Item item = slots[index];
         int amount = quantities[index];
         if (item == null || amount <= 0 || item.WorldPickupPrefab == null || dropSpawnPoint == null)
@@ -314,6 +338,19 @@ public class PlayerInventory : MonoBehaviour
         return true;
     }
 
+
+    public bool TryConsumeEquippedItem()
+    {
+        if (slots[SelectedSlot] == null || quantities[SelectedSlot] <= 0)
+            return false;
+
+        if (quantities[SelectedSlot] == 1)
+            return RemoveItem(SelectedSlot) != null;
+
+        quantities[SelectedSlot]--;
+        Changed?.Invoke();
+        return true;
+    }
 
     public bool TryConsumeItem(Item item, int amount = 1)
     {
@@ -385,9 +422,15 @@ public class PlayerInventory : MonoBehaviour
 
     public void UseEquippedItem()
     {
-        if (!isActiveAndEnabled || IsOpen || Time.timeScale == 0f || Cursor.lockState != CursorLockMode.Locked || EquippedObject == null)
+        if (!isActiveAndEnabled || IsOpen || Time.timeScale == 0f || Cursor.lockState != CursorLockMode.Locked)
             return;
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+        if (playerInteraction == null)
+            playerInteraction = GetComponent<PlayerInteraction>();
+        if (playerInteraction != null && playerInteraction.TryInteractWithKeycardLock())
+            return;
+        if (EquippedObject == null || IsEquipCooldownActive)
             return;
         if (equippedUse is Behaviour behaviour && behaviour != null && behaviour.isActiveAndEnabled)
             equippedUse.Use();
@@ -408,6 +451,8 @@ public class PlayerInventory : MonoBehaviour
         Item item = slots[SelectedSlot];
         if (item == null || item.Prefab == null || equipmentHolder == null)
             return;
+
+        equipCooldownEndTime = Time.time + Mathf.Max(0f, equipCooldown);
 
         if (instances[SelectedSlot] == null)
         {

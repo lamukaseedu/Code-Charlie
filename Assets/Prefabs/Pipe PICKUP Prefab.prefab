@@ -750,9 +750,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!82 &2790915620812972429
 AudioSource:
   m_ObjectHideFlags: 0
@@ -865,6 +865,8 @@ MonoBehaviour:
   impactClips:
   - {fileID: 8300000, guid: e4b34f2b46dbf5745bb32f18d0ec810c, type: 3}
   - {fileID: 8300000, guid: ef4d16366d68c2248867c2a3be772091, type: 3}
+  minimumImpactSpeed: 3
+  impactCooldown: 1
   spatialBlend: 1
   minDistance: 1
   maxDistance: 20
