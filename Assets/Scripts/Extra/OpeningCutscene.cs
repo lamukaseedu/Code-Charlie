@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -25,6 +26,10 @@ public class OpeningCutscene : MonoBehaviour
     [SerializeField] private Volume volume;
 
     [SerializeField] private Animator healthBarAnimator;
+
+    [Header("Events")]
+    [Tooltip("Invoked when the cutscene finishes and gameplay has been re-enabled.")]
+    [SerializeField] private UnityEvent onCutsceneEnded = new UnityEvent();
 
     private PlayerMinigameContext player;
 
@@ -86,6 +91,7 @@ public class OpeningCutscene : MonoBehaviour
 
         // Enable gameplay
         SetGameplayEnabled(true);
+        onCutsceneEnded?.Invoke();
     }
 
     private void SetGameplayEnabled(bool enabled)

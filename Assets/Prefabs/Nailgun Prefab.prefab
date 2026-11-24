@@ -1669,11 +1669,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965d8bcfc020751488afe78137b82d5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGun
-  damage: 8
+  damage: 10
   range: 100
   layersToIgnore:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 1280
   fireRate: 0.5
   nailAmmo: {fileID: 11400000, guid: 8956422968aaa0d4ca969c40c0e32a81, type: 2}
   magSize: 10
@@ -1724,6 +1724,8 @@ MonoBehaviour:
   quantity: 1
   highlightRenderers: []
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  useHoverMaterial: 0
+  hoverMaterial: {fileID: 0}
   interactionPrompt: PRESS E TO PICK UP NAILGUN
   onHover:
     m_PersistentCalls:

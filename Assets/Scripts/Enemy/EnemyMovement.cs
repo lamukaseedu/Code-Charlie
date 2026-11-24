@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,6 +27,8 @@ public class EnemyMovement : MonoBehaviour
     [Min(0.1f)] public float maxPatrolDistance = 25f;
     [Tooltip("Horizontal distance in metres that counts as reaching a patrol destination. A new destination is chosen without waiting to stop.")]
     [Min(0.02f)] public float patrolArrivalDistance = 1f;
+    [Tooltip("Seconds without progress near another enemy before choosing a different patrol destination. Also applies to alert searches.")]
+    [Min(0.5f)] public float patrolBlockedTimeout = 3f;
     [Header("Alert Search")]
     [Tooltip("Radius in metres of the local NavMesh search around a reached investigation or last seen position while Alert. Keep larger than Patrol Arrival Distance. Uses Investigate Speed until awareness changes or a new destination is remembered.")]
     [Min(0.1f)] public float alertSearchRadius = 4f;
@@ -42,6 +45,27 @@ public class EnemyMovement : MonoBehaviour
     [Min(0.01f)] public float destinationProjectionLimit = 1f;
     [Tooltip("Minimum turning distance in metres used to control speed near intermediate path corners. Larger values carry more speed through turns.")]
     [Min(0.01f)] public float cornerTolerance = 0.1f;
+    [Header("NavMesh Recovery")]
+    [Tooltip("Walking speed toward the nearest NavMesh point when outside the walkable area.")]
+    [Min(0f)] public float recoverySpeed = 1.5f;
+    [Tooltip("Seconds continuously outside the NavMesh before teleporting to a clear NavMesh position.")]
+    [Min(0f)] public float recoveryTeleportDelay = 5f;
+    [Tooltip("Maximum search distance for recovery. Searches expand from nearby points and retry periodically if no mesh is found.")]
+    [Min(1f)] public float recoverySearchDistance = 100f;
+    [Header("Enemy Avoidance")]
+    public bool enableAvoidance = true;
+    [Tooltip("Extra space between enemy body colliders, in metres.")]
+    [Min(0f)] public float separationDistance = 0.2f;
+    [Tooltip("How far ahead, in seconds, to predict contact with another enemy.")]
+    [Min(0.1f)] public float avoidanceLookAhead = 0.8f;
+    [Tooltip("Minimum distance at which to consider neighbouring enemies. Faster movement also extends this distance.")]
+    [Min(0.5f)] public float neighbourDistance = 3f;
+    [Tooltip("Weight of keeping space between enemies when choosing a direction.")]
+    [Min(0f)] public float separationStrength = 2f;
+    [Tooltip("Lower numbers have right of way. Equal priorities use a stable instance order. Enemies still brake to avoid contact.")]
+    public int avoidancePriority = 50;
+    [Tooltip("Spread enemies pursuing the visible player around a circle of this radius. Set to 0 to disable. Keep below EnemyAttack's Attack Range.")]
+    [Min(0f)] public float chaseSpacingRadius = 1.2f;
     [Header("Waypoint Debug")]
     [Tooltip("Current movement destination, or the suspicion position the enemy is facing.")]
     [SerializeField] private Vector3 debugWaypoint;
@@ -66,6 +90,7 @@ public class EnemyMovement : MonoBehaviour
     public Vector3 PatrolTarget => patrolTarget;
     public bool HasPatrolTarget => hasPatrolTarget;
     public bool IsAlertSearching => alertSearching;
+    public bool IsRecoveringNavMesh => recoveringNavMesh;
     public Vector3[] PathCorners => (Vector3[])corners.Clone();
 
     private Animator enemyAnimation;
@@ -86,9 +111,29 @@ public class EnemyMovement : MonoBehaviour
     private string lastFailure;
     private Vector3 spawnPosition;
     private bool alertSearching;
+    private float patrolProgressDeadline;
+    private float closestPatrolDistance;
+    private static readonly List<EnemyMovement> ActiveEnemies = new List<EnemyMovement>();
+    private readonly List<EnemyMovement> neighbours = new List<EnemyMovement>();
+    private readonly RaycastHit[] avoidanceHits = new RaycastHit[32];
+    private Vector3 preferredVelocity;
+    private bool recoveringNavMesh;
+    private float timeOutsideNavMesh;
+    private float nextRecoverySearch;
+    private bool hasRecoveryTarget;
+    private Vector3 recoveryTarget;
+    private readonly Collider[] recoveryOverlaps = new Collider[32];
     private Vector3 alertSearchCenter;
     private Vector3 PatrolAreaCenter => alertSearching ? alertSearchCenter : spawnPosition;
     private float PatrolAreaRadius => Mathf.Max(0.1f, alertSearching ? alertSearchRadius : maxPatrolDistance);
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetEnemies() => ActiveEnemies.Clear();
+
+    private void OnEnable()
+    {
+        if (!ActiveEnemies.Contains(this)) ActiveEnemies.Add(this);
+    }
 
     private void Awake()
     {
@@ -112,6 +157,12 @@ public class EnemyMovement : MonoBehaviour
 
     private void OnDisable()
     {
+        ActiveEnemies.Remove(this);
+        preferredVelocity = Vector3.zero;
+        recoveringNavMesh = false;
+        timeOutsideNavMesh = 0f;
+        hasRecoveryTarget = false;
+        nextRecoverySearch = 0f;
         hasRequest = false;
         hasPatrolTarget = false;
         alertSearching = false;
@@ -144,10 +195,15 @@ public class EnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        preferredVelocity = Vector3.zero;
         debugHasWaypoint = false;
+        if (rb.isKinematic) return;
+        if (RecoverNavMesh()) return;
         if (attack != null && attack.ShouldPauseMovement)
         {
             navigationStatus = "Attacking";
+            if (awareness != null && awareness.isActiveAndEnabled && awareness.HasWaypoint)
+                TurnTowards(awareness.CurrentWaypoint - rb.position);
             return;
         }
         if (awareness == null || !awareness.isActiveAndEnabled)
@@ -189,11 +245,32 @@ public class EnemyMovement : MonoBehaviour
         {
             if (!awareness.HasWaypoint) { Idle("Waiting for awareness"); return; }
             target = awareness.CurrentWaypoint;
+            if (enableAvoidance && awareness.State == EnemyAwareness.AwarenessState.Active && awareness.HasLineOfSightToPlayer)
+                target = GetSpacedChaseTarget(target);
             speed = awareness.State == EnemyAwareness.AwarenessState.Active ? chaseSpeed : investigateSpeed;
         }
         debugWaypoint = target;
         debugHasWaypoint = true;
         debugDistance = Horizontal(target - rb.position).magnitude;
+        if (patrol && enableAvoidance && debugDistance > Mathf.Max(0.02f, patrolArrivalDistance))
+        {
+            if (debugDistance < closestPatrolDistance - 0.1f)
+            {
+                closestPatrolDistance = debugDistance;
+                patrolProgressDeadline = Time.fixedTime + Mathf.Max(0.5f, patrolBlockedTimeout);
+            }
+            if (Time.fixedTime >= patrolProgressDeadline && HasNearbyEnemy())
+            {
+                // Keep avoidance active on moving patrols, but give up a destination that causes a lasting queue.
+                hasPatrolTarget = false;
+                hasRequest = false;
+                nextPatrolSelection = 0f;
+                corners = new Vector3[0];
+                navigationStatus = "Choosing a less crowded patrol destination";
+                StopAtWaypoint();
+                return;
+            }
+        }
         if (patrol && debugDistance <= Mathf.Max(0.02f, patrolArrivalDistance))
         {
             hasPatrolTarget = false;
@@ -243,10 +320,11 @@ public class EnemyMovement : MonoBehaviour
             }
             // Active retains its destination even after reaching it.
             navigationStatus = alertSearching ? "Choosing next alert search destination" : "At remembered destination";
+            if (awareness.State == EnemyAwareness.AwarenessState.Active)
+                TurnTowards(awareness.CurrentWaypoint - rb.position);
             StopAtWaypoint();
             return;
         }
-        TurnTowards(delta);
         // Slow for tight turns, but retain a nonzero approach speed at intermediate corners.
         // Only the final destination uses a braking distance that falls all the way to zero.
         float brakingAcceleration = Mathf.Max(0f, acceleration);
@@ -255,7 +333,273 @@ public class EnemyMovement : MonoBehaviour
             ? Mathf.Max(0f, distance - radius * 0.5f)
             : Mathf.Max(distance, radius);
         float arrivalSpeed = Mathf.Sqrt(stepVelocity * stepVelocity + 2f * brakingAcceleration * brakingDistance) - stepVelocity;
-        AccelerateTowards(delta.normalized * Mathf.Min(Mathf.Max(0f, speed), arrivalSpeed));
+        preferredVelocity = delta.normalized * Mathf.Min(Mathf.Max(0f, speed), arrivalSpeed);
+        Vector3 velocity = enableAvoidance ? AvoidEnemies(preferredVelocity, Mathf.Max(0f, speed)) : preferredVelocity;
+        bool facePlayer = awareness.State == EnemyAwareness.AwarenessState.Active && awareness.HasLineOfSightToPlayer &&
+            Horizontal(awareness.CurrentWaypoint - rb.position).magnitude <= chaseSpacingRadius + stopDistance + 0.25f;
+        TurnTowards(facePlayer ? awareness.CurrentWaypoint - rb.position : velocity);
+        AccelerateTowards(velocity);
+    }
+
+    private bool RecoverNavMesh()
+    {
+        var filter = new NavMeshQueryFilter { agentTypeID = agentTypeID, areaMask = areaMask };
+        Vector3 feet = FeetPosition;
+        if (NavMesh.SamplePosition(feet, out NavMeshHit nearby, 0.5f, filter) &&
+            Horizontal(nearby.position - feet).sqrMagnitude <= 0.15f * 0.15f &&
+            Mathf.Abs(nearby.position.y - feet.y) <= 0.5f)
+        {
+            recoveringNavMesh = false;
+            timeOutsideNavMesh = 0f;
+            hasRecoveryTarget = false;
+            nextRecoverySearch = 0f;
+            return false;
+        }
+
+        if (!recoveringNavMesh)
+        {
+            recoveringNavMesh = true;
+            timeOutsideNavMesh = 0f;
+            nextRecoverySearch = 0f;
+            hasRequest = hasPatrolTarget = false;
+            corners = new Vector3[0];
+            // Recovery takes over from an attack that carried the enemy off the mesh.
+            if (attack != null && attack.IsAttacking) attack.CancelAttack();
+        }
+        timeOutsideNavMesh += Time.fixedDeltaTime;
+
+        if (Time.fixedTime >= nextRecoverySearch)
+        {
+            nextRecoverySearch = Time.fixedTime + Mathf.Max(0.1f, repathInterval);
+            hasRecoveryTarget = TryFindRecoveryTarget(feet, filter, out recoveryTarget);
+            if (hasRecoveryTarget && timeOutsideNavMesh >= Mathf.Max(0f, recoveryTeleportDelay) &&
+                TryFindClearRecoverySpot(feet, recoveryTarget, filter, out Vector3 landing))
+            {
+                // Keep the collider's feet on the surface even when the Rigidbody pivot is at its center.
+                Vector3 pivotOffset = rb.position - feet;
+                rb.position = landing + pivotOffset + Vector3.up * 0.03f;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                recoveringNavMesh = false;
+                timeOutsideNavMesh = 0f;
+                hasRecoveryTarget = false;
+                hasRequest = hasPatrolTarget = false;
+                nextRepath = nextPatrolSelection = 0f;
+                lastFailure = null;
+                navigationStatus = "Returned to NavMesh";
+                return true;
+            }
+        }
+
+        if (!hasRecoveryTarget)
+        {
+            navigationStatus = "Outside NavMesh: searching for a recovery position";
+            StopAtWaypoint();
+            return true;
+        }
+        navigationStatus = "Returning to nearest NavMesh position";
+        debugWaypoint = recoveryTarget;
+        debugHasWaypoint = true;
+        Vector3 delta = Horizontal(recoveryTarget - feet);
+        debugDistance = delta.magnitude;
+        float speed = Mathf.Min(Mathf.Max(0f, recoverySpeed),
+            Mathf.Sqrt(2f * Mathf.Max(0f, acceleration) * delta.magnitude));
+        preferredVelocity = delta.normalized * speed;
+        TurnTowards(delta);
+        // Normal avoidance needs a valid NavMesh starting point, so use the physics motor directly here.
+        AccelerateTowards(preferredVelocity);
+        return true;
+    }
+
+    private bool TryFindRecoveryTarget(Vector3 feet, NavMeshQueryFilter filter, out Vector3 target)
+    {
+        float maximum = Mathf.Max(1f, recoverySearchDistance);
+        float radius = Mathf.Min(maximum, Mathf.Max(1f, sampleDistance));
+        while (true)
+        {
+            if (NavMesh.SamplePosition(feet, out NavMeshHit hit, radius, filter))
+            {
+                target = hit.position;
+                return true;
+            }
+            if (radius >= maximum) break;
+            radius = Mathf.Min(maximum, radius * 2f);
+        }
+        target = default;
+        return false;
+    }
+
+    private bool TryFindClearRecoverySpot(Vector3 feet, Vector3 nearest, NavMeshQueryFilter filter, out Vector3 landing)
+    {
+        landing = nearest;
+        if (IsRecoverySpotClear(nearest)) return true;
+        bool found = false;
+        float bestDistance = float.PositiveInfinity;
+        float step = Mathf.Max(0.5f, BodyRadius * 2f + separationDistance);
+        // If the closest point is occupied, check nearby points and choose the closest clear candidate.
+        for (int ring = 1; ring <= 4; ring++)
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                float angle = i * Mathf.PI / 6f;
+                Vector3 candidate = nearest + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * (ring * step);
+                if (!NavMesh.SamplePosition(candidate, out NavMeshHit hit, 0.5f, filter)) continue;
+                float distance = (hit.position - feet).sqrMagnitude;
+                if (distance >= bestDistance || !IsRecoverySpotClear(hit.position)) continue;
+                landing = hit.position;
+                bestDistance = distance;
+                found = true;
+            }
+        }
+        return found;
+    }
+
+    private bool IsRecoverySpotClear(Vector3 feet)
+    {
+        float radius = Mathf.Max(0.01f, BodyRadius - 0.02f);
+        float height = bodyCollider != null && bodyCollider.enabled ? bodyCollider.bounds.size.y : 2f;
+        Vector3 bottom = feet + Vector3.up * (radius + 0.03f);
+        Vector3 top = feet + Vector3.up * (Mathf.Max(height, radius * 2f) - radius + 0.01f);
+        int count = Physics.OverlapCapsuleNonAlloc(bottom, top, radius, recoveryOverlaps,
+            Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        if (count == recoveryOverlaps.Length) return false;
+        for (int i = 0; i < count; i++)
+        {
+            Collider other = recoveryOverlaps[i];
+            if (other != null && other.attachedRigidbody != rb && !other.transform.IsChildOf(transform))
+                return false;
+        }
+        return true;
+    }
+
+    private float BodyRadius => bodyCollider != null && bodyCollider.enabled
+        ? Mathf.Max(0.05f, Mathf.Max(bodyCollider.bounds.extents.x, bodyCollider.bounds.extents.z)) : 0.35f;
+
+    private Vector3 FeetPosition => bodyCollider != null && bodyCollider.enabled
+        ? new Vector3(rb.position.x, bodyCollider.bounds.min.y, rb.position.z) : rb.position;
+
+    private bool HasRightOfWay(EnemyMovement other) => avoidancePriority < other.avoidancePriority ||
+        (avoidancePriority == other.avoidancePriority && GetInstanceID() < other.GetInstanceID());
+
+    private Vector3 GetSpacedChaseTarget(Vector3 target)
+    {
+        if (chaseSpacingRadius <= 0f) return target;
+        int count = 0;
+        int rank = 0;
+        foreach (EnemyMovement other in ActiveEnemies)
+        {
+            if (other == null || other.awareness == null || !other.enableAvoidance || other.chaseSpacingRadius <= 0f ||
+                other.awareness.State != EnemyAwareness.AwarenessState.Active || !other.awareness.HasLineOfSightToPlayer ||
+                (other.awareness.CurrentWaypoint - target).sqrMagnitude > 1f) continue;
+            count++;
+            if (other.GetInstanceID() < GetInstanceID()) rank++;
+        }
+        if (count < 2) return target;
+        float angle = rank * (Mathf.PI * 2f / count);
+        Vector3 candidate = target + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * chaseSpacingRadius;
+        var filter = new NavMeshQueryFilter { agentTypeID = agentTypeID, areaMask = areaMask };
+        // Reject positions projected across walls or onto disconnected parts of the mesh.
+        if (NavMesh.SamplePosition(target, out NavMeshHit center, Mathf.Max(0.05f, sampleDistance), filter) &&
+            NavMesh.SamplePosition(candidate, out NavMeshHit end, 0.5f, filter) &&
+            Horizontal(end.position - candidate).sqrMagnitude <= 0.25f &&
+            !NavMesh.Raycast(center.position, end.position, out _, filter))
+            return end.position;
+        return target;
+    }
+
+    private Vector3 AvoidEnemies(Vector3 desired, float speed)
+    {
+        if (desired.sqrMagnitude < 0.000001f || speed <= 0f) return desired;
+        var filter = new NavMeshQueryFilter { agentTypeID = agentTypeID, areaMask = areaMask };
+        if (!NavMesh.SamplePosition(FeetPosition, out NavMeshHit start, 0.3f, filter)) return Vector3.zero;
+        float horizon = Mathf.Max(0.1f, avoidanceLookAhead);
+        float searchDistance = Mathf.Max(neighbourDistance, BodyRadius * 2f + speed * horizon * 2f);
+        neighbours.Clear();
+        Vector3 forward = desired.normalized;
+        bool yielding = false;
+        foreach (EnemyMovement other in ActiveEnemies)
+        {
+            if (other == null || other == this || other.rb == null || !other.isActiveAndEnabled) continue;
+            Vector3 offset = other.rb.position - rb.position;
+            float height = bodyCollider != null ? bodyCollider.bounds.size.y : 2f;
+            if (Mathf.Abs(offset.y) > height || Horizontal(offset).sqrMagnitude > searchDistance * searchDistance) continue;
+            // Enemies on the other side of a NavMesh boundary cannot block this corridor.
+            if (NavMesh.Raycast(start.position, other.FeetPosition, out _, filter)) continue;
+            neighbours.Add(other);
+            float clearance = BodyRadius + other.BodyRadius + Mathf.Max(0f, separationDistance);
+            float ahead = Vector3.Dot(Horizontal(offset), forward);
+            Vector3 otherIntent = other.preferredVelocity;
+            if (otherIntent.sqrMagnitude < 0.001f) otherIntent = Horizontal(other.rb.linearVelocity);
+            if (ahead > 0f && ahead < clearance + speed * horizon &&
+                Vector3.Cross(forward, Horizontal(offset)).magnitude < clearance &&
+                Vector3.Dot(forward, otherIntent) < -0.1f && !HasRightOfWay(other))
+                yielding = true;
+        }
+        if (neighbours.Count == 0) return desired;
+
+        Vector3 right = Vector3.Cross(Vector3.up, forward);
+        Vector3 best = Vector3.zero;
+        float bestScore = float.PositiveInfinity;
+        // Sample a full turn, including reversing, so a yielding enemy can back out of a narrow passage.
+        for (int i = -1; i < 32; i++)
+        {
+            float speedFraction = i < 16 ? 1f : 0.5f;
+            Vector3 candidate = i < 0 ? Vector3.zero :
+                Quaternion.AngleAxis((i % 16) * 22.5f, Vector3.up) * forward * desired.magnitude * speedFraction;
+            if (!IsAvoidanceDirectionClear(candidate, start.position, filter, horizon)) continue;
+            float score = (candidate - desired).sqrMagnitude / Mathf.Max(0.01f, speed * speed);
+            // Waiting is a fallback: prefer a clear side route over queuing forever in open space.
+            if (candidate.sqrMagnitude < 0.000001f) score += 0.75f;
+            // Both approaching enemies prefer their own right, avoiding mirrored side-to-side decisions.
+            score -= Vector3.Dot(candidate, right) / speed * 0.15f;
+            if (yielding)
+                score += Vector3.Dot(candidate, forward) / speed * 3f - Vector3.Dot(candidate, right) / speed;
+            foreach (EnemyMovement other in neighbours)
+            {
+                Vector3 offset = Horizontal(other.rb.position - rb.position);
+                Vector3 relativeVelocity = candidate - Horizontal(other.rb.linearVelocity);
+                float clearance = BodyRadius + other.BodyRadius + Mathf.Max(0f, separationDistance);
+                float collisionTime = relativeVelocity.sqrMagnitude > 0.0001f
+                    ? Mathf.Clamp(Vector3.Dot(offset, relativeVelocity) / relativeVelocity.sqrMagnitude, 0f, horizon) : 0f;
+                float closestDistance = (offset - relativeVelocity * collisionTime).magnitude;
+                float currentDistance = offset.magnitude;
+                if (closestDistance < clearance)
+                {
+                    float penetration = 1f - closestDistance / clearance;
+                    score += 20f * penetration * penetration;
+                }
+                float spacing = clearance + Mathf.Max(0f, separationDistance);
+                float futureDistance = (offset - relativeVelocity * horizon).magnitude;
+                score += Mathf.Max(0f, separationStrength) * Mathf.Clamp01(1f - futureDistance / spacing);
+                // When already touching, prefer separating rather than pressing into the collider.
+                if (currentDistance < clearance && Vector3.Dot(offset, relativeVelocity) > 0f)
+                    score += 20f * Vector3.Dot(offset.normalized, relativeVelocity) / Mathf.Max(0.1f, speed);
+            }
+            if (score < bestScore) { bestScore = score; best = candidate; }
+        }
+        if (yielding) navigationStatus = "Giving way to another enemy";
+        else if ((best - desired).sqrMagnitude > 0.01f) navigationStatus = "Avoiding another enemy";
+        return best;
+    }
+
+    private bool IsAvoidanceDirectionClear(Vector3 velocity, Vector3 start, NavMeshQueryFilter filter, float horizon)
+    {
+        if (velocity.sqrMagnitude < 0.000001f) return true;
+        Vector3 travel = velocity * Mathf.Max(0.25f, horizon);
+        if (NavMesh.Raycast(start, start + travel, out _, filter)) return false;
+        Vector3 center = bodyCollider != null ? bodyCollider.bounds.center : rb.position + Vector3.up;
+        int count = Physics.SphereCastNonAlloc(center, BodyRadius * 0.9f, travel.normalized, avoidanceHits,
+            travel.magnitude, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        if (count == avoidanceHits.Length) return false;
+        for (int i = 0; i < count; i++)
+        {
+            Collider hit = avoidanceHits[i].collider;
+            if (hit == null || hit.attachedRigidbody == rb) continue;
+            EnemyMovement other = hit.GetComponentInParent<EnemyMovement>();
+            if (other != null && other.isActiveAndEnabled) continue;
+            return false;
+        }
+        return true;
     }
 
     private void AdvancePathCorners()
@@ -319,18 +663,52 @@ public class EnemyMovement : MonoBehaviour
             if (distance <= minimumDistance || (!alertSearching && !returningHome && distance > Mathf.Max(1f, patrolRadius))) continue;
             // NavMesh projection can move a candidate beyond the patrol or search boundary.
             if (Horizontal(hit.position - areaCenter).sqrMagnitude > homeRadius * homeRadius) continue;
+            if (enableAvoidance && !IsPatrolDestinationClear(hit.position)) continue;
             if (!NavMesh.CalculatePath(start.position, hit.position, filter, path) ||
                 path.status != NavMeshPathStatus.PathComplete || path.corners.Length == 0) continue;
             if (!IsPatrolPathWithinRange(path.corners)) continue;
 
             patrolTarget = target = hit.position;
             hasPatrolTarget = true;
+            closestPatrolDistance = distance;
+            patrolProgressDeadline = Time.fixedTime + Mathf.Max(0.5f, patrolBlockedTimeout);
             // Keep the chosen destination until arrival; periodic repaths must not reroll it.
             hasRequest = false;
             return true;
         }
         Fail(alertSearching ? "No reachable alert search destination found" : "No reachable random patrol destination found");
         return false;
+    }
+
+    private bool HasNearbyEnemy()
+    {
+        foreach (EnemyMovement other in ActiveEnemies)
+        {
+            if (other == null || other == this || other.rb == null) continue;
+            float range = Mathf.Max(neighbourDistance, BodyRadius + other.BodyRadius + separationDistance);
+            if ((other.rb.position - rb.position).sqrMagnitude < range * range) return true;
+        }
+        return false;
+    }
+
+    private bool IsPatrolDestinationClear(Vector3 destination)
+    {
+        foreach (EnemyMovement other in ActiveEnemies)
+        {
+            if (other == null || other == this || other.rb == null) continue;
+            float clearance = BodyRadius + other.BodyRadius + Mathf.Max(0f, separationDistance);
+            // Different floors may overlap horizontally without sharing space.
+            float height = bodyCollider != null ? bodyCollider.bounds.size.y : 2f;
+            if (Mathf.Abs(destination.y - other.FeetPosition.y) < height &&
+                Horizontal(destination - other.rb.position).sqrMagnitude < clearance * clearance)
+                return false;
+            // Reserve enough room for both enemies to arrive at their independently selected destinations.
+            float reservedDistance = clearance + Mathf.Max(patrolArrivalDistance, other.patrolArrivalDistance);
+            if (other.hasPatrolTarget && Mathf.Abs(destination.y - other.patrolTarget.y) < height &&
+                Horizontal(destination - other.patrolTarget).sqrMagnitude < reservedDistance * reservedDistance)
+                return false;
+        }
+        return true;
     }
 
     private void BuildPath(Vector3 target)
@@ -395,6 +773,8 @@ public class EnemyMovement : MonoBehaviour
 
     private void TurnTowards(Vector3 direction)
     {
+        if (attack != null && attack.ShouldPauseTurning)
+            return;
         direction = Horizontal(direction);
         debugTurnAngle = direction.sqrMagnitude > 0.000001f ? Vector3.SignedAngle(transform.forward, direction, Vector3.up) : 0f;
         if (direction.sqrMagnitude <= 0.000001f) return;

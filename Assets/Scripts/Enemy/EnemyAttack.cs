@@ -34,7 +34,7 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] private float colliderDisableThreshold = 0.8f;
 
     [Header("Movement")]
-    [Tooltip("Stop horizontal motion when the attack starts and pause navigation and turning until it ends. The optional lunge can still move the enemy.")]
+    [Tooltip("Stop horizontal motion when the attack starts and pause navigation until it ends. The enemy can turn during the windup, then stops turning when the hitbox activates or the lunge begins. The optional lunge can still move the enemy.")]
     [SerializeField] private bool stopMovingDuringAttack = true;
     [Tooltip("Apply one forward Rigidbody impulse when the attack collider activates. Navigation pauses for the rest of the attack so it does not cancel the impulse.")]
     [SerializeField] private bool lunge = false;
@@ -64,6 +64,8 @@ public class EnemyAttack : MonoBehaviour
     public bool IsAttacking { get; private set; }
     // Leave the impulse to physics instead of letting the navigation motor brake it away.
     public bool ShouldPauseMovement => IsAttacking && (stopMovingDuringAttack || hasLunged);
+    // Keep facing committed through the hit window and recovery, even after the collider switches off.
+    public bool ShouldPauseTurning => IsAttacking && (hitWindowStarted || hitWindowEnded);
 
     private Rigidbody rb;
     private EnemyMovement movement;
@@ -132,7 +134,7 @@ public class EnemyAttack : MonoBehaviour
     public void Attack()
     {
         if (!isActiveAndEnabled || IsAttacking || Time.timeScale == 0f || Time.time < nextAttackTime ||
-            movement == null || !movement.isActiveAndEnabled || (health != null && health.IsDead) ||
+            movement == null || !movement.isActiveAndEnabled || movement.IsRecoveringNavMesh || (health != null && health.IsDead) ||
             !HasValidCollider() || animator == null || !animator.isActiveAndEnabled ||
             animatorLayer < 0 || animatorLayer >= animator.layerCount)
             return;

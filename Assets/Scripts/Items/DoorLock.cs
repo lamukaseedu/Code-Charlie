@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public class DoorLock : MonoBehaviour, IInteractable
 {
-    [Tooltip("A held keycard must have an ID greater than or equal to this ID.")]
+    [Tooltip("A keycard in the player's inventory must have an ID greater than or equal to this ID.")]
     [Min(0)]
     [SerializeField] private int id = 0;
 
@@ -29,20 +29,14 @@ public class DoorLock : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        // Also support the normal interaction input, but only with a held card.
         PlayerInventory inventory = FindFirstObjectByType<PlayerInventory>();
-        if (inventory == null || inventory.EquippedObject == null)
-            return;
-
-        Keycard keycard = inventory.EquippedObject.GetComponentInChildren<Keycard>();
-        if (keycard != null)
-            keycard.Use();
+        TryUnlock(inventory);
     }
 
-    public bool TryUnlock(Keycard keycard)
+    public bool TryUnlock(PlayerInventory inventory)
     {
-        if (!isActiveAndEnabled || IsUnlocked || keycard == null ||
-            !keycard.IsEquipped || keycard.Id < id)
+        if (!isActiveAndEnabled || IsUnlocked || inventory == null ||
+            !inventory.isActiveAndEnabled || inventory.IsOpen || !inventory.HasKeycard(id))
             return false;
 
         // Guard against reentrant use while the event runs, then require another card use.

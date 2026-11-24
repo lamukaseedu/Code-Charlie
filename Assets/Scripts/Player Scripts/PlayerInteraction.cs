@@ -21,6 +21,37 @@ public class PlayerInteraction : MonoBehaviour
     private IInteractable currentInteractable;
 
     private bool interactionLocked;
+    private int keycardInteractionFrame = -1;
+
+    // Called by both interaction input and item-use input, independent of Update order.
+    public bool TryInteractWithKeycardLock()
+    {
+        if (!isActiveAndEnabled || interactionLocked || Time.timeScale == 0f || WorkbenchUI.AnyOpen)
+            return false;
+        if (keycardInteractionFrame == Time.frameCount)
+            return true;
+
+        PlayerInventory inventory = GetComponent<PlayerInventory>();
+        if (inventory == null || !inventory.isActiveAndEnabled || inventory.IsOpen)
+            return false;
+
+        FindInteractable();
+        if (currentInteractable is SlidingDoor slidingDoor && slidingDoor.isActiveAndEnabled &&
+            !slidingDoor.IsUnlocked && inventory.HasKeycard(slidingDoor.Id))
+        {
+            keycardInteractionFrame = Time.frameCount;
+            slidingDoor.TryUnlock(inventory);
+            return true;
+        }
+        if (currentInteractable is DoorLock doorLock && doorLock.isActiveAndEnabled &&
+            !doorLock.IsUnlocked && inventory.HasKeycard(doorLock.Id))
+        {
+            keycardInteractionFrame = Time.frameCount;
+            doorLock.TryUnlock(inventory);
+            return true;
+        }
+        return false;
+    }
 
     private void Awake()
     {
@@ -162,6 +193,9 @@ public class PlayerInteraction : MonoBehaviour
             WorkbenchUI.AnyOpen)
             return;
 
+        if (TryInteractWithKeycardLock())
+            return;
+        FindInteractable();
         currentInteractable?.Interact();
     }
 

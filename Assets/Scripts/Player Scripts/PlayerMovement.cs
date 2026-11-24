@@ -14,6 +14,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float crouchSpeed = 0.75f;
     [SerializeField] float walkHeight = 2f;
     [SerializeField] float crouchHeight = 1.2f;
+
+    [Header("Directional Speed")]
+    [Tooltip("Sideways speed relative to forward speed. 0.7 means 70%. Applies while walking, sprinting and crouching.")]
+    [SerializeField, Min(0f)] private float sidewaysSpeedMultiplier = 0.7f;
+    [Tooltip("Backward speed relative to forward speed. 0.5 means 50%. Diagonals blend by movement angle.")]
+    [SerializeField, Min(0f)] private float backwardSpeedMultiplier = 0.5f;
     
     private const float gravity = 10f;
     private bool isMoving = false;
@@ -77,7 +83,15 @@ public class PlayerMovement : MonoBehaviour
             height = walkHeight;
         }
 
-        movement *= speed;
+        float directionMultiplier = 1f;
+        if (moveInput.sqrMagnitude > 0f)
+        {
+            // Blend by angle: straight ahead/behind is 0, sideways is 1, and a 45-degree diagonal is 0.5.
+            float sidewaysBlend = Mathf.Atan2(Mathf.Abs(moveInput.x), Mathf.Abs(moveInput.y)) / (Mathf.PI * 0.5f);
+            float longitudinalMultiplier = moveInput.y >= 0f ? 1f : Mathf.Max(0f, backwardSpeedMultiplier);
+            directionMultiplier = Mathf.Lerp(longitudinalMultiplier, Mathf.Max(0f, sidewaysSpeedMultiplier), sidewaysBlend);
+        }
+        movement *= speed * directionMultiplier;
 
         // Move downwards always so player stays on the floor
         movement.y = -gravity;
