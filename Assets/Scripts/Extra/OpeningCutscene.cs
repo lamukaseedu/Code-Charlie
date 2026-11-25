@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -26,6 +27,10 @@ public class OpeningCutscene : MonoBehaviour
 
     [SerializeField] private Animator healthBarAnimator;
 
+    [Header("Events")]
+    [Tooltip("Invoked when the cutscene finishes and gameplay has been re-enabled.")]
+    [SerializeField] private UnityEvent onCutsceneEnded = new UnityEvent();
+
     private PlayerMinigameContext player;
 
     private Vignette vignette;
@@ -39,6 +44,21 @@ public class OpeningCutscene : MonoBehaviour
         player.Input.currentActionMap?.Disable();
 
         playerBody.enabled = false;
+
+        float startVignetteIntensity = 0f;
+        float startDOFIntensity = 0f;
+
+        if (volume.profile.TryGet<Vignette>(out vignette))
+        {
+            vignette.intensity.value = 0.5f;
+            startVignetteIntensity = vignette.intensity.value;
+        }
+
+        if (volume.profile.TryGet<DepthOfField>(out DOF))
+        {
+            DOF.focalLength.value = 240;
+            startDOFIntensity = DOF.focalLength.value;
+        }
 
         // Set initial camera priorities
         wakeUpCamera.Priority = 20;
@@ -57,17 +77,6 @@ public class OpeningCutscene : MonoBehaviour
         wakeUpCamera.Priority = 10;
 
         float elapsedTime = 0f;
-        float startVignetteIntensity = 0f;
-        float startDOFIntensity = 0f;
-
-        if (volume.profile.TryGet<Vignette>(out vignette)) {
-            startVignetteIntensity = vignette.intensity.value;
-        }
-
-        if (volume.profile.TryGet<DepthOfField>(out DOF))
-        {
-            startDOFIntensity = DOF.focalLength.value;
-        }
 
         while (elapsedTime < blendDuration)
         {
@@ -82,6 +91,7 @@ public class OpeningCutscene : MonoBehaviour
 
         // Enable gameplay
         SetGameplayEnabled(true);
+        onCutsceneEnded?.Invoke();
     }
 
     private void SetGameplayEnabled(bool enabled)
