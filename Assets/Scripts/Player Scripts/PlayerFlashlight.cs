@@ -11,6 +11,9 @@ public class PlayerFlashlight : MonoBehaviour
     [SerializeField] Light flashlight;
 
     private InputAction flashlightAction;
+    private bool minigameLocked;
+
+
 
     private void Awake()
     {
@@ -23,11 +26,20 @@ public class PlayerFlashlight : MonoBehaviour
         flashlight.enabled = false;
     }
 
+    public void SetMinigameLocked(bool locked)
+    {
+        minigameLocked = locked;
+
+        if (locked)
+            flashlight.enabled = false;
+    }
+
     private void Update()
     {
-        if (flashlightAction.WasPressedThisFrame())
+        if (!minigameLocked && flashlightAction.WasPressedThisFrame())
         {
             flashlight.enabled = !flashlight.enabled;
         }
     }
+
 }

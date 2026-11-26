@@ -72,6 +72,7 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
 
     private bool[] originalTriggerStates;
     private bool exitSubscribed;
+    private PlayerFlashlight playerFlashlight;
 
     private void Awake()
     {
@@ -200,6 +201,8 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
     private IEnumerator EnterRoutine()
     {
         IsTransitioning = true;
+        playerFlashlight = player.Input.GetComponentInChildren<PlayerFlashlight>(true);
+        playerFlashlight?.SetMinigameLocked(true);
         if (!allowInteractionsWhileActive)
         {
             player.Interaction?.SetInteractionLocked(true);
@@ -275,6 +278,8 @@ public class MinigameInteractable : MonoBehaviour, IInteractable
         player.Input.SwitchCurrentActionMap(
             player.DefaultActionMap
         );
+
+        playerFlashlight?.SetMinigameLocked(false);
 
         if (player.CameraController != null)
             player.CameraController.enabled = true;
