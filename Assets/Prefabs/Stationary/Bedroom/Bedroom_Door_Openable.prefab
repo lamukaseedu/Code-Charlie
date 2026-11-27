@@ -27,12 +27,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 205277956558848177}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.85772216, w: 0.5141135}
-  m_LocalPosition: {x: 0.012061932, y: -0.008518559, z: 0.0014571118}
-  m_LocalScale: {x: 1.0972886, y: 1, z: 1}
+  m_LocalRotation: {x: -0.85772216, y: 0.5141135, z: 0, w: 0}
+  m_LocalPosition: {x: 0.028210912, y: 0.00018212196, z: 0.00085885817}
+  m_LocalScale: {x: -1.0917382, y: 0.97289824, z: 1.2910157}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7412203641434052937}
+  m_Father: {fileID: 245829233963028584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8461411241961318849
 MeshFilter:
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 5221510900653300741}
   - component: {fileID: 2003286890905225809}
   - component: {fileID: 5494649524255823996}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: bathroom_door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,12 +140,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4893945912823752326}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000046096384, y: -0.0023724586, z: 0.0014909046}
-  m_LocalScale: {x: 1.0443796, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0.0189, y: 0.006351314, z: 0.0005}
+  m_LocalScale: {x: -1.0068687, y: 1.0037572, z: 1.2910157}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7412203641434052937}
+  m_Father: {fileID: 245829233963028584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5221510900653300741
 MeshFilter:
@@ -226,6 +226,114 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6257202489077515159, guid: 90db8fff0d7d5d74f94408aba035d6aa, type: 3}
+--- !u!1 &6346529978654519516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 174742454677213131}
+  - component: {fileID: 8204536600577886054}
+  m_Layer: 0
+  m_Name: MinigameCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &174742454677213131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6346529978654519516}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0477}
+  m_LocalScale: {x: -0.6324654, y: 0.78491575, z: 0.7805489}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7412203641434052937}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &8204536600577886054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6346529978654519516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
+  Priority:
+    Enabled: 1
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 80
+    OrthographicSize: 10
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
+--- !u!1 &7081138186750510392
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 245829233963028584}
+  m_Layer: 0
+  m_Name: HingePivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &245829233963028584
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7081138186750510392}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
+  m_LocalPosition: {x: -0.0193, y: -0.0087, z: -0.0017}
+  m_LocalScale: {x: -1.0372553, y: 0.9962569, z: 0.7745839}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3778402824928851766}
+  - {fileID: 5688262371967306768}
+  m_Father: {fileID: 7412203641434052937}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &7665130533837319213
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,6 +345,8 @@ GameObject:
   - component: {fileID: 7412203641434052937}
   - component: {fileID: 6597153143148040232}
   - component: {fileID: 2021110169822037632}
+  - component: {fileID: 3705498287732691068}
+  - component: {fileID: 1228513707857873688}
   m_Layer: 0
   m_Name: Bedroom_Door_Openable
   m_TagString: Untagged
@@ -252,15 +362,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7665130533837319213}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalRotation: {x: -0, y: 0.9904941, z: -0, w: -0.13755557}
   m_LocalPosition: {x: 0.91317, y: 0.04686, z: 0.17909001}
   m_LocalScale: {x: -0.96408284, y: 1.0037571, z: 1.2910157}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 3778402824928851766}
-  - {fileID: 5688262371967306768}
+  - {fileID: 174742454677213131}
+  - {fileID: 245829233963028584}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 195.813, z: 0}
 --- !u!33 &6597153143148040232
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -318,3 +428,93 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &3705498287732691068
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665130533837319213}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9422946a2d5a0cc4e9949351516ab10d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1228513707857873688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665130533837319213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3cab9bed4568354f974a6b3886ca6ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HighlightEventInteractable
+  interactionPrompt: Press E To Open Door
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3705498287732691068}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1228513707857873688}
+        m_TargetAssemblyTypeName: HighlightEventInteractable, Assembly-CSharp
+        m_MethodName: Unhover
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1228513707857873688}
+        m_TargetAssemblyTypeName: HighlightEventInteractable, Assembly-CSharp
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4893945912823752326}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: set_layer
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  highlightRenderers:
+  - {fileID: 2003286890905225809}
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
