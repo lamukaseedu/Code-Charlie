@@ -31,6 +31,7 @@ public class TerminalLogButton : MonoBehaviour,
 
     private LogData logData;
     private Action<LogData> onSelected;
+    private TerminalUISounds terminalSounds;
 
     private bool isSelected;
     private bool isHovered;
@@ -41,6 +42,7 @@ public class TerminalLogButton : MonoBehaviour,
     {
         logData = data;
         onSelected = callback;
+        terminalSounds = GetComponentInParent<TerminalUISounds>(true);
 
         subjectText.text = data.subject;
         logText.text = data.log;
@@ -101,6 +103,9 @@ public class TerminalLogButton : MonoBehaviour,
 
     private void OnClicked()
     {
+        if (terminalSounds != null)
+            terminalSounds.PlayLogClickSound();
+
         onSelected?.Invoke(logData);
     }
 

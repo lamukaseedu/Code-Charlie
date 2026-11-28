@@ -24,6 +24,7 @@ public class KeypadButton : MonoBehaviour
     [Header("Hover")]
     [SerializeField] private Renderer buttonRenderer;
     [SerializeField] private Color hoverColor = new(0.15f, 0.8f, 1f, 1f);
+    [SerializeField] private Material hoverMaterial;
 
     [Header("Press Animation")]
     [SerializeField] private Vector3 localPressDirection = Vector3.back;
@@ -33,6 +34,10 @@ public class KeypadButton : MonoBehaviour
 
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
     private static readonly int ColorId = Shader.PropertyToID("_Color");
+    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+
+    private Material[] originalMaterials;
+    private Material hoverMaterialInstance;
 
     private MaterialPropertyBlock propertyBlock;
     private Color normalColor = Color.white;
@@ -57,7 +62,45 @@ public class KeypadButton : MonoBehaviour
     //Changes the button color when the player starts or stops hovering over it
     public void SetHovered(bool hovered)
     {
-        if (buttonRenderer == null || colorPropertyId == 0)
+        if (buttonRenderer == null)
+            return;
+
+        if (!hovered && originalMaterials != null)
+        {
+            buttonRenderer.sharedMaterials = originalMaterials;
+            originalMaterials = null;
+            return;
+        }
+
+        if (hoverMaterial != null)
+        {
+            if (!hovered || originalMaterials != null)
+                return;
+
+            if (hoverMaterialInstance == null)
+                hoverMaterialInstance = new Material(hoverMaterial);
+
+            int overlayColorId = hoverMaterialInstance.HasProperty(BaseColorId)
+                ? BaseColorId
+                : ColorId;
+
+            if (hoverMaterialInstance.HasProperty(overlayColorId))
+                hoverMaterialInstance.SetColor(overlayColorId, hoverColor);
+
+            if (hoverMaterialInstance.HasProperty(EmissionColorId))
+                hoverMaterialInstance.SetColor(EmissionColorId, hoverColor * 3f);
+
+            originalMaterials = buttonRenderer.sharedMaterials;
+
+            var hoveredMaterials = new Material[originalMaterials.Length + 1];
+            System.Array.Copy(originalMaterials, hoveredMaterials, originalMaterials.Length);
+            hoveredMaterials[originalMaterials.Length] = hoverMaterialInstance;
+
+            buttonRenderer.sharedMaterials = hoveredMaterials;
+            return;
+        }
+
+        if (colorPropertyId == 0)
             return;
 
         propertyBlock ??= new MaterialPropertyBlock();
@@ -160,5 +203,11 @@ public class KeypadButton : MonoBehaviour
         {
             digit = "0";
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (hoverMaterialInstance != null)
+            Destroy(hoverMaterialInstance);
     }
 }

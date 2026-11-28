@@ -36,6 +36,14 @@ public class SlidingDoor : MonoBehaviour, IInteractable
     [Tooltip("Optional transparent or additive highlight material. Extra material slots draw over the mesh's last submesh.")]
     [SerializeField] private Material hoverMaterial;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource keycardAudioSource;
+    [SerializeField] private AudioClip accessDeniedClip;
+    [SerializeField] private AudioClip unlockedClip;
+    [Tooltip("Use a dedicated AudioSource for the looping lift sound.")]
+    [SerializeField] private AudioSource liftAudioSource;
+    [SerializeField] private AudioClip liftClip;
+
     [Header("Events")]
     [Tooltip("Invoked when a keycard in the player's inventory unlocks this door for one opening cycle.")]
     [SerializeField] private UnityEvent onUnlocked = new UnityEvent();
@@ -43,6 +51,7 @@ public class SlidingDoor : MonoBehaviour, IInteractable
     private readonly HashSet<Collider> occupants = new HashSet<Collider>();
     private bool unlocked;
     private bool openedSinceUnlock;
+    private bool liftAudioPlaying;
     private Vector3 closedPosition;
     private Vector3 openPosition;
     private bool isHovered;
@@ -91,6 +100,7 @@ public class SlidingDoor : MonoBehaviour, IInteractable
 
     private void OnDisable()
     {
+        StopLiftAudio();
         Unhover();
         occupants.Clear();
         unlocked = false;
@@ -210,15 +220,24 @@ public class SlidingDoor : MonoBehaviour, IInteractable
 
     public bool TryUnlock(PlayerInventory inventory)
     {
-        if (!isActiveAndEnabled || IsUnlocked || inventory == null ||
-            !inventory.isActiveAndEnabled || inventory.IsOpen || !inventory.HasKeycard(id))
+        if (!isActiveAndEnabled || IsUnlocked)
             return false;
+
+        if (inventory != null && (!inventory.isActiveAndEnabled || inventory.IsOpen))
+            return false;
+
+        if (inventory == null || !inventory.HasKeycard(id))
+        {
+            PlayKeycardSound(accessDeniedClip);
+            return false;
+        }
 
         // Block repeated or reentrant use until this opening cycle is complete.
         unlocked = true;
         openedSinceUnlock = false;
         RefreshHighlight();
         FindFirstObjectByType<PlayerInteraction>()?.RefreshPrompt(this);
+        PlayKeycardSound(unlockedClip);
         onUnlocked?.Invoke();
         return true;
     }
@@ -233,8 +252,16 @@ public class SlidingDoor : MonoBehaviour, IInteractable
         if (shouldOpen && unlocked)
             openedSinceUnlock = true;
 
+        Vector3 previousPosition = door.localPosition;
         Vector3 doorPosition = shouldOpen ? openPosition : closedPosition;
-        door.localPosition = Vector3.MoveTowards(door.localPosition, doorPosition, speed * Time.deltaTime);
+        door.localPosition = Vector3.MoveTowards(previousPosition, doorPosition, speed * Time.deltaTime);
+
+        bool rising = shouldOpen && door.localPosition.y > previousPosition.y;
+        if (rising && door.localPosition != openPosition)
+            StartLiftAudio();
+        else
+            StopLiftAudio();
+
         RefreshDoorwayObstacle();
 
         // Consume keycard access after everyone leaves and the door finishes closing.
@@ -246,6 +273,35 @@ public class SlidingDoor : MonoBehaviour, IInteractable
             FindFirstObjectByType<PlayerInteraction>()?.RefreshPrompt(this);
         }
         RefreshHighlight();
+    }
+
+    private void PlayKeycardSound(AudioClip clip)
+    {
+        if (clip != null && keycardAudioSource != null && keycardAudioSource.isActiveAndEnabled)
+            keycardAudioSource.PlayOneShot(clip);
+    }
+
+    private void StartLiftAudio()
+    {
+        if (liftAudioPlaying || liftClip == null || liftAudioSource == null ||
+            !liftAudioSource.isActiveAndEnabled)
+            return;
+
+        liftAudioSource.clip = liftClip;
+        liftAudioSource.loop = true;
+        liftAudioSource.Play();
+        liftAudioPlaying = true;
+    }
+
+    private void StopLiftAudio()
+    {
+        if (!liftAudioPlaying)
+            return;
+
+        if (liftAudioSource != null)
+            liftAudioSource.Stop();
+
+        liftAudioPlaying = false;
     }
 
     private void RefreshDoorwayObstacle()

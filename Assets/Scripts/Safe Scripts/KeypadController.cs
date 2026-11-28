@@ -34,6 +34,7 @@ public class KeypadController : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip digitSound;
     [SerializeField] private AudioClip grantedSound;
+    [SerializeField, Min(0f)] private float grantedSoundDelay = 0.25f;
     [SerializeField] private AudioClip deniedSound;
 
     [Header("Events")]
@@ -140,7 +141,11 @@ public class KeypadController : MonoBehaviour
                     StartCoroutine(RestorePromptAfterDelay());
             }
 
-            PlaySound(grantedSound);
+            if (grantedSoundDelay > 0f)
+                StartCoroutine(PlayGrantedSoundAfterDelay());
+            else
+                PlaySound(grantedSound);
+
             onAccessGranted?.Invoke();
         }
         else
@@ -172,6 +177,12 @@ public class KeypadController : MonoBehaviour
     private void PlaySound(AudioClip clip)
     {
         GameAudio.PlayOneShot(audioSource, clip);
+    }
+
+    private IEnumerator PlayGrantedSoundAfterDelay()
+    {
+        yield return new WaitForSeconds(grantedSoundDelay);
+        PlaySound(grantedSound);
     }
 
     private void OnValidate()

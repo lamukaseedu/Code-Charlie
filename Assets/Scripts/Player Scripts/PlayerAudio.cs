@@ -20,6 +20,9 @@ public class PlayerAudio : MonoBehaviour
     [Tooltip("Crouching footstep volume relative to walking. 0.5 means 50%.")]
     [SerializeField, Range(0f, 1f)] private float crouchVolumeMultiplier = 0.5f;
 
+    [SerializeField, Min(0f)] private float footstepFadeOutTime = 0.15f;
+    private float footstepGain;
+
     private AudioSource oneShotSource;
     private AudioSource footstepSource;
     private PlayerMovement movement;
@@ -67,9 +70,9 @@ public class PlayerAudio : MonoBehaviour
 
     private void Update()
     {
-        ApplyFootstepVolume();
+        bool gamePaused = Time.timeScale <= 0f;
         bool shouldPlay =
-            Time.timeScale > 0f &&
+            !gamePaused &&
             footstepLoop != null &&
             movement != null &&
             movement.CheckMovement() &&
@@ -78,14 +81,25 @@ public class PlayerAudio : MonoBehaviour
 
         if (shouldPlay)
         {
+            footstepGain = 1f;
             footstepSource.pitch = movement.IsSprinting ? sprintPitch : walkPitch;
-            if (!footstepSource.isPlaying)
-                footstepSource.Play();
         }
-        else if (footstepSource.isPlaying)
+        else if (gamePaused || footstepFadeOutTime <= 0f)
         {
-            footstepSource.Pause();
+            footstepGain = 0f;
         }
+        else
+        {
+            footstepGain = Mathf.MoveTowards(
+                footstepGain, 0f, Time.deltaTime / footstepFadeOutTime);
+        }
+
+        ApplyFootstepVolume();
+
+        if (shouldPlay && !footstepSource.isPlaying)
+            footstepSource.Play();
+        else if (footstepGain <= 0f && footstepSource.isPlaying)
+            footstepSource.Pause();
     }
 
     private void PlayDamage()
@@ -106,6 +120,6 @@ public class PlayerAudio : MonoBehaviour
         if (footstepSource == null) return;
         float multiplier = movement != null && movement.IsCrouching
             ? Mathf.Clamp01(crouchVolumeMultiplier) : 1f;
-        footstepSource.volume = GameSettings.GetSoundVolume() * multiplier;
+        footstepSource.volume = GameSettings.GetSoundVolume() * multiplier * footstepGain;
     }
 }

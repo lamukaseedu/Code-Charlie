@@ -5281,7 +5281,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8995010704374017077}
+        m_TargetAssemblyTypeName: TerminalUISounds, Assembly-CSharp
+        m_MethodName: PlayTypingSound
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -12736,7 +12748,6 @@ GameObject:
   - component: {fileID: 923542522805954711}
   - component: {fileID: 6412246815074735488}
   - component: {fileID: 4347661151103872069}
-  - component: {fileID: 903246901475945089}
   m_Layer: 0
   m_Name: CircuitsPanel
   m_TagString: Untagged
@@ -12813,7 +12824,7 @@ MonoBehaviour:
       m_Calls: []
   relayProgressFill: {fileID: 7299570731913876588}
   relayProgressText: {fileID: 0}
-  soundEffectsSource: {fileID: 903246901475945089}
+  soundEffectsSource: {fileID: 384083332708277543}
   piecePlacementSound: {fileID: 8300000, guid: b744d562b4e424e43b064aa50468bac3, type: 3}
   placementVolume: 0.5
   puzzleSuccessSound: {fileID: 8300000, guid: ea171fedc94631748a01895250d34bf3, type: 3}
@@ -12830,103 +12841,6 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!82 &903246901475945089
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4245913649432017540}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &4276857466152742826
 GameObject:
   m_ObjectHideFlags: 0
@@ -21851,6 +21765,8 @@ GameObject:
   - component: {fileID: 7873461851989233738}
   - component: {fileID: 4012124964189578242}
   - component: {fileID: 4249406225870755132}
+  - component: {fileID: 384083332708277543}
+  - component: {fileID: 8995010704374017077}
   m_Layer: 0
   m_Name: Computer
   m_TagString: Untagged
@@ -22011,6 +21927,9 @@ MonoBehaviour:
   lockEmployeeID: 0
   prefillAccessKey: 0
   lockAccessKey: 0
+  audioSource: {fileID: 384083332708277543}
+  loginSuccessSound: {fileID: 8300000, guid: 27313cfc3f20f9546a2bdcc65b72d2da, type: 3}
+  loginFailureSound: {fileID: 8300000, guid: 4897c42995defe446909f492bc43320d, type: 3}
   defaultMessage: LOGIN
   successMessage: ACCESS GRANTED
   failureMessage: ACCESS DENIED
@@ -22047,10 +21966,122 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdcaafec20bbfe64f8e60aa9d276b1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerminalFeatures
-  hasCircuitMinigame: 1
+  hasCircuitMinigame: 0
   circuitButton: {fileID: 2030129017611527724}
   circuitsPanel: {fileID: 4245913649432017540}
   circuitPuzzleManager: {fileID: 6412246815074735488}
+--- !u!82 &384083332708277543
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7566879490003422151}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 8
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &8995010704374017077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7566879490003422151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d0e6e96c65fae74cadaeab7b4fce399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TerminalUISounds
+  audioSource: {fileID: 384083332708277543}
+  typingSound: {fileID: 8300000, guid: c553fbbf8e9fc4d4f83eceacdfafacf3, type: 3}
+  logClickSound: {fileID: 8300000, guid: a57a4882ae8deb343bd593b9b28d44b4, type: 3}
 --- !u!1 &7715419570603090866
 GameObject:
   m_ObjectHideFlags: 0
@@ -23124,7 +23155,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8995010704374017077}
+        m_TargetAssemblyTypeName: TerminalUISounds, Assembly-CSharp
+        m_MethodName: PlayTypingSound
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []

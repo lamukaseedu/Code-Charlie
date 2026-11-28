@@ -17179,6 +17179,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::throwItemAudio
   impactClips: []
+  minimumImpactSpeed: 3
+  impactCooldown: 1
   spatialBlend: 1
   minDistance: 1
   maxDistance: 20
@@ -17218,6 +17220,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::throwItemAudio
   impactClips:
   - {fileID: 8300000, guid: e4b34f2b46dbf5745bb32f18d0ec810c, type: 3}
+  minimumImpactSpeed: 3
+  impactCooldown: 1
   spatialBlend: 1
   minDistance: 1
   maxDistance: 20
@@ -17536,6 +17540,135 @@ Transform:
   - {fileID: 7871790639105306530}
   m_Father: {fileID: 4779364469355588636}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6768301248916374766
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5507786642124227432}
+  - component: {fileID: 5556129466981949993}
+  m_Layer: 0
+  m_Name: Audio Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5507786642124227432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6768301248916374766}
+  serializedVersion: 2
+  m_LocalRotation: {x: 6.123234e-17, y: 1, z: 6.123234e-17, w: -6.123234e-17}
+  m_LocalPosition: {x: 0.028, y: 0.001, z: 0.0845}
+  m_LocalScale: {x: 0.02500294, y: 0.02500294, z: -0.022220884}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5088624766742965610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &5556129466981949993
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6768301248916374766}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 51da9df76182c0740b7f55beb7bdd8e2, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 2.386152
+  MaxDistance: 3.7978716
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6981073689787059846
 GameObject:
   m_ObjectHideFlags: 0
@@ -24042,6 +24175,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6426773769855369580, guid: f3fa7ee5b4b9180478fd3455efd19bdc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1672164643788360144}
+    - targetCorrespondingSourceObject: {fileID: 6426773769855369580, guid: f3fa7ee5b4b9180478fd3455efd19bdc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5507786642124227432}
     - targetCorrespondingSourceObject: {fileID: 1854151691382584774, guid: f3fa7ee5b4b9180478fd3455efd19bdc, type: 3}
       insertIndex: 0
       addedObject: {fileID: 6824230961534391999}

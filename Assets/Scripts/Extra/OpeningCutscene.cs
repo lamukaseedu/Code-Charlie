@@ -17,6 +17,11 @@ public class OpeningCutscene : MonoBehaviour
     [SerializeField] private float transitionWait = 2f;
     [SerializeField] private float blendDuration = 2f;
 
+    [Header("Cutscene Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip wakeUpGrunt;
+    [SerializeField] private AudioClip getUpShuffle;
+
     [SerializeField] private MeshRenderer playerBody;
 
     [SerializeField] private Animator eyeAnimator;
@@ -67,10 +72,16 @@ public class OpeningCutscene : MonoBehaviour
         // Wait before opening eyes
         yield return new WaitForSeconds(initialWait);
 
-        // TODO: Play blinking animation here
+        // Blinking animation here and audio
         eyeAnimator.SetTrigger("open");
-        yield return new WaitForSeconds(3.5f);
+        PlayCutsceneSound(wakeUpGrunt);
+
+        yield return new WaitForSeconds(4f);
         yield return new WaitForSeconds(transitionWait);
+
+        PlayCutsceneSound(getUpShuffle);
+        gameplayCamera.Priority = 20;
+        wakeUpCamera.Priority = 10;
 
         // Switch to gameplay camera
         gameplayCamera.Priority = 20;
@@ -107,6 +118,12 @@ public class OpeningCutscene : MonoBehaviour
     {
         yield return new WaitForSeconds(2.0f);
         healthBarAnimator.enabled = false;
+    }
+
+    private void PlayCutsceneSound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+            GameAudio.PlayOneShot(audioSource, clip);
     }
 }
 

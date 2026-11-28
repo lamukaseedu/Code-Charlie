@@ -37,6 +37,8 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
     [Header("Audio")]
     [SerializeField] private AudioClip fireClip;
+    [SerializeField] private AudioClip reloadClip;
+    [SerializeField] private AudioClip emptyFireClip;
 
     private AudioSource audioSource;
 
@@ -116,7 +118,11 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
         {
             nailsToLoad += nailsInMag;
             nailsInMag = 0;
-            recoilAnimator.SetTrigger("reload");
+
+            if (recoilAnimator != null)
+                recoilAnimator.SetTrigger("reload");
+
+            GameAudio.PlayOneShot(audioSource, reloadClip);
             StartCoroutine(ReloadGun(nailsToLoad));
         }
     }
@@ -135,7 +141,8 @@ public class Nailgun : MonoBehaviour, IUsable, IInventoryItem
 
         if (nailsInMag <= 0)
         {
-            Debug.Log("Magazine empty! Reload!");
+            nextFireTime = Time.time + fireRate;
+            GameAudio.PlayOneShot(audioSource, emptyFireClip);
             return;
         }
 

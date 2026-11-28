@@ -243,6 +243,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 729139276967630208}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -481,9 +482,10 @@ MonoBehaviour:
   resultDisplayTime: 1
   promptRevealDelay: 1.5
   audioSource: {fileID: 1957142050113889077}
-  digitSound: {fileID: 0}
-  grantedSound: {fileID: 0}
-  deniedSound: {fileID: 0}
+  digitSound: {fileID: 8300000, guid: a57a4882ae8deb343bd593b9b28d44b4, type: 3}
+  grantedSound: {fileID: 8300000, guid: e7cde134d78418b4e81960d1d4231378, type: 3}
+  grantedSoundDelay: 1
+  deniedSound: {fileID: 8300000, guid: 4897c42995defe446909f492bc43320d, type: 3}
   onAccessGranted:
     m_PersistentCalls:
       m_Calls:
@@ -1148,6 +1150,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 8488856670677718691}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -1683,6 +1686,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 4698045604502307742}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -1960,6 +1964,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 5501746360606227226}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -2401,6 +2406,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 1147497212946650048}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -2625,6 +2631,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 2477940182974909877}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -2924,6 +2931,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 5931410730840892795}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -3392,6 +3400,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 12549498639358483}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -4096,6 +4105,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 9013187180292208625}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -4457,6 +4467,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 3671800332875149535}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -5073,6 +5084,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 8866601579407972129}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06
@@ -5304,6 +5316,7 @@ MonoBehaviour:
   keypad: {fileID: 3852375872454853038}
   buttonRenderer: {fileID: 5882037227698242919}
   hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverMaterial: {fileID: 2100000, guid: 5ed10ed185079dd44ab096245414a187, type: 2}
   localPressDirection: {x: 0, y: 0, z: -1}
   pressDistance: 0.006
   moveTime: 0.06

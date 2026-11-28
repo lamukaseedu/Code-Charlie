@@ -28,6 +28,10 @@ public class PlayerInventory : MonoBehaviour
     [Min(0f)]
     [SerializeField] private float equipCooldown = 0.25f;
 
+    [Header("Pickup Audio")]
+    [SerializeField] private AudioSource pickupAudioSource;
+    [SerializeField] private AudioClip pickupSound;
+
     private readonly GameObject[] instances = new GameObject[SlotCount];
     private IUsable equippedUse;
     private float equipCooldownEndTime;
@@ -160,7 +164,12 @@ public class PlayerInventory : MonoBehaviour
         int amountAdded = amount - remaining;
 
         if (amountAdded > 0)
+        {
+            if (pickupAudioSource != null && pickupSound != null)
+                GameAudio.PlayOneShot(pickupAudioSource, pickupSound);
+
             Changed?.Invoke();
+        }
 
         return amountAdded;
     }

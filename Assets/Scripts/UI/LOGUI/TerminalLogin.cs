@@ -30,6 +30,10 @@ public class TerminalLogin : MonoBehaviour
     [SerializeField] private bool prefillAccessKey = false;
     [SerializeField] private bool lockAccessKey = false;
 
+    [Header("Login Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip loginSuccessSound;
+    [SerializeField] private AudioClip loginFailureSound;
 
     [Header("Status Messages")]
     [SerializeField] private string defaultMessage = "LOGIN";
@@ -105,7 +109,7 @@ public class TerminalLogin : MonoBehaviour
             loginButton.interactable = false;
             employeeIDInput.interactable = false;
             accessKeyInput.interactable = false;
-
+            PlayLoginSound(loginSuccessSound);
             onLoginSuccess?.Invoke();
         }
         else
@@ -163,12 +167,19 @@ public class TerminalLogin : MonoBehaviour
         statusText.text = failureMessage;
         loginButtonVisuals.ShowLoginResult(false);
 
+        PlayLoginSound(loginFailureSound);
         onLoginFailure?.Invoke();
 
         yield return new WaitForSeconds(failureDisplayDuration);
 
         ResetStatus();
         failureCoroutine = null;
+    }
+
+    private void PlayLoginSound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+            GameAudio.PlayOneShot(audioSource, clip);
     }
 
     private void ResetStatus()

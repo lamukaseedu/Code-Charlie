@@ -7,8 +7,9 @@
  * Edited: 10/20/2026
  */
 
-using UnityEngine.Events;
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public interface IDamageable
 {
@@ -24,6 +25,10 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private UnityEvent onDamaged;
     [SerializeField] private UnityEvent onDeath;
     [SerializeField] private UnityEvent<float> onHealthChanged;
+
+    [Header("Damage Audio")]
+    [SerializeField] private AudioSource damageAudioSource;
+    [SerializeField] private AudioClip[] damageGrunts = new AudioClip[3];
 
     private float currentHealth;
     private bool isDead;
@@ -56,6 +61,7 @@ public class Health : MonoBehaviour, IDamageable
         }
 
         currentHealth = Mathf.Max(0f, currentHealth - amount);
+        PlayDamageGrunt();
         onDamaged?.Invoke();
         onHealthChanged?.Invoke(HealthPercent);
 
@@ -67,6 +73,18 @@ public class Health : MonoBehaviour, IDamageable
         {
             DamagedBy?.Invoke(source);
         }
+    }
+
+    private void PlayDamageGrunt()
+    {
+        if (damageAudioSource == null || damageGrunts == null || damageGrunts.Length == 0)
+            return;
+
+        int index = UnityEngine.Random.Range(0, damageGrunts.Length);
+        AudioClip clip = damageGrunts[index];
+
+        if (clip != null)
+            GameAudio.PlayOneShot(damageAudioSource, clip);
     }
 
     public void Heal(float amount)
